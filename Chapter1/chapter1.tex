@@ -1,0 +1,98 @@
+%*******************************************************************************
+%*********************************** First Chapter *****************************
+%*******************************************************************************
+
+\chapter{First Chapter Title}  %Title of the First Chapter
+\label{chapter 1}
+\ifpdf
+    \graphicspath{{Chapter1/Figs/}{Chapter1/Figs/PDF/}{Chapter1/Figs/}}
+\else
+    \graphicspath{{Chapter1/Figs/Vector/}{Chapter1/Figs/}}
+\fi
+
+
+%********************************** %First Section  ****************************
+\section{Introduction to PhD Thesis Template} %Section - 1.1 
+\label{section 1.1} % here you can label the section to refer it inside the text
+
+Welcome to this \LaTeX{} Thesis Template for writing your PhD thesis using the \LaTeX{} typesetting system. If you are writing a thesis (or will be in the future) and its subject is technical or mathematical (though it doesn't have to be), then creating it in \LaTeX{} is highly recommended.
+
+\LaTeX{} is easily able to professionally typeset documents that run to hundreds or thousands of pages long. With simple mark-up commands, it automatically sets out the table of contents, margins, page headers and footers and keeps the formatting consistent and beautiful. One of its main strengths is the way it can easily typeset mathematics, even heavy mathematics. Even if those equations are the most horribly twisted and most difficult mathematical problems that can only be solved on a super-computer, you can at least count on \LaTeX{} to make them look stunning \cite{lamport1994latex, hertel2010writing}.Please see appendix\ref{Appendix1} for the instruction to install \LaTeX.
+
+Along with this document you have access to \LaTeX{} file (\textbf{Polito PhD thesis template.tex}) including different partitions: Preamble, Thesis info and etc. Inside each part there are instructive comments explaining the options for different commands. The default commands are designed and recommended by PhD school of Politecnico di Torino. In this tutorial the commands essential to write a scientific document are listed and explained briefly.  
+
+
+
+
+%********************************** %Second Section  ***************************
+\section{Getting Started with this Template}  %Section - 1.2 
+\label{section1.2}
+If you are familiar with \LaTeX{}, then you should explore the directory structure of the template and then proceed to place your own information into the  block of the \textbf{Polito PhD thesis template.tex} file. You can then modify the rest of this file to your unique specifications based on your course. Chapter \ref{chapter 2} will help you do this.
+
+If you are new to \LaTeX{} it is recommended that you carry on reading through the rest of the information in this document. The style of this template is confirmed and recommanded by Doctoral School of Politecnico di Torino (SCUDO).
+
+%********************************** % Third Section  ***************************
+\section{What this Template Includes}
+\label{section 1.3}
+
+\subsection{Folders}
+
+This template comes as a single zip file that expands out to several files and folders. The folder names are mostly self-explanatory:
+
+\textbf{Preamble}: this folder contains the \textbf{.tex} file in which the adjustments and modifications regarding the style of document is possible. It is recommanded to not changing the predefined style, except for small modifications.
+
+\textbf{Thesis-info}: this folder contains the \textbf{.tex} file in which the thesis informations can be inserted.
+ 
+\textbf{Dedication}: this folder contains the \textbf{.tex} file dedicated to write the dedications of the thesis.
+
+\textbf{Declaration}: this folder contains the \textbf{.tex} file dedicated to write the declaration of the thesis.
+
+\textbf{Acknowledgment}: this folder contains the \textbf{.tex} file dedicated to write the acknowledgments of the thesis. 
+
+\textbf{Abstract}: this folder contains the \textbf{.tex} file dedicated to write the abstract of the thesis.
+
+\textbf{Chapters}: these are the folders where you put the thesis chapters.  Each chapter should go in its own separate \textbf{.tex} file and folder. Each chapter folder contains a \textbf{Figs} folder which contains all figures for the chapter. A thesis usually has about five to six chapters, though there is no hard rule on this. For example they can be split as:
+\begin{itemize}
+	\item Chapter 1: Introduction to the thesis topic
+	\item Chapter 2: Background information and theory
+	\item Chapter 3: (Laboratory) experimental setup
+	\item Chapter 4: Details of experiment
+	\item Chapter 5: Discussion of the experimental results
+	\item Chapter 6: Conclusion and future directions
+\end{itemize}
+This chapter layout is specialised for the experimental sciences.
+
+\textbf{Figs}: This folder contains all figures for the thesis not included in chapters (for exaple the polito logo on thesis info page). These are the final images that will go into the thesis document.
+
+\textbf{References}: this folder contains the \textbf{.tex} file which is an important file that contains all the bibliographic information and references that you will be citing in the thesis for use with BibTeX. You can write it manually, but there are reference manager programs available that will create and manage it for you. Bibliographies in \LaTeX{} are a large subject and you may need to read about BibTeX before starting with this. Many modern reference managers will allow you to export your references in BibTeX format which greatly eases the amount of work you have to do..
+
+\textbf{Classes} and \textbf{sty}: these folders contain important files such as class file that tells \LaTeX{} how to format the thesis.
+
+\textbf{Appendices}: these are the folders where you put the appendices. Each appendix should go into its own separate \textbf{.tex} file.
+
+\subsection{Files}
+
+Included are also several files, most of them are plain text and you can see their contents in a text editor. After initial compilation, you will see that more auxiliary files are created by \LaTeX{} or BibTeX and which you don't need to delete or worry about:
+
+\textbf{Polito PhD thesis template.pdf}: this is your beautifully typeset thesis (in the PDF file format) created by \LaTeX{}. It is supplied in the PDF with the template and after you compile the template you should get an identical version.
+
+\textbf{Polito PhD thesis template.tex}: this is an important file. This is the file that you tell \LaTeX{} to compile to produce your thesis as a PDF file. It contains the framework and constructs that tell \LaTeX{} how to layout the thesis. It is heavily commented so you can read exactly what each line of code does and why it is there. After you put your own information into the \emph{Thesis-info} block -- you have now started your thesis!
+
+Files that are \emph{not} included, but are created by \LaTeX{} as auxiliary files include:\textbf{.aux}, \textbf{.bbl}, \textbf{.blg}, \textbf{.lof}, \textbf{.log}, \textbf{.lot} and \textbf{.out} files: are auxiliary files generated by \LaTeX{}, if they are deleted \LaTeX{} simply regenerates them when you run the main \textbf{.tex} file.
+
+%********************************** % Forth Section  ****************************
+
+\section{Filling in Your Information in the "Polito PhD thesis template.tex" File}
+\label{section 1.4}
+
+You will need to personalise the thesis template and make it your own by filling in your own information. This is done by editing the \textbf{Polito PhD thesis template.tex} file in a text editor or your favourite LaTeX environment.
+
+Open the file and scroll down to the second large block titled \emph{Thesis-info} where you can see the entries for \emph{Authur}, \emph{Supervisors}, etc \ldots. Fill out the information about your thesis, yourself and your department. When you have done this, save the file and recompile \textbf{Polito PhD thesis template.tex}. All the information you filled in should now be in the PDF, complete with web links. You can now begin your thesis proper!
+
+The \textbf{Polito PhD thesis template.tex} file contains the structure of the thesis. There are plenty of written comments that explain what pages, sections and formatting the \LaTeX{} code is creating. Each major document element is divided into commented blocks with titles in all capitals to make it obvious what the following bit of code is doing. Initially there seems to be a lot of \LaTeX{} code, but this is all formatting, and it has all been taken care of so you don't have to do it.
+
+Begin by checking that your information on the title page is correct. The next page contains a one line (or more) dedication; Who will you dedicate your thesis to. Next come the acknowledgements. On this page, write about all the people who you wish to thank (not forgetting parents, partners and your advisor/supervisor).Following this is the abstract page which summarises your work in a condensed way and can almost be used as a standalone document to describe what you have done. The text you write will cause the heading to move up so don't worry about running out of space.
+
+The contents pages, list of figures and tables are all taken care of for you and do not need to be manually created or edited.  Finally, there is the block where the chapters are included. Uncomment the lines (delete the \% character) as you write the chapters. Each chapter should be written in its own file and put into the \emph{Chapters} folder and named Chapter1, Chapter2, etc\ldots Similarly for the appendices, uncomment the lines as you need them. Each appendix should go into its own file and placed in the Appendices folder.
+
+After the preamble, chapters and appendices finally comes the bibliography. The bibliography style (called \textbf{numbered}) is used for the bibliography and is a fully featured style that will even include links to where the referenced paper can be found online. Do not underestimate how grateful your reader will be to find that a reference to a paper is just a click away. Of course, this relies on you putting the URL information into the BibTeX file in the first place.
