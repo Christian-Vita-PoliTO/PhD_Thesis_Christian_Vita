@@ -1,0 +1,22 @@
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.bbl
+*.blg
+*.brf
+*.idx
+*.ind
+*.ilg
+*.nlo
+*.nls
+*.ist
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex(busy)
+# Compiled thesis (Overleaf rebuilds it; keep the repo to sources)
+Polito PhD thesis template.pdf
