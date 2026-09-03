@@ -97,11 +97,11 @@ accelerator of the search and not a substitute for the physics, an arrangement
 which also protects the results from the regions in which its accuracy is hard to
 learn for the metamodel.
 
-The paper first defines the optimization problem, reporting in full the
+The chapter first defines the optimization problem, reporting in full the
 chromosome representation and the fitness functions inherited from
 Ref.~\cite{prevMulti}. It then describes the metamodel, its training and its
 accuracy, and identifies the regime in which it is least reliable, since that
-regime dictates the role it is given. The resulting workflow is presented next,
+regime dictates the role it is given. The resulting workflow, summarized in Figure~\ref{eg:fig:flow}, is presented next,
 followed by the analysis of the hundred searches, of the structures they
 produce, and of the features those structures have in common.
 
@@ -1078,7 +1078,7 @@ collapsing procedure admits, obtained by suppressing a single boundary of the
 fine mesh. Each entry is the scaled contribution entering the joint fitness,
 obtained from the FRENETIC values through the fixed canonical window: unity is
 the best attainable value and 100 the worst. Six of the fifteen terms score
-unity for all four structures, a saturation discussed in Sec.~\\ref{sec:active}.}
+unity for all four structures, a saturation discussed in Sec.~\ref{eg:sec:active}.}
 \label{eg:tab:standard}
 \begin{tabular}{lcccc}
 \hline
@@ -1149,7 +1149,7 @@ the accuracy of the metamodel: since the best structures owe their quality to a
 cancellation between two errors of different origin, their fitness is bound to
 be a fragile function of the mesh, and therefore a hard one to interpolate.
 
-\subsection{Which Terms of the Fitness Are Active}
+\subsection{Which Terms of the Fitness Are Active}\label{eg:sec:active}
 
 Table~\ref{eg:tab:standard} shows six rows in which all four structures score
 unity, and the observation generalises. Evaluating the fifteen scaled terms for
@@ -1305,7 +1305,7 @@ conclusions rest on FRENETIC and not on the metamodel.
 The landscape turns out to be organised rather than merely rugged. The searches
 converge to 67 distinct structures which separate into two families, defined by
 a block of mutually exclusive boundary choices in the fast region, between which
-no single mutation can pass and which differ by $16\%$ in true fitness. Within
+no single mutation can pass and which differ by $22\%$ in true fitness. Within
 that organisation the structures share a skeleton of seven boundaries present in
 more than nine cases out of ten, all located in the epithermal region, while
 five boundaries are never selected. The placement of the recurring boundaries
