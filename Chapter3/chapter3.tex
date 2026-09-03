@@ -67,34 +67,34 @@ The number of universes used for multi-group data generation is kept deliberatel
 In the axial direction two more regions are defined, at the top and at the bottom of each fuel assembly, to capture the spectral changes along the axis. They are visible in Figure~\ref{sph:fig:IC_EC_spectrum_radial_axial_direction_33G}, which shows the spectrum at different axial positions of different fuel assemblies.
 All the following calculations use a five-group energy grid, with boundaries, in MeV: $1 \times 10^{-11}$, $9.1188 \times 10^{-3}$, $6.7379 \times 10^{-2}$, $1.8316 \times 10^{-1}$, $1.3530$, $20.0$. The structure descends from the reference grid defined for the ALFRED design in Ref.~\cite{ENEA_report_ALFRED_energy_group}: the well-known ECCO-33 grid was reduced to five groups through a spectrum analysis of the most relevant regions of the core. Fewer energy groups mean a faster deterministic solver and a lower uncertainty on the MGXS, in the thermal region above all. Figure~\ref{sph:fig:WEC_LFR_spectrum_33G} shows the total spectrum of the system with the selected grid boundaries.
 
-\begin{figure}[h!]
+\begin{figure}[p]
     \centering
-    \begin{subfigure}{1.0\textwidth}
+    \begin{subfigure}{\textwidth}
         \centering
-        \includegraphics[width=1.1\textwidth]{Chapter3/Figs/Spectrum_change_in_radial_direction_v1.png}
-        \caption{Reactor spectrum change in the radial direction, on the ECCO-33 energy grid. The maximum Serpent~2 relative uncertainty, 13\%, sits in the most thermal energy group of the CF region.}
+        \includegraphics[width=\textwidth]{Chapter3/Figs/spectrum_radial.pdf}
+        \caption{Spectrum change in the radial direction, from the central fuel outwards. The maximum Serpent~2 relative uncertainty, 13\%, sits in the most thermal energy group of the CF region.}
         \label{sph:fig:IC_EC_spectrum_radial_direction_33G}
     \end{subfigure}
 
-    \vspace{0.25cm}
-    \centering
-    \begin{subfigure}{1.0\textwidth}
+    \vspace{0.35cm}
+
+    \begin{subfigure}{\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{Chapter3/Figs/axial_spectrum_distribution_v1.png}
-        \caption{Reactor spectrum change in the Central Fuel (CF) and External Fuel (EF) for five axial cuts, from the top of the core (label 1) to its center (label 5), on the ECCO-33 energy grid. The maximum Serpent~2 relative uncertainty, 15\%, sits in the most thermal energy group of the CF5 region.}
+        \includegraphics[width=\textwidth]{Chapter3/Figs/spectrum_axial.pdf}
+        \caption{Spectrum change along the axis, in the central fuel (CF, solid) and in the external fuel (EF, dashed), for five axial cuts from the top of the core to the mid-plane. The maximum Serpent~2 relative uncertainty, 15\%, sits in the most thermal energy group of the CF5 region.}
         \label{sph:fig:IC_EC_spectrum_radial_axial_direction_33G}
     \end{subfigure}
 
-    \vspace{0.25cm}
+    \vspace{0.35cm}
 
-    \begin{subfigure}{1.0\textwidth}
+    \begin{subfigure}{\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{Chapter3/Figs/WEC_LFR_spectrum_33G_v1.png}
-        \caption{Total system spectrum. The dashed green lines are the cuts of the few-group grid adopted in this study. The maximum Serpent~2 relative uncertainty, 8\%, sits in the most thermal energy group.}
+        \includegraphics[width=\textwidth]{Chapter3/Figs/spectrum_total.pdf}
+        \caption{Total system spectrum, with the five groups $g_1$ to $g_5$ shaded. The maximum Serpent~2 relative uncertainty, 8\%, sits in the most thermal energy group.}
         \label{sph:fig:WEC_LFR_spectrum_33G}
     \end{subfigure}
 
-    \caption{Analysis of the energy spectrum in different regions of the LFR core and definition of the five-group structure adopted.}
+    \caption{Analysis of the energy spectrum in different regions of the LFR core and definition of the five-group structure adopted. In all three panels the thin grey lines are the 33 boundaries of the ECCO-33 grid and the heavy dashed lines are the four internal boundaries retained by the five-group structure, which are ECCO-33 boundaries themselves; the lowest group extends below the axis, down to \SI{1e-11}{\mega\electronvolt}. The spectra are tallied per unit volume and normalised to the total.}
     \label{sph:fig:spectrum_analysis}
 \end{figure}
 
