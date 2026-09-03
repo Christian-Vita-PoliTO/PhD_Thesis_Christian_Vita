@@ -37,21 +37,20 @@ The core model is a simplified representation of the Westinghouse LFR at Beginni
     \label{sph:fig:combined}
 \end{figure}
 
-Two configurations are analyzed: all-rods-in (ARI) and all-rods-out (ARO). The reference results come from a full-core Serpent model run with $50$ inactive cycles, $1000$ active cycles and $10^6$ particles per cycle, with vacuum boundary conditions on both the axial and radial boundaries. Table~\ref{sph:tab:reference_ARO_ARI_eigenvalues} collects the reference $k_{\rm eff}$, $\beta_{\rm eff}$ and $\Lambda_{\rm eff}$ of the two configurations; Figure~\ref{sph:fig:serpent_fullcore_power_results} shows the corresponding power density distributions. The system is highly symmetric, which allows simulating one twelfth of the core.
+Two configurations are analyzed: all-rods-in (ARI) and all-rods-out (ARO). The reference results come from a full-core Serpent model run with $50$ inactive cycles, $1000$ active cycles and $10^6$ particles per cycle, with vacuum boundary conditions on both the axial and radial boundaries. Table~\ref{sph:tab:reference_ARO_ARI_eigenvalues} collects the reference $k_{\mathrm{eff}}$, $\beta_{\mathrm{eff}}$ and $\Lambda_{\mathrm{eff}}$ of the two configurations; Figure~\ref{sph:fig:serpent_fullcore_power_results} shows the corresponding power density distributions. The system is highly symmetric, which allows simulating one twelfth of the core.
 %
 \begin{table}[h!]
     \centering
     \caption{ARI and ARO reference results computed with Serpent~2.}
-    \begin{tabular}{cccc}
-        \hline
-        & $k_{\rm eff}$ (-) & $\beta_{\rm eff}$ (pcm) & $\Lambda_{\rm eff}$ ($\mu s$) \\ \hline
-
-         \textbf{ARI} & $0.89764 \pm 4.0 \times 10^{-5}$ & $712.3 \pm 1.4$  & $0.99253 \pm 2.08 \times 10^{-3}$
-         \\ \hline
-         \textbf{ARO} & $1.06336 \pm 4.0 \times 10^{-5}$ & $696.2 \pm 1.26$  & $0.89968 \pm 1.46 \times 10^{-3} $
-         \\ \hline
-    \end{tabular}
     \label{sph:tab:reference_ARO_ARI_eigenvalues}
+    \begin{tabular}{lccc}
+        \toprule
+        & $k_{\mathrm{eff}}$ (-) & $\beta_{\mathrm{eff}}$ (pcm) & $\Lambda_{\mathrm{eff}}$ ($\mu$s) \\
+        \midrule
+        \textbf{ARI} & $0.89764 \pm 4.0 \times 10^{-5}$ & $712.3 \pm 1.4$ & $0.99253 \pm 2.08 \times 10^{-3}$ \\
+        \textbf{ARO} & $1.06336 \pm 4.0 \times 10^{-5}$ & $696.2 \pm 1.26$ & $0.89968 \pm 1.46 \times 10^{-3}$ \\
+        \bottomrule
+    \end{tabular}
 \end{table}
 %
 %
@@ -100,7 +99,7 @@ All the following calculations use a five-group energy grid, with boundaries, in
 
 \section{Methodology}
 
-The study is carried by a Python package whose main task is to manage the various data types and assemble the desired dataset for the deterministic solver. The workflow runs as follows. Serpent~2 simulations of the full-core and mini-core models produce the multi-group data. An input file then selects a subset of regions of the ``non-multiplying'' family, whose data are corrected with the SPH coefficients described below. The dataset, in any combination of corrected and uncorrected data, feeds the deterministic solver developed in FreeFEM++, and the output is compared with the reference values of the full-core Monte Carlo simulations. The kinetic parameters $\beta_{\rm eff}$ and $\Lambda_{\rm eff}$ are computed with double-weighting formulations \cite{SPH_book_Bell_Glasstone}, so the adjoint function is calculated as well.
+The study is carried by a Python package whose main task is to manage the various data types and assemble the desired dataset for the deterministic solver. The workflow runs as follows. Serpent~2 simulations of the full-core and mini-core models produce the multi-group data. An input file then selects a subset of regions of the ``non-multiplying'' family, whose data are corrected with the SPH coefficients described below. The dataset, in any combination of corrected and uncorrected data, feeds the deterministic solver developed in FreeFEM++, and the output is compared with the reference values of the full-core Monte Carlo simulations. The kinetic parameters $\beta_{\mathrm{eff}}$ and $\Lambda_{\mathrm{eff}}$ are computed with double-weighting formulations \cite{SPH_book_Bell_Glasstone}, so the adjoint function is calculated as well.
 
 The literature offers little on the calculation of kinetic parameters under SPH correction. To the best of the author's knowledge, the studies that address the point apply the ``non-fundamental'' SPH method, in which the correction is performed in systems with vacuum boundary conditions \cite{takasugi_2023_SPH_kinetic_parameters,INL_report_SPH_muller,Ortensi2021} -- which is not the case treated here.
 
@@ -135,7 +134,7 @@ Full-core Monte Carlo simulations capture the spatial flux gradients that enter 
     \vspace{0.5cm}
     \begin{subfigure}{0.6\textwidth}
         \centering
-        \includegraphics[width=1.0\textwidth]{Chapter3/Figs/Serpent_mini_core_peripherical_fuel_400_geom1.png}
+        \includegraphics[width=\textwidth]{Chapter3/Figs/Serpent_mini_core_peripherical_fuel_400_geom1.png}
         \caption{Radial view of the 3D mini-core model for peripheral fuel assemblies.}
         \label{sph:fig:Serpent_mini_core_peripherical_fuel_400_geom1}
     \end{subfigure}
@@ -166,11 +165,10 @@ The goal of the SPH method is to preserve the reaction rates in the selected reg
 \end{equation}
 where $\tau$ denotes the reaction rates, $\Sigma_{x,r,g}$ a generic cross section of region $r$ and group $g$, $\phi_{r,g}$ the neutron flux in group $g$ and region $r$, $V_r$ the volume (or area) of the region, and $\mu_{r,g}$ the correction factor. The SPH method is formulated as a fixed-source problem, and with no constraint on the SPH factors it admits infinitely many solutions. A normalization condition makes the set unique: in the original SPH approach, the flux averaged over the entire geometry of the supercell is preserved through the equivalence procedure, and the normalization factor $N_g$ is defined as the ratio of the sums of the spectra over the regions \cite{Ortensi_normalization_factor}. The superscripts ``ref'' and ``FF'' refer to the Serpent reference results and to the homogenized FreeFEM++ model, respectively. The tuned multi-group data are $\Sigma_{t,g}$, $D_{g}$, $\Sigma_{g' \to g}$ and $\nu\Sigma_{f,g}$. For the scattering matrix, the production matrix is used: neglecting $(n,xn)$ reactions would systematically underestimate the neutron production and lower the reactivity.
 %
-Following Ref.~\cite{Nikitin_mini_core_models}, only non-multiplying regions, such as the CRs and the empty CR channels, undergo the SPH procedure, sketched in Figure~\ref{sph:fig:SPH_flowchart}. Figure~\ref{sph:fig:SPH_convergence_example} shows an example of the convergence of the SPH coefficients and of the mini-core $k_{\rm eff}$.
+Following Ref.~\cite{Nikitin_mini_core_models}, only non-multiplying regions, such as the CRs and the empty CR channels, undergo the SPH procedure, sketched in Figure~\ref{sph:fig:SPH_flowchart}. Figure~\ref{sph:fig:SPH_convergence_example} shows an example of the convergence of the SPH coefficients and of the mini-core $k_{\mathrm{eff}}$.
 %
 \begin{figure}[h!]
 \centering
-\hspace*{4cm}
 \scalebox{1}{
 \begin{tikzpicture}[node distance=2.0cm, auto, font=\small]
     % Node definitions
@@ -196,12 +194,12 @@ Following Ref.~\cite{Nikitin_mini_core_models}, only non-multiplying regions, su
 %
 \begin{figure}[h!]
 \centering
-\includegraphics[width=1\textwidth]{Chapter3/Figs/convergence_SPH_examples_horizontal_second_case_definitive.png}
-\caption{SPH method convergence example. Left: relative differences in reaction rates (names as in the Serpent~2 output) between the FreeFEM++ model and the reference Serpent~2 results, for the MGC evolutions of the two mini-core assemblies: central CR material (subscript ``1'') and surrounding FA (subscript ``2''). Right: evolution of $k_{\rm eff}$ over the iterations of the equivalent FreeFEM++ model.}
+\includegraphics[width=\textwidth]{Chapter3/Figs/convergence_SPH_examples_horizontal_second_case_definitive.png}
+\caption{SPH method convergence example. Left: relative differences in reaction rates (names as in the Serpent~2 output) between the FreeFEM++ model and the reference Serpent~2 results, for the MGC evolutions of the two mini-core assemblies: central CR material (subscript ``1'') and surrounding FA (subscript ``2''). Right: evolution of $k_{\mathrm{eff}}$ over the iterations of the equivalent FreeFEM++ model.}
 \label{sph:fig:SPH_convergence_example}
 \end{figure}
 %
-The non-multiplying mini-core is thus defined in FreeFEM++ by homogenizing the assemblies, and the eigenvalue problem of the neutron diffusion equation is solved until the SPH coefficients change by less than the fixed tolerance. Figure~\ref{sph:fig:SPH_convergence_example} reports, as an example, the evolution of the relative errors of the total reaction rates for every reaction channel, both for the inactive and for the fuel regions of the supercell with the CR inserted as central assembly, together with the evolution of the mini-core $k_{\rm eff}$ over the iterations.
+The non-multiplying mini-core is thus defined in FreeFEM++ by homogenizing the assemblies, and the eigenvalue problem of the neutron diffusion equation is solved until the SPH coefficients change by less than the fixed tolerance. Figure~\ref{sph:fig:SPH_convergence_example} reports, as an example, the evolution of the relative errors of the total reaction rates for every reaction channel, both for the inactive and for the fuel regions of the supercell with the CR inserted as central assembly, together with the evolution of the mini-core $k_{\mathrm{eff}}$ over the iterations.
 
 Table~\ref{sph:tab:SPH_factors} lists the SPH factors of the inner and outer control rod assembly models, in both the inserted and the extracted configuration, for every assembly type present in the models. Region $r=1$ is the center of the supercell -- the control rod when inserted, the lead region when extracted -- and the surrounding fuel assemblies form region $r=2$. The largest corrections appear in the central region of the inserted configurations: there the deterministic model predicts the neutron flux poorly. The point can become critical when the solver is used without a Monte Carlo reference at hand, for example in transient analyses.
 
@@ -210,20 +208,22 @@ Table~\ref{sph:tab:SPH_factors} lists the SPH factors of the inner and outer con
 \centering
 \caption{SPH factors for all corrected regions.}
 \label{sph:tab:SPH_factors}
-\begin{tabular}{cllllllll}
-\hline
-\multicolumn{1}{l}{}                        &                            &     & $\mu_{r,g=1}$ & $\mu_{r,g=2}$  & $\mu_{r,g=3}$   & $\mu_{r,g=4}$   & $\mu_{r,g=5}$  \\ \hline
-\multirow{4}{*}{Outer Control Rod model} & \multirow{2}{*}{inserted}  & r=1 & 0.84647         & 0.90426 & 0.89596 & 0.84977 & 0.74205   \\
-                                            &                            & r=2 & 1.03507         & 1.02211 & 1.02123 & 1.02392 & 1.02686      \\ \cline{4-8}
-
-                                            & \multirow{2}{*}{extracted} & r=1 &  0.9224         & 0.99970 & 0.99801 & 1.00384 & 1.02469      \\
-                                            &                            & r=2 & 1.02199          & 1.00009 & 1.00065 & 0.99867 & 0.99077      \\ \hline
-
-\multirow{4}{*}{Inner Control Rod model} & \multirow{2}{*}{inserted}  & r=1 & 0.84648          & 0.90396 & 0.89546 & 0.84945 & 0.74123      \\
-                                            &                            & r=2 &  1.0350         & 1.02214 & 1.02128 & 1.02385 & 1.02675      \\ \cline{4-8}
-
-                                            & \multirow{2}{*}{extracted} & r=1 &  0.92253         & 0.99953 & 0.99771 & 1.00349 & 1.02334      \\
-                                            &                            & r=2 &  1.02196         & 1.00015 & 1.00075 & 0.99879 & 0.99132     \\ \hline
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{llccccc}
+\toprule
+Model & Configuration & $\mu_{r,g=1}$ & $\mu_{r,g=2}$ & $\mu_{r,g=3}$ & $\mu_{r,g=4}$ & $\mu_{r,g=5}$ \\
+\midrule
+\multirow{4}{*}{Outer control rod} & inserted, $r=1$  & 0.84647 & 0.90426 & 0.89596 & 0.84977 & 0.74205 \\
+                                   & inserted, $r=2$  & 1.03507 & 1.02211 & 1.02123 & 1.02392 & 1.02686 \\
+                                   & extracted, $r=1$ & 0.9224  & 0.99970 & 0.99801 & 1.00384 & 1.02469 \\
+                                   & extracted, $r=2$ & 1.02199 & 1.00009 & 1.00065 & 0.99867 & 0.99077 \\
+\midrule
+\multirow{4}{*}{Inner control rod} & inserted, $r=1$  & 0.84648 & 0.90396 & 0.89546 & 0.84945 & 0.74123 \\
+                                   & inserted, $r=2$  & 1.0350  & 1.02214 & 1.02128 & 1.02385 & 1.02675 \\
+                                   & extracted, $r=1$ & 0.92253 & 0.99953 & 0.99771 & 1.00349 & 1.02334 \\
+                                   & extracted, $r=2$ & 1.02196 & 1.00015 & 1.00075 & 0.99879 & 0.99132 \\
+\bottomrule
 \end{tabular}
 \end{table}
 
@@ -237,7 +237,7 @@ The models are considered with and without SPH (superhomogenization) corrections
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=1\textwidth]{Chapter3/Figs/FF_fullcore_model_geom_mesh.png}
+\includegraphics[width=\textwidth]{Chapter3/Figs/FF_fullcore_model_geom_mesh.png}
 \caption{WEC LFR full-core model in FreeFEM++ (left) and the mesh adopted for every full-core simulation (right).}
 \label{sph:fig:FF_fullcore_model_geom_mesh}
 \end{figure}
@@ -245,10 +245,11 @@ The models are considered with and without SPH (superhomogenization) corrections
 FreeFEM++ requires the user to define explicitly the weak formulation of the governing equations, so the neutron diffusion equation must be recast in variational form. The result is:
 %
 \begin{align}
-\int_{\Omega} \nabla \left( D_g(\vec{r}) \, \phi_g(\vec{r}) \, w_g \right) \, d\vec{r}
-+ \int_{\Omega} \Sigma_{t,g}(\vec{r}) \, \phi_g(\vec{r}) \, w_g \, d\vec{r}
-= \frac{1}{k_{\text{eff}}} \int_{\Omega} \chi_g(\vec{r}) \, w_g \sum_{g'=1}^{G} \nu \Sigma_{f,g'}(\vec{r}) \, \phi_{g'}(\vec{r}) \, d\vec{r} \notag \\
-+ \int_{\Omega} w_g \sum_{g'=1}^{G} \Sigma_{g' \rightarrow g}(\vec{r}) \, \phi_{g'}(\vec{r}) \, d\vec{r} + \int_{\Omega} \nabla(w_g \nabla \phi_g) d\vec{r}
+&\int_{\Omega} \nabla \left( D_g(\vec{r}) \, \phi_g(\vec{r}) \, w_g \right) \, d\vec{r}
++ \int_{\Omega} \Sigma_{t,g}(\vec{r}) \, \phi_g(\vec{r}) \, w_g \, d\vec{r} \notag \\
+&= \frac{1}{k_{\mathrm{eff}}} \int_{\Omega} \chi_g(\vec{r}) \, w_g \sum_{g'=1}^{G} \nu \Sigma_{f,g'}(\vec{r}) \, \phi_{g'}(\vec{r}) \, d\vec{r} \notag \\
+&\quad + \int_{\Omega} w_g \sum_{g'=1}^{G} \Sigma_{g' \rightarrow g}(\vec{r}) \, \phi_{g'}(\vec{r}) \, d\vec{r}
++ \int_{\Omega} \nabla(w_g \nabla \phi_g) d\vec{r}
 \label{sph:eq:diffusion_weak_formulation}
 \end{align}
 %
@@ -268,48 +269,51 @@ The P$_1$ angular treatment then defines the outgoing current at the vacuum boun
 %
 The neutron diffusion equation is then solved for each energy group, one dataset at a time, combining SPH-corrected and uncorrected MGXS in the different assembly types of the core.
 
-The kinetic parameters computed are the effective delayed neutron fraction $\beta_{\rm eff}$ and the effective prompt neutron generation time $\Lambda_{\rm eff}$:
+The kinetic parameters computed are the effective delayed neutron fraction $\beta_{\mathrm{eff}}$ and the effective prompt neutron generation time $\Lambda_{\mathrm{eff}}$:
 \begin{equation}
-\beta_{\rm eff} = \frac{\langle\phi^{\dagger}|\hat{F}_d\phi\rangle}{\langle\phi^{\dagger}|\hat{F}_t\phi\rangle}
+\beta_{\mathrm{eff}} = \frac{\langle\phi^{\dagger}|\hat{F}_d\phi\rangle}{\langle\phi^{\dagger}|\hat{F}_t\phi\rangle}
 \label{sph:eq:beta_eff}
 \end{equation}
 %
 \begin{equation}
-\Lambda_{\rm eff} = \frac{\left\langle\phi^{\dagger}|\frac{1}{v}\phi\right\rangle}{\langle\phi^{\dagger}|\hat{F}_t\phi\rangle}.
+\Lambda_{\mathrm{eff}} = \frac{\left\langle\phi^{\dagger}|\frac{1}{v}\phi\right\rangle}{\langle\phi^{\dagger}|\hat{F}_t\phi\rangle}.
 \label{sph:eq:lambda_eff}
 \end{equation}
 Their evaluation requires the adjoint flux $\phi^{\dagger}$, so the neutronic problem is solved twice: the adjoint solution is obtained by transposing the operators on the right-hand side of the neutron diffusion equation, leaving the left-hand side untouched. The adjoint problem uses the uncorrected MGXS. Previous studies, such as Ref.~\cite{takasugi_2023_SPH_kinetic_parameters}, show that applying the SPH method to the adjoint problem is not always advantageous: restricting SPH to the fuel region in the forward calculation improves the preservation of the kinetic parameters, while extending it to the adjoint $k$-eigenvalue calculation introduces inconsistencies in their bilinear weighting and degrades the reliability of the results. For the adjoint problem, SPH is therefore best avoided, or applied with great caution.
 
 \section{Results}
 
-This section analyzes the results of the FreeFEM++ 3D full-core model. Several datasets are compared with each other and with the Serpent~2 reference; the outputs examined are $k_{\rm eff}$, $\Lambda_{\rm eff}$, $\beta_{\rm eff}$ and the fission power density distribution. Table~\ref{sph:tab:dataset_description} describes the datasets used for the ARI and ARO simulations.
+This section analyzes the results of the FreeFEM++ 3D full-core model. Several datasets are compared with each other and with the Serpent~2 reference; the outputs examined are $k_{\mathrm{eff}}$, $\Lambda_{\mathrm{eff}}$, $\beta_{\mathrm{eff}}$ and the fission power density distribution. Table~\ref{sph:tab:dataset_description} describes the datasets used for the ARI and ARO simulations.
 
 %
 \begin{table}[h!]
+\centering
 \small
-\begin{tabular}{|l|l|}
-\hline
-\textbf{Dataset name}           & \textbf{Dataset description}                                                                                                                         \\ \hline
-full-core                         & All regions data from Serpent MC full-core model.                                                                                                 \\ \hline
-full-core + CR SPH          & \begin{tabular}[c]{@{}l@{}}All regions data from MC full-core model.\\ CR data are corrected.\end{tabular}                                \\ \hline
-mini-core                        & All regions data from MC mini-core models.                                                                                     \\ \hline
-mini-core + CR SPH          & \begin{tabular}[c]{@{}l@{}}All regions data from MC mini-core models.\\ CR data are corrected.\end{tabular}                   \\ \hline
-mini-core w CR detailed          & \begin{tabular}[c]{@{}l@{}}All regions data from MC mini-core  models.\\ Improved CR Serpent model.\end{tabular}               \\ \hline
-mini-core w CR detailed + CR,SFA SPH & \begin{tabular}[c]{@{}l@{}}All regions data from MC mini-core  models.\\ Improved CR Serpent model. \\ CR and SFA (Surrounding Fuel Assemblies) are corrected \end{tabular} \\ \hline
-\end{tabular}
 \caption{Datasets used in the comparison of the results.}
 \label{sph:tab:dataset_description}
+\begin{tabular}{@{}p{47mm}p{85mm}@{}}
+\toprule
+\textbf{Dataset name} & \textbf{Dataset description} \\
+\midrule
+full-core & All regions data from Serpent MC full-core model. \\
+full-core + CR SPH & All regions data from MC full-core model. CR data are corrected. \\
+mini-core & All regions data from MC mini-core models. \\
+mini-core + CR SPH & All regions data from MC mini-core models. CR data are corrected. \\
+mini-core w CR detailed & All regions data from MC mini-core  models. Improved CR Serpent model. \\
+mini-core w CR detailed + CR,SFA SPH & All regions data from MC mini-core  models. Improved CR Serpent model. CR and SFA (Surrounding Fuel Assemblies) are corrected \\
+\bottomrule
+\end{tabular}
 \end{table}
 %
 
-Table~\ref{sph:tab:all_results_table} summarizes all the results of the study; the discussion starts from $k_{\rm eff}$ and from the assembly-wise relative error of the fission power density.
+Table~\ref{sph:tab:all_results_table} summarizes all the results of the study; the discussion starts from $k_{\mathrm{eff}}$ and from the assembly-wise relative error of the fission power density.
 
 Figures~\ref{sph:fig:ARI_keff} and~\ref{sph:fig:ARI_power_density_distribution_4_cases} show the results for the ARI configuration.
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth]{Chapter3/Figs/ARI_k_eff.png}
-    \caption{ARI configuration $k_{\rm eff}$. The green bands represent the statistical error of the reference results.}
+    \caption{ARI configuration $k_{\mathrm{eff}}$. The green bands represent the statistical error of the reference results.}
     \label{sph:fig:ARI_keff}
 \end{figure}
 
@@ -320,7 +324,7 @@ Figures~\ref{sph:fig:ARI_keff} and~\ref{sph:fig:ARI_power_density_distribution_4
     \label{sph:fig:ARI_power_density_distribution_4_cases}
 \end{figure}
 
-The SPH correction improves both $k_{\rm eff}$ and the fission power density distribution. With the full-core dataset and no correction, the eigenvalue misses the Serpent~2 reference by \(-1023\) pcm; replacing the CR MGC with the mini-core data and applying the SPH factors reduces the difference to \(-101\) pcm. The root mean square error (RMSE) of the fission power density drops accordingly, from 8.3\% to 2.3\%. The dataset built entirely from mini-core models gives results essentially comparable to the full-core dataset, a sign that the mini-core models represent the neutron spectrum of the system well. The best results come from the last dataset of Table~\ref{sph:tab:dataset_description}: an eigenvalue difference of $-19$ pcm and a power RMSE of 1.3\%.
+The SPH correction improves both $k_{\mathrm{eff}}$ and the fission power density distribution. With the full-core dataset and no correction, the eigenvalue misses the Serpent~2 reference by \(-1023\) pcm; replacing the CR MGC with the mini-core data and applying the SPH factors reduces the difference to \(-101\) pcm. The root mean square error (RMSE) of the fission power density drops accordingly, from 8.3\% to 2.3\%. The dataset built entirely from mini-core models gives results essentially comparable to the full-core dataset, a sign that the mini-core models represent the neutron spectrum of the system well. The best results come from the last dataset of Table~\ref{sph:tab:dataset_description}: an eigenvalue difference of $-19$ pcm and a power RMSE of 1.3\%.
 
 Figures~\ref{sph:fig:ARO_keff} and~\ref{sph:fig:ARO_power_density_distribution_4_cases} show the corresponding results for the ARO configuration.
 
@@ -328,7 +332,7 @@ Figures~\ref{sph:fig:ARO_keff} and~\ref{sph:fig:ARO_power_density_distribution_4
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth]{Chapter3/Figs/ARO_k_eff.png}
-    \caption{ARO configuration $k_{\rm eff}$. The green bands represent the statistical error of the reference results.}
+    \caption{ARO configuration $k_{\mathrm{eff}}$. The green bands represent the statistical error of the reference results.}
     \label{sph:fig:ARO_keff}
 \end{figure}
 
@@ -340,24 +344,24 @@ Figures~\ref{sph:fig:ARO_keff} and~\ref{sph:fig:ARO_power_density_distribution_4
 \end{figure}
 
 
-In the ARO configuration all the control rods are extracted and the power distribution is far less heterogeneous than in the ARI case, so the accuracy gained by the SPH factors is comparable to that of the uncorrected datasets. With the full-core dataset the deterministic solver gives a $k_{\rm eff}$ difference of 152 pcm and a power RMSE of 0.25\%; replacing the CR MGC with the mini-core data and applying the SPH factors brings them to 43 pcm and 0.23\%. The mini-core dataset deserves a remark: it agrees well on the multiplication eigenvalue, yet it gives the worst prediction of the distributed quantity, with the highest RMSE, 0.42\%. In general $k_{\rm eff}$ is more prone to hide error compensation than a distributed quantity such as the power density.
+In the ARO configuration all the control rods are extracted and the power distribution is far less heterogeneous than in the ARI case, so the accuracy gained by the SPH factors is comparable to that of the uncorrected datasets. With the full-core dataset the deterministic solver gives a $k_{\mathrm{eff}}$ difference of 152 pcm and a power RMSE of 0.25\%; replacing the CR MGC with the mini-core data and applying the SPH factors brings them to 43 pcm and 0.23\%. The mini-core dataset deserves a remark: it agrees well on the multiplication eigenvalue, yet it gives the worst prediction of the distributed quantity, with the highest RMSE, 0.42\%. In general $k_{\mathrm{eff}}$ is more prone to hide error compensation than a distributed quantity such as the power density.
 
-Across both configurations, the full-core dataset yields the least accurate $k_{\rm eff}$, and every case that uses the detailed CR description with corrections on the CR and SFA data yields the most accurate one. The reason lies in the construction of the method: SPH forces the reaction rates of the corrected regions to match those of the reference mini-core model, so if that reference represents well the flux distribution of the corresponding region in the full-core calculation, the corrected solution follows it closely. The deterministic model without SPH correction, by contrast, shows noticeable deviations, likely due to the limited number of energy groups and/or of universes defined in Serpent~2 for the MGXS generation. All comparisons, however, were performed under consistent modeling conditions, which keeps the observations meaningful within the scope of this study. One further advantage of the SPH method emerges here: it mitigates the dependence of the deterministic results on the chosen energy group structure and on the spatial subdivision used for collapsing the data -- an attractive feature wherever computational efficiency and accuracy must be balanced.
+Across both configurations, the full-core dataset yields the least accurate $k_{\mathrm{eff}}$, and every case that uses the detailed CR description with corrections on the CR and SFA data yields the most accurate one. The reason lies in the construction of the method: SPH forces the reaction rates of the corrected regions to match those of the reference mini-core model, so if that reference represents well the flux distribution of the corresponding region in the full-core calculation, the corrected solution follows it closely. The deterministic model without SPH correction, by contrast, shows noticeable deviations, likely due to the limited number of energy groups and/or of universes defined in Serpent~2 for the MGXS generation. All comparisons, however, were performed under consistent modeling conditions, which keeps the observations meaningful within the scope of this study. One further advantage of the SPH method emerges here: it mitigates the dependence of the deterministic results on the chosen energy group structure and on the spatial subdivision used for collapsing the data -- an attractive feature wherever computational efficiency and accuracy must be balanced.
 
 Figure~\ref{sph:fig:kinetic_parameters_ARI_and_ARO_results} reports the kinetic parameters of both configurations against the Serpent reference values.
 
  \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth]{Chapter3/Figs/kinetic_parameters_ARI_and_ARO_results.png}
-    \caption{ARI (left) and ARO (right) configuration $\beta_{\rm eff}$ and $\Lambda_{\rm eff}$ comparison. The green bands represent the statistical error of the reference results.}
+    \caption{ARI (left) and ARO (right) configuration $\beta_{\mathrm{eff}}$ and $\Lambda_{\mathrm{eff}}$ comparison. The green bands represent the statistical error of the reference results.}
     \label{sph:fig:kinetic_parameters_ARI_and_ARO_results}
 \end{figure}
 
-As expected, $\beta_{\rm eff}$ and $\Lambda_{\rm eff}$ draw no benefit from the SPH correction. Unlike the reaction rates, which the SPH equivalence preserves by construction, nothing guarantees that the kinetic parameters of Serpent are preserved in the deterministic calculation: collapsing them with a bilinear weighting built on the forward and adjoint multi-group fluxes of the deterministic code does not ensure the preservation of the reference values. If the reaction rates are preserved, the bilinear reaction rate cannot be preserved at the same time. The SPH equivalence theory preserves reaction rates by modifying cross sections; for bilinear quantities such as the kinetic parameters a theoretical gap remains, all the more when the correction touches only some sub-regions of the core, as here.
+As expected, $\beta_{\mathrm{eff}}$ and $\Lambda_{\mathrm{eff}}$ draw no benefit from the SPH correction. Unlike the reaction rates, which the SPH equivalence preserves by construction, nothing guarantees that the kinetic parameters of Serpent are preserved in the deterministic calculation: collapsing them with a bilinear weighting built on the forward and adjoint multi-group fluxes of the deterministic code does not ensure the preservation of the reference values. If the reaction rates are preserved, the bilinear reaction rate cannot be preserved at the same time. The SPH equivalence theory preserves reaction rates by modifying cross sections; for bilinear quantities such as the kinetic parameters a theoretical gap remains, all the more when the correction touches only some sub-regions of the core, as here.
 
-It would not be accurate, though, to call the two parameters insensitive to the corrections: Figure~\ref{sph:fig:kinetic_parameters_ARI_and_ARO_results} shows variations across the datasets. For $\beta_{\rm eff}$ the changes are minor, as its definition explains: the numerator of Eq.~\ref{sph:eq:beta_eff} carries the delayed fission operator $\hat{F}_d = \beta \chi_d \nu \Sigma_f$, which vanishes in non-fissile regions such as the CR assemblies, precisely where the correction acts. The small differences that do appear are second-order: the SPH correction modifies the cross sections of the CR regions, which perturbs the local neutron flux near the CR assemblies, and the perturbation propagates weakly to $\beta_{\rm eff}$.
+It would not be accurate, though, to call the two parameters insensitive to the corrections: Figure~\ref{sph:fig:kinetic_parameters_ARI_and_ARO_results} shows variations across the datasets. For $\beta_{\mathrm{eff}}$ the changes are minor, as its definition explains: the numerator of Eq.~\ref{sph:eq:beta_eff} carries the delayed fission operator $\hat{F}_d = \beta \chi_d \nu \Sigma_f$, which vanishes in non-fissile regions such as the CR assemblies, precisely where the correction acts. The small differences that do appear are second-order: the SPH correction modifies the cross sections of the CR regions, which perturbs the local neutron flux near the CR assemblies, and the perturbation propagates weakly to $\beta_{\mathrm{eff}}$.
 
-$\Lambda_{\rm eff}$ behaves differently. In the ARI case it is consistently underestimated when the SPH corrections are applied and overestimated when they are not. The numerator of Eq.~\ref{sph:eq:lambda_eff} never vanishes, since $\frac{1}{v}$ is always finite, and it varies through the neutron flux $\phi$, which responds to the SPH factors; the denominator does not change, because the corrections act only on the CR regions, where $\Sigma_f = 0$. In the ARO configuration $\Lambda_{\rm eff}$ stays nearly constant across the first datasets -- the flux barely changes, as Figure~\ref{sph:fig:ARO_power_density_distribution_4_cases} confirms -- and drops visibly for the last two. There the correction extends beyond the CR assemblies to the surrounding fuel assemblies, so the denominator picks up non-zero fission terms and grows, and the parameter decreases.
+$\Lambda_{\mathrm{eff}}$ behaves differently. In the ARI case it is consistently underestimated when the SPH corrections are applied and overestimated when they are not. The numerator of Eq.~\ref{sph:eq:lambda_eff} never vanishes, since $\frac{1}{v}$ is always finite, and it varies through the neutron flux $\phi$, which responds to the SPH factors; the denominator does not change, because the corrections act only on the CR regions, where $\Sigma_f = 0$. In the ARO configuration $\Lambda_{\mathrm{eff}}$ stays nearly constant across the first datasets -- the flux barely changes, as Figure~\ref{sph:fig:ARO_power_density_distribution_4_cases} confirms -- and drops visibly for the last two. There the correction extends beyond the CR assemblies to the surrounding fuel assemblies, so the denominator picks up non-zero fission terms and grows, and the parameter decreases.
 
 Table~\ref{sph:tab:all_results_table} gathers all the results discussed so far, together with the maximum power density relative error ($E_p$) and the computational time needed to generate the multi-group data. Building the dataset from mini-core models costs more time. Their advantage lies elsewhere: since they are defined independently of the surrounding assembly pattern (with the exception of the non-multiplying type), no new full Monte Carlo simulation is needed when the core configuration changes -- a CR repositioning, a fuel reshuffling. The advantage fades when several distributed parameters, such as temperatures, must be covered: every parameter value requires regenerating the whole dataset.
 
@@ -372,19 +376,21 @@ As discussed above, ``mini-core + CR detailed + CR and SFA SPH'' is the most acc
 \centering
 \caption{Comparison of different core models and MGC generation methods.}
 \label{sph:tab:all_results_table}
+\small
+\setlength{\tabcolsep}{4pt}
 \begin{tabular}{
-    l
-    >{\centering\arraybackslash}p{1.8cm} % Full-core, adjust width as needed
-    >{\centering\arraybackslash}p{1.8cm} % Full-core + CR SPH
-    >{\centering\arraybackslash}p{1.8cm} % Mini-core
-    >{\centering\arraybackslash}p{1.8cm} % Mini-core + CR SPH
-    >{\centering\arraybackslash}p{1.8cm} % Mini-core + CR detailed
-    >{\centering\arraybackslash}p{1.8cm} % Mini-core + CR detailed + CR and SFA SPH
+    @{}p{24mm}
+    >{\centering\arraybackslash}p{15mm} % Full-core
+    >{\centering\arraybackslash}p{15mm} % Full-core + CR SPH
+    >{\centering\arraybackslash}p{15mm} % Mini-core
+    >{\centering\arraybackslash}p{15mm} % Mini-core + CR SPH
+    >{\centering\arraybackslash}p{15mm} % Mini-core + CR detailed
+    >{\centering\arraybackslash}p{15mm}@{} % Mini-core + CR detailed + CR and SFA SPH
 }
 \toprule
 \textbf{} & \textbf{Full-core} & \textbf{Full-core + CR SPH} & \textbf{Mini-core} & \textbf{Mini-core + CR SPH} & \textbf{Mini-core + CR detailed} & \textbf{Mini-core + CR detailed + CR and SFA SPH} \\
 \midrule
-{{$\Delta k_{\rm eff}$} (pcm)} \\
+{{$\Delta k_{\mathrm{eff}}$} (pcm)} \\
 \textbf{ARI} & \num{-1023} & \cellcolor{brown}\num{-101} & \num{-1068} & \cellcolor{gray}\num{-65} & \num{-961.5} & \cellcolor{yellow}\num{-18.9} \\
 \textbf{ARO} & \num{152} & \cellcolor{brown}\num{43} & \num{-23} & \cellcolor{gray}\num{13} & \num{22} & \cellcolor{yellow}\num{11} \\
 \addlinespace
@@ -396,11 +402,11 @@ As discussed above, ``mini-core + CR detailed + CR and SFA SPH'' is the most acc
 \textbf{ARI} & \num{11.66} & \cellcolor{yellow}\num{2.38} & \num{10.64} & \cellcolor{gray}\num{3.92} & \num{8.6} & \cellcolor{brown}\num{3.97} \\
 \textbf{ARO} & \cellcolor{gray}\num{1.54} & \cellcolor{brown}\num{1.64} & \num{1.75} & \num{2.61} & \num{2.1} & \cellcolor{yellow}\num{1.39} \\
 \addlinespace
-{$\Delta \beta_{\rm eff}$ (pcm)} \\
+{$\Delta \beta_{\mathrm{eff}}$ (pcm)} \\
 \textbf{ARI} & \num{31} & \num{39} & \num{43} & \num{41} & \num{43} & \num{33} \\
 \textbf{ARO} & \num{-35} & \num{-34} & \num{-30} & \num{-29} & \num{-34} & \num{-36} \\
 \addlinespace
-{$\Delta \Lambda_{\rm eff}$ (\%)} \\
+{$\Delta \Lambda_{\mathrm{eff}}$ (\%)} \\
 \textbf{ARI} & \num{-2} & \num{-1.8} & \num{1.6} & \num{-1.9} & \num{2} & \num{-2} \\
 \textbf{ARO} & \num{-17} & \num{-17} & \num{-17} & \num{-17} & \num{-32} & \num{-32} \\
 \addlinespace
@@ -416,10 +422,10 @@ As discussed above, ``mini-core + CR detailed + CR and SFA SPH'' is the most acc
 This chapter investigated the possibility of reproducing the Serpent~2 reference results for the Westinghouse LFR core design with a finite-element code solving the neutron diffusion equation. Several routes for generating the multi-group constants were explored: a standard full-core model, and a set of mini-core models representative of the different regions of the system. The mini-core route pays off, in accuracy and in computational time, whenever several core configurations -- control rod positions, for instance -- must be analyzed: a full-core model would have to be rerun for each of them, at a significant cost if low statistical errors are wanted in the non-multiplying regions or in materials far from the core, such as the shielding. The advantage does not carry over to parametric studies over distributed variables. When multi-group libraries must cover several temperatures and burnup levels, the whole set of mini-core simulations -- about 70 hours in this study, with the same neutron population settings in Serpent~2 -- must be repeated for every temperature and every burnup step, a total effort scaling as $N_{\text{temperature}} \times N_{\text{burnup}}$. Large parametric studies then become impractical, unless a highly reliable deterministic code takes over the data generation: one able to reproduce the neutron spectrum of the system accurately and to extract the information needed for the SPH correction coefficients.
 A caveat on the timing figures: using the same number of particles and cycles for the full-core and the mini-core models was a deliberate choice, made to keep the comparison simple. Mini-core models generally need fewer histories, particularly for cells with reflective boundary conditions, and with cycle counts tailored to each model -- at comparable cross-section accuracy -- the total computational time drops to approximately 48 hours for the ARI configuration and 53 hours for the ARO one.
 
-The chapter also showed how the SPH method can tune the multi-group data to improve the reference quantities, using $k_{\rm eff}$, $\beta_{\rm eff}$, $\Lambda_{\rm eff}$ and the power density distribution for the comparison. The time taken by the SPH-correction algorithm itself is negligible, of the order of seconds per supercell.
+The chapter also showed how the SPH method can tune the multi-group data to improve the reference quantities, using $k_{\mathrm{eff}}$, $\beta_{\mathrm{eff}}$, $\Lambda_{\mathrm{eff}}$ and the power density distribution for the comparison. The time taken by the SPH-correction algorithm itself is negligible, of the order of seconds per supercell.
 
-With the SPH correction applied, the power density distribution and $k_{\rm eff}$ of the deterministic model agree well with the reference. In the ARO configuration the simulation based on the mini-core dataset is less sensitive to the correction, because the system is less heterogeneous. The models relying on the full-core dataset produce the poorest results overall. Fast reactors are, in fact, favorable ground for the SPH method: the relatively uniform neutron flux, the reduced anisotropy and the smoother energy dependence of the cross sections limit the multi-group collapsing errors and let scalar correction factors preserve the global quantities with high fidelity.
+With the SPH correction applied, the power density distribution and $k_{\mathrm{eff}}$ of the deterministic model agree well with the reference. In the ARO configuration the simulation based on the mini-core dataset is less sensitive to the correction, because the system is less heterogeneous. The models relying on the full-core dataset produce the poorest results overall. Fast reactors are, in fact, favorable ground for the SPH method: the relatively uniform neutron flux, the reduced anisotropy and the smoother energy dependence of the cross sections limit the multi-group collapsing errors and let scalar correction factors preserve the global quantities with high fidelity.
 
-The values of $\beta_{\rm eff}$ and $\Lambda_{\rm eff}$ were obtained with the double-weighting formulation. They respond to the cross-section correction, but without any direct improvement: the SPH method preserves reaction rates of the form $\Sigma_x \phi$, a product of a macroscopic cross section and the neutron flux, not bilinear quantities weighted with the adjoint function.
+The values of $\beta_{\mathrm{eff}}$ and $\Lambda_{\mathrm{eff}}$ were obtained with the double-weighting formulation. They respond to the cross-section correction, but without any direct improvement: the SPH method preserves reaction rates of the form $\Sigma_x \phi$, a product of a macroscopic cross section and the neutron flux, not bilinear quantities weighted with the adjoint function.
 
 Looking ahead, this line of work will keep building on the mini-core route to multi-group data generation, in particular for uncertainty and sensitivity analyses related to nuclear data in transient calculations, and will aim at improving the reproduction of the kinetic parameters under SPH correction.
