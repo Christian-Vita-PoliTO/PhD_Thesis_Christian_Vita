@@ -33,7 +33,7 @@ The core model is a simplified representation of the Westinghouse LFR at Beginni
         \centering
         \includegraphics[width=\textwidth]{Chapter3/Figs/system_model_geom3_labeled.png}
     \end{subfigure}
-    \caption{Radial (left) and axial (right) views of the Serpent~2 model of the simplified LFR core. The core is surrounded by the lead reflector (RE) and by the vessel material (VE), and holds four fuel assembly types of increasing U-235 content: inner fuel (IF), middle fuel (MF), outer fuel (OF), external fuel (EF).}
+    \caption[Serpent~2 model of the simplified LFR core]{Radial (left) and axial (right) views of the Serpent~2 model of the simplified LFR core. The core is surrounded by the lead reflector (RE) and by the vessel material (VE), and holds four fuel assembly types of increasing U-235 content: inner fuel (IF), middle fuel (MF), outer fuel (OF), external fuel (EF).}
     \label{sph:fig:combined}
 \end{figure}
 
@@ -71,7 +71,7 @@ All the following calculations use a five-group energy grid, with boundaries, in
     \begin{subfigure}{\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Chapter3/Figs/spectrum_radial.pdf}
-        \caption{Spectrum change in the radial direction, from the central fuel outwards. The maximum Serpent~2 relative uncertainty, 13\%, sits in the most thermal energy group of the CF region.}
+        \caption[Spectrum change in the radial direction]{Spectrum change in the radial direction, from the central fuel outwards. The maximum Serpent~2 relative uncertainty, 13\%, sits in the most thermal energy group of the CF region.}
         \label{sph:fig:IC_EC_spectrum_radial_direction_33G}
     \end{subfigure}
 
@@ -80,7 +80,7 @@ All the following calculations use a five-group energy grid, with boundaries, in
     \begin{subfigure}{\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Chapter3/Figs/spectrum_axial.pdf}
-        \caption{Spectrum change along the axis, in the central fuel (CF, solid) and in the external fuel (EF, dashed), for five axial cuts from the top of the core to the mid-plane. The maximum Serpent~2 relative uncertainty, 15\%, sits in the most thermal energy group of the CF5 region.}
+        \caption[Spectrum change along the axis]{Spectrum change along the axis, in the central fuel (CF, solid) and in the external fuel (EF, dashed), for five axial cuts from the top of the core to the mid-plane. The maximum Serpent~2 relative uncertainty, 15\%, sits in the most thermal energy group of the CF5 region.}
         \label{sph:fig:IC_EC_spectrum_radial_axial_direction_33G}
     \end{subfigure}
 
@@ -89,11 +89,11 @@ All the following calculations use a five-group energy grid, with boundaries, in
     \begin{subfigure}{\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Chapter3/Figs/spectrum_total.pdf}
-        \caption{Total system spectrum, with the five groups $g_1$ to $g_5$ shaded. The maximum Serpent~2 relative uncertainty, 8\%, sits in the most thermal energy group.}
+        \caption[Total system spectrum and the five-group structure]{Total system spectrum, with the five groups $g_1$ to $g_5$ shaded. The maximum Serpent~2 relative uncertainty, 8\%, sits in the most thermal energy group.}
         \label{sph:fig:WEC_LFR_spectrum_33G}
     \end{subfigure}
 
-    \caption{Analysis of the energy spectrum in different regions of the LFR core and definition of the five-group structure adopted. In all three panels the thin grey lines are the 33 boundaries of the ECCO-33 grid and the heavy dashed lines are the four internal boundaries retained by the five-group structure, which are ECCO-33 boundaries themselves; the lowest group extends below the axis, down to \SI{1e-11}{\mega\electronvolt}. The spectra are tallied per unit volume and normalised to the total.}
+    \caption[Analysis of the energy spectrum and the five-group structure]{Analysis of the energy spectrum in different regions of the LFR core and definition of the five-group structure adopted. In all three panels the thin grey lines are the 33 boundaries of the ECCO-33 grid and the heavy dashed lines are the four internal boundaries retained by the five-group structure, which are ECCO-33 boundaries themselves; the lowest group extends below the axis, down to \SI{1e-11}{\mega\electronvolt}. The spectra are tallied per unit volume and normalised to the total.}
     \label{sph:fig:spectrum_analysis}
 \end{figure}
 
@@ -195,7 +195,7 @@ Following Ref.~\cite{Nikitin_mini_core_models}, only non-multiplying regions, su
 \begin{figure}[h!]
 \centering
 \includegraphics[width=\textwidth]{Chapter3/Figs/convergence_SPH_examples_horizontal_second_case_definitive.png}
-\caption{SPH method convergence example. Left: relative differences in reaction rates (names as in the Serpent~2 output) between the FreeFEM++ model and the reference Serpent~2 results, for the MGC evolutions of the two mini-core assemblies: central CR material (subscript ``1'') and surrounding FA (subscript ``2''). Right: evolution of $k_{\mathrm{eff}}$ over the iterations of the equivalent FreeFEM++ model.}
+\caption[SPH method convergence example]{SPH method convergence example. Left: relative differences in reaction rates (names as in the Serpent~2 output) between the FreeFEM++ model and the reference Serpent~2 results, for the MGC evolutions of the two mini-core assemblies: central CR material (subscript ``1'') and surrounding FA (subscript ``2''). Right: evolution of $k_{\mathrm{eff}}$ over the iterations of the equivalent FreeFEM++ model.}
 \label{sph:fig:SPH_convergence_example}
 \end{figure}
 %
@@ -313,14 +313,14 @@ Figures~\ref{sph:fig:ARI_keff} and~\ref{sph:fig:ARI_power_density_distribution_4
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth]{Chapter3/Figs/ARI_k_eff.png}
-    \caption{ARI configuration $k_{\mathrm{eff}}$. The green bands represent the statistical error of the reference results.}
+    \caption[ARI configuration eigenvalue]{ARI configuration $k_{\mathrm{eff}}$. The green bands represent the statistical error of the reference results.}
     \label{sph:fig:ARI_keff}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.9\textwidth]{Chapter3/Figs/ARI_power_density_distribution_4_cases.png}
-    \caption{Absolute total 3D power density relative error between the FF simulations and the Serpent reference results $\left( \left| \frac{P_{\text{ref}} - P_{\text{FF}}}{P_{\text{ref}}} \right| \, \% \right)$, for each assembly of the ARI configuration.}
+    \caption[Power density relative error, ARI configuration]{Absolute total 3D power density relative error between the FF simulations and the Serpent reference results $\left( \left| \frac{P_{\text{ref}} - P_{\text{FF}}}{P_{\text{ref}}} \right| \, \% \right)$, for each assembly of the ARI configuration.}
     \label{sph:fig:ARI_power_density_distribution_4_cases}
 \end{figure}
 
@@ -332,14 +332,14 @@ Figures~\ref{sph:fig:ARO_keff} and~\ref{sph:fig:ARO_power_density_distribution_4
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth]{Chapter3/Figs/ARO_k_eff.png}
-    \caption{ARO configuration $k_{\mathrm{eff}}$. The green bands represent the statistical error of the reference results.}
+    \caption[ARO configuration eigenvalue]{ARO configuration $k_{\mathrm{eff}}$. The green bands represent the statistical error of the reference results.}
     \label{sph:fig:ARO_keff}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.9\textwidth]{Chapter3/Figs/ARO_power_density_distribution_4_cases.png}
-    \caption{Absolute total 3D power density relative error between the FF simulations and the Serpent reference results $\left( \left| \frac{P_{\text{ref}} - P_{\text{FF}}}{P_{\text{ref}}} \right| \, \% \right)$, for each assembly of the ARO configuration.}
+    \caption[Power density relative error, ARO configuration]{Absolute total 3D power density relative error between the FF simulations and the Serpent reference results $\left( \left| \frac{P_{\text{ref}} - P_{\text{FF}}}{P_{\text{ref}}} \right| \, \% \right)$, for each assembly of the ARO configuration.}
     \label{sph:fig:ARO_power_density_distribution_4_cases}
 \end{figure}
 
@@ -353,7 +353,7 @@ Figure~\ref{sph:fig:kinetic_parameters_ARI_and_ARO_results} reports the kinetic 
  \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth]{Chapter3/Figs/kinetic_parameters_ARI_and_ARO_results.png}
-    \caption{ARI (left) and ARO (right) configuration $\beta_{\mathrm{eff}}$ and $\Lambda_{\mathrm{eff}}$ comparison. The green bands represent the statistical error of the reference results.}
+    \caption[Kinetic parameters, ARI and ARO configurations]{ARI (left) and ARO (right) configuration $\beta_{\mathrm{eff}}$ and $\Lambda_{\mathrm{eff}}$ comparison. The green bands represent the statistical error of the reference results.}
     \label{sph:fig:kinetic_parameters_ARI_and_ARO_results}
 \end{figure}
 

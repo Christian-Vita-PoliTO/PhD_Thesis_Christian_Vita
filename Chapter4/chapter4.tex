@@ -208,7 +208,7 @@ produce, and of the features those structures have in common.
   \node[fill=ga!12, rounded corners=2mm, fit=(gen)(term)(mut), inner sep=3.5mm] {};
 \end{scope}
 \end{tikzpicture}}
-  \caption{Workflow adopted in this work, drawn for direct comparison with the
+  \caption[Workflow adopted in this work]{Workflow adopted in this work, drawn for direct comparison with the
   one of Ref.~\cite{prevMulti}. Boxes and arrows outlined in blue are introduced
   here, those with a thin grey outline are inherited unchanged, and the faded box
   on the right is the per-individual call to the solver that the metamodel
@@ -299,7 +299,7 @@ and are applied identically to the reference values and to the candidate ones.
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{Chapter4/Figs/fig_core.pdf}
-  \caption{The core of the NEA lead-cooled fast reactor benchmark. Left, radial
+  \caption[The core of the NEA lead-cooled fast reactor benchmark]{The core of the NEA lead-cooled fast reactor benchmark. Left, radial
   layout at mid-height: inner and outer fuel assemblies (I1-crit, O1-crit),
   control rods (CR), safety rods (SR), dummy elements (DR), the barrel (BA) and
   the surrounding lead reflector (EL). Right, axial position of the absorbing
@@ -410,7 +410,7 @@ identify the family level as the one that carries the architectural gain.
 
 \begin{table}[htbp]
 \centering
-\caption{Contribution of each level of the hierarchy, measured on the same
+\caption[Contribution of each level of the hierarchy]{Contribution of each level of the hierarchy, measured on the same
 91\,723 configurations and with the same reduced protocol: one network per
 architecture, constant learning rate and early stopping. The absolute values are
 therefore higher than those of the final ensemble, and only their differences
@@ -460,7 +460,7 @@ which are the least accurate, lie between $2.0$ and $2.3\%$.
 
 \begin{table}[htbp]
 \centering
-\caption{Metamodel accuracy on the external validation set, 1700 configurations
+\caption[Metamodel accuracy on the external validation set]{Metamodel accuracy on the external validation set, 1700 configurations
 never used in training nor for early stopping. The coefficient of determination
 is computed in the space in which the network is trained; the relative error is
 in physical units.}
@@ -483,7 +483,7 @@ Output & $R^2$ & Rel.\ err.\ [\%] & Output & $R^2$ & Rel.\ err.\ [\%] \\ \midrul
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.94\textwidth]{Chapter4/Figs/fig_scatter.pdf}
-  \caption{Predicted against reference values of the fifteen fitness functions
+  \caption[Predicted against reference values of the fitness functions]{Predicted against reference values of the fifteen fitness functions
   for the 1700 configurations of the external validation set. Rows correspond to
   the five physical families and columns to the three control-rod
   configurations. Colour encodes the number of energy groups of the structure.
@@ -506,7 +506,7 @@ in the following, for the reason set out when the workflow is described.
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.96\textwidth]{Chapter4/Figs/fig_learning.pdf}
-  \caption{External validation error as a function of the size of the training
+  \caption[External validation error against the size of the training set]{External validation error as a function of the size of the training
   set, obtained by replaying the acquisition campaign on the assembled data.
   Left, median relative error; right, mean coefficient of determination over the
   fifteen outputs. All the points were obtained with the same reduced training
@@ -542,7 +542,7 @@ where they are useful, and supplying them explicitly only costs it parameters.
 
 \begin{table}[htbp]
 \centering
-\caption{Three candidate explanations for the residual error at small values of
+\caption[Three candidate explanations for the residual error]{Three candidate explanations for the residual error at small values of
 the reactivity and kinetics fitness functions, and the measurement that rules
 each of them out.}
 \label{eg:tab:hypotheses}
@@ -596,7 +596,7 @@ for its conclusions.
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{Chapter4/Figs/fig_steepness.pdf}
-  \caption{Left, steepness of the target measured on the pairs of structures
+  \caption[Steepness of the target and the error of the metamodel]{Left, steepness of the target measured on the pairs of structures
   that differ by exactly one boundary, as the median change of the base-ten
   logarithm of the fitness function across a pair. Centre, median relative error
   of the metamodel over the same bands of the reference value. Right, the two
@@ -708,7 +708,7 @@ and the next subsection makes it quantitative.
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{Chapter4/Figs/fig_search.pdf}
-  \caption{Behaviour of the hundred independent searches. Left, distance of each
+  \caption[Behaviour of the hundred independent searches]{Behaviour of the hundred independent searches. Left, distance of each
   search from its own final value, generation by generation, as one faint line
   every fourth search with the median and the band between the tenth and
   ninetieth percentiles. Centre, fraction of the searches whose outcome lies
@@ -732,7 +732,7 @@ the solution after the joint fitness has apparently settled.
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{Chapter4/Figs/fig_tribe.pdf}
-  \caption{Evolution of a single search. Above, fraction of the population
+  \caption[Evolution of a single search]{Evolution of a single search. Above, fraction of the population
   containing each internal boundary, generation by generation, from green when
   the boundary is absent from the whole population to red when every individual
   carries it, the white dotted lines marking the boundaries of the final
@@ -799,7 +799,7 @@ convenience of presentation.
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{Chapter4/Figs/fig_howmany.pdf}
-  \caption{Effect of the number of independent searches, obtained by re-drawing
+  \caption[Effect of the number of independent searches]{Effect of the number of independent searches, obtained by re-drawing
   the hundred outcomes in random order. Left, best joint fitness reached, with
   the band between the tenth and ninetieth percentiles and the dotted line one
   per cent above the final value. Centre, probability that at least one search
@@ -868,7 +868,7 @@ blocks is preferable.
 
 \begin{table}[htbp]
 \centering
-\caption{The two families of solutions. Above, the boundaries whose presence
+\caption[The two families of solutions]{The two families of solutions. Above, the boundaries whose presence
 distinguishes them, with the fraction of the structures of each family that
 retains the boundary. Below, the properties of the two families: the median
 joint fitness verified with the reference solver, and the variation of the
@@ -895,7 +895,7 @@ Boundary [MeV] & Family A [\%] & Family B [\%] \\ \midrule
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{Chapter4/Figs/fig_structure.pdf}
-  \caption{Left, frequency with which each internal boundary of the fine mesh
+  \caption[Frequency of the internal boundaries among the better searches]{Left, frequency with which each internal boundary of the fine mesh
   appears among the better searches, taken as the best forty per cent and
   plotted upward, and among the remaining ones, plotted downward, the dotted
   vertical lines marking the boundaries of the best structure found. Right, the
@@ -925,7 +925,7 @@ for the variability among the solutions.
 
 \begin{table}[htbp]
 \centering
-\caption{The 29 internal boundaries of the fine mesh. For each one: the fraction
+\caption[The 29 internal boundaries of the fine mesh]{The 29 internal boundaries of the fine mesh. For each one: the fraction
 of the 67 distinct optimized structures that retains it, the total importance
 $\phi\phi^{\ddagger}/v$ of the two groups it separates, and whether it belongs to
 the best structure found. The boundaries retained by more than nine structures
@@ -1003,7 +1003,7 @@ Eq.~(\ref{eg:eqn:distributed}).
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{Chapter4/Figs/fig_boundaries.pdf}
-  \caption{Recurring features of the optimized structures. Above, frequency with
+  \caption[Recurring features of the optimized structures]{Recurring features of the optimized structures. Above, frequency with
   which each internal boundary is selected among the 67 distinct structures, in
   green, and total importance surrounding each boundary on the same energy axis,
   in blue. Below, the same frequency plotted against the surrounding importance
@@ -1027,7 +1027,7 @@ would require of the order of five thousand core-hours on the solver.
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.79\textwidth]{Chapter4/Figs/fig_tradeoff.pdf}
-  \caption{Best attainable joint fitness as a function of the number of energy
+  \caption[Best attainable joint fitness against the number of groups]{Best attainable joint fitness as a function of the number of energy
   groups, obtained by repeating the searches with the group count constrained.
   Each point of the solid curve was verified with the reference solver, while
   the dashed curve is the corresponding prediction of the metamodel. The stars
@@ -1074,7 +1074,7 @@ The fine mesh constrains which regular structures can be constructed at all.
 
 \begin{table}[htbp]
 \centering
-\caption{The optimized structure against three reference ones, quantity by
+\caption[The optimized structure against three reference ones]{The optimized structure against three reference ones, quantity by
 quantity: two built with standard spacing rules and the finest structure the
 collapsing procedure admits, obtained by suppressing a single boundary of the
 fine mesh. Each entry is the scaled contribution entering the joint fitness,
@@ -1197,7 +1197,7 @@ are listed in Table~\ref{eg:tab:ranking}.
 
 \begin{table}[htbp]
 \centering
-\caption{The fifteen best of the 67 distinct structures, all of which were
+\caption[The fifteen best of the 67 distinct structures]{The fifteen best of the 67 distinct structures, all of which were
 recomputed with FRENETIC, ranked by their true canonical fitness. The
 disagreement is the relative difference between predicted and true joint
 fitness; the worst output is the quantity on which the metamodel errs most for
@@ -1248,7 +1248,7 @@ searches grows.
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{Chapter4/Figs/fig_bias.pdf}
-  \caption{Left, joint fitness predicted by the metamodel against the value
+  \caption[Predicted against true joint fitness for the 67 structures]{Left, joint fitness predicted by the metamodel against the value
   obtained from the reference solver, for each of the 67 distinct structures
   produced by the searches, the shaded region indicating underestimation and the
   colour the number of energy groups. Right, distribution of the relative error
@@ -1271,7 +1271,7 @@ core-hours for the 67 structures.
 
 \begin{table}[htbp]
 \centering
-\caption{Computational budget in core-hours, from the measured cost of one
+\caption[Computational budget in core-hours]{Computational budget in core-hours, from the measured cost of one
 FRENETIC configuration (46~s on 3 cores). One tribe is a complete genetic
 search of 100 individuals over 100 generations.}
 \label{eg:tab:cost}
