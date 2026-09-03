@@ -263,7 +263,10 @@ distributions over the $J$ core assemblies,
   \label{eg:eqn:distributed}
 \end{equation}
 %
-the flux being weighted by the total importance $\phi\phi^{\ddagger}/v$. All
+the flux being weighted by the total importance $\phi\phi^{\ddagger}/v$, the
+product of the flux and of the adjoint flux divided by the neutron speed, which
+measures how much the neutrons of a group contribute to the chain reaction and
+is examined in Sec.~\ref{eg:sec:recurring}. All
 five are deviations from the reference, so that smaller values indicate a better
 structure.
 
@@ -624,7 +627,9 @@ The correspondence with the accuracy of the metamodel is direct.
 Figure~\ref{eg:fig:smallvalue} places the two quantities side by side, band by band
 and family by family: where the target changes most under a single boundary
 displacement, the metamodel errs most. Over the thirty pairs of measurements the
-rank correlation between local steepness and relative error is $+0.70$, with a
+rank correlation between local steepness and relative error, that is Spearman's
+coefficient, which compares the two orderings and is therefore unaffected by the
+scale of either quantity, is $+0.70$, with a
 probability of $2\times10^{-5}$ under the null hypothesis, and it is unchanged
 at $+0.68$ if the flux is excluded. The flux is worth keeping in view because it
 is the control case: its steepness grows with the value of the fitness function
@@ -685,7 +690,9 @@ established, 89\,723 of them, after the controls described above have been
 applied and after discarding the calculations that failed to converge. The
 window is therefore a property of the data set and not of the search, and it is
 deliberately not recomputed when the data set grows, since doing so would move
-the scale and make every previously reported value incomparable. Because the
+the scale and make every previously reported value incomparable. This fixed
+window, and the fitness values expressed through it, are referred to as
+canonical in the following. Because the
 window spans the whole range observed in that population, the values reported
 here are almost always well inside $[1,100]$; a structure would have to be worse
 than anything computed so far to fall outside it.
@@ -822,9 +829,15 @@ without moving the estimate. The reason is that the correlation is computed over
 the 29 internal boundaries of the fine mesh, and that number does not grow with
 the number of searches: more searches stabilise the frequency attached to each
 boundary, but only a finer starting mesh would add degrees of freedom to the
-test. The separation into two families is equally settled, the silhouette
-coefficient of the Hamming distance falling by a quarter as soon as a third
-cluster is admitted, and that third cluster containing a single structure.
+test. The separation into two families is equally settled. The families
+themselves, and the Hamming distance between structures on which they rest --
+the number of boundaries on which two structures disagree -- are the subject of
+Sec.~\ref{eg:sec:families}; here it is enough that admitting a third cluster
+lowers the silhouette coefficient from $0.51$ to $0.39$, and that the third
+cluster so obtained contains a single structure. The silhouette coefficient
+measures how much closer a structure lies to the members of its own group than
+to those of the nearest other group, one meaning a clean separation and zero
+none, so a partition in two is what these data support.
 
 The third question is the one the sample does not answer, and the right panel
 shows it plainly: the number of distinct structures is still growing at the
@@ -843,8 +856,10 @@ and the best structure was itself produced three times. The unseen part of the
 population is expected to consist mostly of the poorer attractors, which is the
 part that matters least for the conclusions drawn here. The consequence is
 visible only in the least robust of the results above: resampling the 67
-structures reproduces the seven-boundary consensus skeleton exactly in about
-seven replicas out of ten and the set of never-selected boundaries in fewer than
+structures reproduces the seven-boundary consensus skeleton -- the boundaries
+kept by more than nine structures out of ten, identified in
+Sec.~\ref{eg:sec:recurring} -- exactly in about
+seven replicas out of ten, and the set of never-selected boundaries in fewer than
 one in two, because both are defined by a threshold that a boundary lying close
 to it crosses in one direction or the other depending on the sample. The
 frequencies themselves are stable; their classification into three groups is a
@@ -864,7 +879,7 @@ convenience of presentation.
   \label{eg:fig:howmany}
 \end{figure}
 
-\subsection{Two Families of Solutions}
+\subsection{Two Families of Solutions}\label{eg:sec:families}
 
 Comparing structures with one another requires a measure of how far apart two of
 them are, and the representation supplies a natural one. Of the 31 boundaries of
@@ -963,7 +978,7 @@ Boundary [MeV] & Family A [\%] & Family B [\%] \\ \midrule
   \label{eg:fig:structure}
 \end{figure}
 
-\subsection{Recurring Features of the Optimized Structures}
+\subsection{Recurring Features of the Optimized Structures}\label{eg:sec:recurring}
 
 Beyond the separation into families, the 67 structures display regularities
 which can be examined collectively, and which constitute the general information
