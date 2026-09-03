@@ -1205,6 +1205,33 @@ the accuracy of the metamodel: since the best structures owe their quality to a
 cancellation between two errors of different origin, their fitness is bound to
 be a fragile function of the mesh, and therefore a hard one to interpolate.
 
+A third consequence concerns the scope of the result, and is worth stating
+plainly because it was so far left implicit. If the quality of a structure rests
+on a cancellation, the structure is bound to everything that fixes the two
+errors being cancelled. It is specific to the core analysed, with its geometry,
+its materials and its enrichments, and to the operating states over which the
+search was conducted, the three control-rod configurations at the single
+isothermal state point at which the reference data were generated. It is
+specific to the deterministic scheme whose error it offsets, the diffusion
+approximation together with the assembly-wise homogenization: it would not
+offset the error of a transport solver, nor that of a different homogenization.
+It is specific to the reference against which the agreement is measured, and to
+the precision of that reference, which enters the objective directly through the
+clipping of the integral terms at the level of the Monte Carlo uncertainty. It
+is specific to the objective itself, in the five quantities chosen and equally
+in the way they are combined by Eq.~(\ref{eg:eqn:joint}), since the clipping and
+the logarithm decide which deviations the search is still allowed to see. And it
+is confined to the pool it was offered, the boundaries of the 30-group parent
+mesh, outside which no search can place a cut.
+
+None of this weakens the result, but it delimits it: what carries over to
+another core, another solver or another set of target quantities is the
+procedure, not the eighteen boundaries it produced here. The point runs against
+the intuition that a better structure should also be a more general one, and the
+cancellation is precisely the reason why the opposite holds: the closer a
+structure comes to the reference, the more tightly it is tied to the particular
+pair of errors it was tuned to annul.
+
 \subsection{Which Terms of the Fitness Are Active}\label{eg:sec:active}
 
 Table~\ref{eg:tab:standard} shows six rows in which all four structures score
