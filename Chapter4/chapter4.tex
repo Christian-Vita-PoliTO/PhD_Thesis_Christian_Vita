@@ -359,11 +359,16 @@ time for the three configurations. The criterion was applied with the ensemble
 available at the time of each batch, so the acquisition history is not
 homogeneous, and the retrospective experiment described below replays it under a
 single protocol in order to measure what the accumulated data are worth. A
-further 1\,700 structures form an external validation set which is never used in
-training, nor for early stopping, nor for any hyperparameter decision. Every
-accuracy figure quoted in this work refers to that set; the ablation and
-reproducibility measurements of the next subsection are evaluated on it as
-well, after the architecture had been fixed.
+further 1\,700 structures form an external validation set which is never used
+in training nor for early stopping. It did guide the development: the
+architectures and trunk widths explored in the preliminary phase were compared
+on its coefficient of determination, overall and output by output. The accuracy
+figures quoted in this work, which all refer to this set, are therefore not
+fully immune from selection effects, and the protection against over-reliance
+on them is structural rather than statistical: the workflow described later
+verifies with the reference solver every result it uses. The ablation and
+reproducibility measurements of the next subsection are evaluated on the same
+set, after the architecture had been fixed.
 
 \subsection{Architecture}
 
@@ -379,6 +384,16 @@ two numbers, the predicted value and the logarithm of a variance, whose only
 role is in the loss function described below. Parameters are
 thus shared to the extent that the physics shares them and specialised where it
 does not.
+
+The capacity is the outcome of exploration, not of a rule. The first
+configuration adopted was considerably smaller and saturated during the
+active-learning campaign, its accuracy no longer improving as data kept
+arriving. Since generating the training data was by far the expensive side of
+the exercise, the network was the economical one to act on, and architectures,
+trunk widths and training parameters were explored extensively to extract more
+accuracy from the same data; the sizes above are what that exploration
+settled on. The retrospective learning curve reported below confirms that,
+after the enlargement, the limit moved back to the data.
 
 An ablation quantifies what each level of the hierarchy is worth, and the result
 is not symmetric. Table~\ref{eg:tab:ablation} reports three architectures trained
