@@ -352,15 +352,18 @@ neutronics module of FRENETIC has been run over the three configurations. The
 set was assembled incrementally, over seventeen batches. The first was drawn at
 random from the design space; each of the following ones was selected, among the
 structures not yet simulated, by the disagreement among the members of an
-ensemble of networks, averaged over the nine quantities that the model predicts
-least accurately, namely the multiplication factor, the flux and the generation
+ensemble of networks -- the variance of their predicted means, in the space in
+which the networks are trained -- averaged over the nine quantities that the
+model predicts least accurately, namely the multiplication factor, the flux and the generation
 time for the three configurations. The criterion was applied with the ensemble
 available at the time of each batch, so the acquisition history is not
 homogeneous, and the retrospective experiment described below replays it under a
 single protocol in order to measure what the accumulated data are worth. A
 further 1\,700 structures form an external validation set which is never used in
 training, nor for early stopping, nor for any hyperparameter decision. Every
-accuracy figure quoted in this work refers to that set.
+accuracy figure quoted in this work refers to that set; the ablation and
+reproducibility measurements of the next subsection are evaluated on it as
+well, after the architecture had been fixed.
 
 \subsection{Architecture}
 
@@ -370,7 +373,10 @@ reproduces that organisation. A shared trunk of three fully connected layers of
 $1024$, $512$ and $256$ neurons receives the 29-bit description of the structure
 together with the number of groups. The trunk feeds five family-level branches
 of $128$ and $64$ neurons, each of which feeds three configuration-level
-branches of $32$ neurons terminating in the corresponding output. Parameters are
+branches of $32$ neurons terminating in the corresponding output. Every hidden
+layer uses the ReLU activation, and each configuration branch in fact ends in
+two numbers, the predicted value and the logarithm of a variance, whose only
+role is in the loss function described below. Parameters are
 thus shared to the extent that the physics shares them and specialised where it
 does not.
 
@@ -432,16 +438,46 @@ Architecture & Parameters & $R^2$ & Rel.\ err.\ [\%] \\ \midrule
 Twelve of the fifteen outputs span several orders of magnitude and are learned
 as $\log_{10}(y+10^{-6})$, while the three power fitness functions are learned
 directly. Predictions are averaged over an ensemble of five networks trained
-from different random initialisations~\cite{deepEnsembles}. The disagreement
-among the members of the ensemble also provides the criterion used to select the
-configurations added to the training set.
+from different random initialisations~\cite{deepEnsembles}; the average is taken
+in the standardised space in which the networks are trained, which for the
+twelve logarithmic outputs amounts to a geometric mean in physical units. The
+disagreement among the members of the ensemble also provides the criterion used
+to select the configurations added to the training set.
 
 \subsection{Training and Accuracy}
 
+The inputs -- the 29-bit description of the structure and the number of
+groups -- and the fifteen targets, in the logarithmic space defined above, are
+standardised to zero mean and unit variance, with the scalers fitted on the
+training portion alone. An internal validation split, $15\%$ of the $91\,723$
+configurations drawn once with a fixed seed, serves for early stopping; it is
+distinct from the external validation set, which no training signal touches.
+
+The loss is the Gaussian negative log-likelihood built from the two outputs of
+each branch, averaged over the mini-batch,
+%
+\begin{equation}
+  \mathcal{L} \;=\; \frac{1}{15}\sum_{q=1}^{15} \frac{1}{2}
+  \left[\, s_q + \frac{\left(\mu_q - t_q\right)^2}{e^{\,s_q}} \right],
+  \label{eg:eqn:nll}
+\end{equation}
+%
+with $\mu_q$ the predicted value of output $q$, $t_q$ its target and $s_q$ the
+predicted log-variance, clamped to $|s_q|\le5$. The predicted variance acts as a
+self-adjusting weight on the residuals during training and appears nowhere
+else: predictions, accuracy figures and the acquisition criterion use the means
+alone.
+
 The networks are trained in PyTorch~\cite{pytorch} with the AdamW
-optimizer~\cite{adamw} and no weight decay, in four stages of decreasing
+optimizer~\cite{adamw} and no weight decay, in mini-batches of 200
+configurations reshuffled at every epoch, in four stages of decreasing
 learning rate, $3\times10^{-3}$, $3\times10^{-4}$, $10^{-4}$ and
-$3\times10^{-5}$, each stopped on the validation loss. The staged schedule
+$3\times10^{-5}$. Each stage stops when the loss on the internal validation
+split has not improved for 40, 12, 12 and 10 epochs respectively, within caps
+of 400, 60, 60 and 40 epochs, and restores the best weights seen; the first
+stage does nearly all the work, running between 168 and 302 epochs depending on
+the member. Training the whole ensemble, the five members in parallel, takes
+79 minutes on CPUs alone. The staged schedule
 proves considerably more effective than a constant learning rate: the same
 architecture trained at $3\times10^{-3}$ with early stopping reaches a median
 relative error of $0.715\%$, against $0.422\%$ with the staged decay on the same
@@ -537,8 +573,9 @@ of the reference flux shape within each of them weighted by the importance, and
 the widths of the groups containing the sharpest spectral features, makes the
 model worse rather than better on fourteen of the fifteen outputs, and worse
 overall, $0.460\%$ against $0.403\%$ on the same data and with the same training
-recipe. A network of this capacity evidently constructs such features internally
-where they are useful, and supplying them explicitly only costs it parameters.
+recipe. What the measurement establishes is the exclusion; the natural reading
+is that a network of this capacity constructs such features internally where
+they are useful, so that supplying them explicitly only costs it parameters.
 
 \begin{table}[htbp]
 \centering
@@ -588,8 +625,10 @@ not by condensing well, but by a cancellation between the error introduced by th
 condensation and the error of the deterministic model itself. A cancellation
 between two quantities of different origin is fragile, and displacing a single
 boundary destroys it. A smooth interpolator cannot follow a function that varies
-by half a decade under a one-bit change of its input, and no amount of
-additional data of the same kind will remove the limitation. This is the reason
+by half a decade under a one-bit change of its input. This local limitation is
+distinct from the aggregate accuracy, which the learning curve shows to be still
+limited by the data: more data of the same kind lower the second, not the
+first. This is the reason
 why the workflow described in the next section does not rely on the metamodel
 for its conclusions.
 
