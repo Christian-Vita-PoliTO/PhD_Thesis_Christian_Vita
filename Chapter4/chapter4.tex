@@ -895,20 +895,17 @@ structures obtained here this distance ranges from one to seventeen, with a
 median of eight.
 
 Measured in this way, the 67 structures do not form a single group. Clustering
-them separates two families of 32 and 35 structures whose mean internal
-distances are $4.6$ and $5.5$ boundaries against $10.4$ between them, and the
-searches divide almost equally between the two, 53 against 47. The separation is
-not a matter of group count,
-since the two families span overlapping ranges of $G$, but of a coherent block
-of mutually exclusive choices in the fast region of the spectrum, as reported in
-Table~\ref{eg:tab:families} and visible in the right panel of
-Fig.~\ref{eg:fig:structure}. The boundaries at $2.231$ and $0.302$~MeV never occur
-together in any of the 67 structures, with a correlation coefficient of $-1.00$,
-while the boundary at $3.679$~MeV occurs together with the one at $0.302$~MeV
-and with the thermal boundary at $5.4\times10^{-7}$~MeV, with correlations of
-$+0.97$ and $+0.94$. One family therefore adopts the block formed by $3.679$ and
-$0.302$~MeV together with the thermal cut, the other adopts $2.231$~MeV together
-with a boundary at $1.371\times10^{-5}$~MeV.
+separates two families, whose sizes, cohesion and defining boundaries are
+collected in Table~\ref{eg:tab:families} and whose composition is shown
+structure by structure in Fig.~\ref{eg:fig:families}. The separation is not a
+matter of group count, since the two families span overlapping ranges of $G$: it
+is a coherent block of mutually exclusive choices in the fast region of the
+spectrum, which the figure shows as five columns that are full in one family and
+empty in the other. The pair at $2.231$ and $0.302$~MeV is the clearest, the two
+never occurring together in any of the 67 structures. One family adopts the block
+formed by $3.679$ and $0.302$~MeV together with the thermal cut at
+$5.4\times10^{-7}$~MeV, the other adopts $2.231$~MeV together with a boundary at
+$1.371\times10^{-5}$~MeV.
 
 The two blocks are alternative and self-consistent. The boundaries at $3.679$
 and $2.231$~MeV are adjacent in the fine mesh, so that retaining both would
@@ -920,20 +917,32 @@ why a search remains within the family in which its initial population happens
 to fall.
 
 The two families are not equivalent. All 67 structures were recomputed with
-FRENETIC, and the median true fitness of the less favourable family is
-$1.133\times10^{7}$ against $9.270\times10^{6}$ for the other, a difference of
-$22\%$. The origin of the difference can be traced to the way the two families
-condense the spectrum. For each structure the variation of the reference flux
-shape within its groups was computed and weighted by the total importance
+FRENETIC, and the median true fitness of the better family is $22\%$ lower than
+that of the other. The origin of the difference can be traced to the way the two
+families condense the spectrum. For each structure the variation of the reference
+flux shape within its groups was computed and weighted by the total importance
 $\phi\phi^{\ddagger}/v$ of the group, which is the weight with which the flux
-fitness function of Eq.~(\ref{eg:eqn:distributed}) counts an error. The result,
-reported in Table~\ref{eg:tab:families}, is $0.138$ for the better family against
-$0.377$ for the other. Where it matters to the objective, the structures of the
-better family follow the shape of the spectrum more closely, and the difference
-in fitness follows. The same quantity weighted by the bare flux separates the
-two families much less, $0.212$ against $0.247$, which indicates that it is the
-importance weighting, and not the flux alone, that decides which of the two
-blocks is preferable.
+fitness function of Eq.~(\ref{eg:eqn:distributed}) counts an error. Where it
+matters to the objective, the structures of the better family follow the shape of
+the spectrum almost three times more closely, as the last two rows of
+Table~\ref{eg:tab:families} report, and the difference in fitness follows. The
+same quantity weighted by the bare flux separates the two families much less,
+which is the point of the comparison: it is the importance weighting, and not the
+flux alone, that decides which of the two blocks is preferable.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{Chapter4/Figs/fig_families.pdf}
+  \caption[Composition of the 67 optimized structures]{The 67 distinct optimized
+  structures, one per row, grouped by family and ordered within each family so
+  that similar structures sit together. A dark cell means that the structure
+  retains that internal boundary of the fine mesh. The five boundaries marked
+  above the matrix, and labelled in the same colour below it, are the ones whose
+  presence separates the two families: they are full in one family and empty in
+  the other, while the remaining boundaries are chosen almost independently of
+  it.}
+  \label{eg:fig:families}
+\end{figure}
 
 \begin{table}[htbp]
 \centering
@@ -942,7 +951,9 @@ distinguishes them, with the fraction of the structures of each family that
 retains the boundary. Below, the properties of the two families: the median
 joint fitness verified with the reference solver, and the variation of the
 reference flux shape within the groups, weighted by the total importance that
-appears in the flux fitness function.}
+appears in the flux fitness function and, for comparison, by the bare flux. The
+mean distance between a structure of one family and one of the other is $10.4$
+boundaries, against the internal values reported here.}
 \label{eg:tab:families}
 \begin{tabular}{ccc}
 \toprule
@@ -955,9 +966,11 @@ Boundary [MeV] & Family A [\%] & Family B [\%] \\ \midrule
 \midrule
     Property & Family A & Family B \\ \midrule
     Distinct structures & 32 & 35 \\
+    Searches ending in the family & 53 & 47 \\
     Median joint fitness & $9.270\times10^{6}$ & $1.133\times10^{7}$ \\
     Mean internal Hamming distance & 4.6 & 5.5 \\
-    Weighted shape variation & 0.138 & 0.377 \\ \bottomrule
+    Shape variation, importance weighted & 0.138 & 0.377 \\
+    Shape variation, flux weighted & 0.212 & 0.247 \\ \bottomrule
 \end{tabular}
 \end{table}
 
