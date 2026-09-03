@@ -8,8 +8,9 @@ set "MAIN=Polito PhD thesis template"
 pdflatex -interaction=nonstopmode -synctex=1 "%MAIN%.tex"
 if errorlevel 1 goto :error
 
-rem bibtex only when at least one \citation reached the .aux file
-findstr /c:"\citation" "%MAIN%.aux" >nul 2>nul && bibtex "%MAIN%"
+rem bibtex: with \include the \citation lines live in the chapter .aux files,
+rem so run it unconditionally; the "no citation commands" error is harmless
+bibtex "%MAIN%"
 
 rem nomenclature, if any entries were produced
 if exist "%MAIN%.nlo" makeindex "%MAIN%.nlo" -s nomencl.ist -o "%MAIN%.nls"

@@ -1,0 +1,157 @@
+% Bibliography for Chapter 3 (SPH / Westinghouse LFR paper).
+% Entries copied verbatim (keys unchanged) from
+% materials/enanching_multigroup_LFR/SPH_paper_NS_E/bibliography.bib
+% -- only the entries actually cited in the chapter.
+
+@phdthesis{Hbert_1980,
+  title={D{\'e}veloppement de la m{\'e}thode SPH: Homog{\'e}n{\'e}isation de cellules dans un r{\'e}seau non uniforme et calcul des parametres de r{\'e}flecteur},
+  author={H{\'e}bert, Alain},
+  year={1980},
+  school={{\'e}diteur non identifi{\'e}}
+}
+
+@article{luo2024fullcore_sph,
+  author  = {Luo, C. and others},
+  title   = {Application of Full-Core Three-Dimensional Multi-Physics Calculation to the EBR-II SHRT-45R Benchmark},
+  journal = {Annals of Nuclear Energy},
+  year    = {2024},
+  volume  = {208},
+  pages   = {110786},
+  doi     = {10.1016/j.anucene.2024.110786},
+  abstract = {Develops a 3D multi-physics framework for liquid metal reactors coupling neutronics and thermal hydraulics with SPH-corrected cross sections, showing large reduction in k_eff error.},
+  note    = {Example of SPH corrections in liquid metal reactor (LMR) core analysis, relevant to fast reactor contexts.}
+}
+
+@article{Nikitin_mini_core_models,
+title = {On the use of the SPH method in nodal diffusion analyses of SFR cores},
+journal = {Annals of Nuclear Energy},
+volume = {85},
+pages = {544-551},
+year = {2015},
+issn = {0306-4549},
+doi = {https://doi.org/10.1016/j.anucene.2015.06.007},
+url = {https://www.sciencedirect.com/science/article/pii/S0306454915003217},
+author = {E. Nikitin and E. Fridman and K. Mikityuk},
+keywords = {Group constant generation, SFR, Monte Carlo, SPH, Serpent, DYN3D and PARCS}
+}
+
+@article{Rachamin2018,
+   abstract = {The capability of the DYN3D-Serpent codes system to simulate highly heterogeneous sodium-cooled fast reactor cores has been studied. The BFS-73-1 and the BFS-62-3A critical assemblies were chosen for the investigation. The study was performed in two parts. In the first part of the study, a 3D full model of each of the assemblies was simulated using the Serpent Monte-Carlo (MC) code, and the basic neutronic characteristics were evaluated and compared against experimental values. In the second part of the study, which is the subject of this paper, the assemblies were modeled using the DYN3D nodal diffusion code. The few-group cross-sections for the DYN3D analysis were generated using the Serpent MC code. The generation of effective few-group cross-sections of such assemblies is quite a challenge due to the substantial heterogeneity of the assemblies configuration. Therefore, the use of homogenization techniques was considered and evaluated. Initially, the GET and SPH techniques were applied for the analysis of the BFS-73-1 assembly core fuel rods, and of selected fuel rods from the BFS-62-3A assembly. Then, the SPH method was implemented and demonstrated for a pin-by-pin calculation of the BFS-73-1 assembly. It was shown that the GET and the SPH method noticeably improve the prediction accuracy of the DYN3D code. The results of the DYN3D pin-by-pin calculation with the SPH correction agree very well with that of the full assembly Serpent results, which in turn agree very well with the experimental data.},
+   author = {Reuven Rachamin and Sören Kliem},
+   doi = {10.1016/j.anucene.2017.12.036},
+   issn = {18732100},
+   journal = {Annals of Nuclear Energy},
+   keywords = {ADF,BFS experiments,Group constant generation,SFR,SPH,Serpent and DYN3D},
+   month = {4},
+   pages = {181-190},
+   publisher = {Elsevier Ltd},
+   title = {Validation of the DYN3D-Serpent code system for SFR cores using selected BFS experiments. Part II: DYN3D calculations},
+   volume = {114},
+   year = {2018},
+}
+
+@article{Serpent_code_description,
+title = {The Serpent Monte Carlo code: Status, development and applications in 2013},
+journal = {Annals of Nuclear Energy},
+volume = {82},
+pages = {142-150},
+year = {2015},
+issn = {0306-4549},
+doi = {https://doi.org/10.1016/j.anucene.2014.08.024},
+url = {https://www.sciencedirect.com/science/article/pii/S0306454914004095},
+author = {Jaakko Leppänen and Maria Pusa and Tuomas Viitanen and Ville Valtavirta and Toni Kaltiaisenaho},
+keywords = {Serpent, Monte Carlo, Reactor physics, Homogenization, Burnup calculation}
+}
+
+@article{Serpent_homog_technique,
+title = {Overview of methodology for spatial homogenization in the Serpent 2 Monte Carlo code},
+journal = {Annals of Nuclear Energy},
+volume = {96},
+pages = {126-136},
+year = {2016},
+issn = {0306-4549},
+doi = {https://doi.org/10.1016/j.anucene.2016.06.007},
+url = {https://www.sciencedirect.com/science/article/pii/S0306454916303899},
+author = {Jaakko Leppänen and Maria Pusa and Emil Fridman},
+keywords = {Serpent, Monte Carlo, Spatial homogenization, Group constants, Automated burnup sequence},
+}
+
+@article{FreeFem_code_description_article,
+url = {https://doi.org/10.1515/jnum-2012-0013},
+title = {New development in freefem++},
+author = {F. Hecht},
+pages = {251--266},
+volume = {20},
+number = {3-4},
+journal = {Journal of Numerical Mathematics},
+doi = {doi:10.1515/jnum-2012-0013},
+year = {2012},
+lastchecked = {2024-11-04}
+}
+
+@misc{ENEA_report_ALFRED_energy_group,
+   author = {V Fabrizio and S Dulla and M Nervo and P Ravetto and A G Bianchini and V Peluso},
+   title = {Inserire logo o denominazione del cobeneficiario ALFRED Reactor: evaluation of multi temperature cross section sets by deterministic and stochastic methods MINISTERO DELLO SVILUPPO ECONOMICO},
+}
+
+@book{SPH_book_Bell_Glasstone,
+	Address = {New York},
+	Author = {Bell, G.I. and S. Glasstone},
+	Publisher = {Van Nostrand Reinhold Company},
+	Title = {Nuclear Reactor Theory},
+	Year = {1970}
+}
+
+@article{takasugi_2023_SPH_kinetic_parameters,
+  title={Preservation of kinetics parameters generated by Monte Carlo calculations in two-step deterministic calculations},
+  author={Takasugi, Cole and Martin, Nicolas Pierre and Labour{\'e}, Vincent M and Ortensi, Javier and Ivanov, Kostadin and Avramova, Maria},
+  journal={EPJ Nuclear Sciences and Technologies},
+  volume={9},
+  number={INL/JOU-21-65377-Rev000},
+  year={2023},
+  publisher={Idaho National Laboratory (INL), Idaho Falls, ID (United States)}
+}
+
+@misc{INL_report_SPH_muller,
+       author = {Cole M Mueller and Ching-Sheng Lin and Javier Ortensi},
+      title = {NRC Multiphysics Analysis Capability Deployment FY 2021-Part 2 April 2021},    url = {http://www.inl.gov}, }
+
+@article{Ortensi2021,    abstract = {The Transient Reactor Test Facility (TREAT) at Idaho National Laboratory is a graphite-moderated, air-cooled facility that was restarted in 2018 and is specifically built to conduct transient reactor tests. The Department of Energy focused modeling and simulation efforts between 2015 and 2019 on obtaining multiphysics solutions using the Griffin reactor physics application. This research has: (1) developed a consistent analysis method that automatically maps the neutronics data generated with Serpent onto the Griffin model, (2) improved the predictive capability of the traditional MCNP and Point Kinetics models that are commonly used in TREAT modeling and the preparation of engineering calculations, (3) determined the average recoverable energy in TREAT fuel per fission event, and (4) calculated a dynamic energy coupling factor that demonstrates the dependency of the energy deposition in the experiments during transients. Three experiments conducted in 2018 form the basis for the validation of Griffin for the transient modeling of TREAT. The first two experiments are 1.5% and 2.6% Δk/k transient prescription experiments with flux wires placed in the M8CAL test rig. The third experiment is a 0.6% Δk/k with the Minimal Activation Retrievable Capsule Holder (MARCH) test rig and the Separate Effect Test Holder (SETH) capsule, a light-water reactor rodlet in dry conditions. The core behavior predicted by Griffin for the transient prescription transients agrees well with the measured core power, peak power, and reactor feedback. The exception is the total energy deposition, which is underpredicted. The core behavior for the MARCH-SETH transient is significantly influenced by delayed neutrons since the reactivity insertion is delayed critical (i.e. ρ<βeff). The Griffin model experiences a stronger temperature feedback, leading to a lower peak power and total energy deposition. Increasing the number of temperature tabulation points significantly improves the solution for the MARCH-SETH transient. In addition, updating the 1.5% Δk/k transient model to ENDF/B-VIII.r0 data resolves the discrepancy in the prediction of the power tail and the total energy deposition. This is attributed to the new graphite S(α,β) data, which leads to lower values of the temperature coefficient of reactivity. The predicted energy coupling factors in both wire and rodlet experiments is the paramount parameter for TREAT modeling and simulation. In both cases, the Griffin predictions compare very well with measured values and exhibit consistent behavior, which is not observed in MCNP predictions. This work shows that Griffin is able to resolve the time-dependent effects from the control rod movement and the core heat-up in both the core and experiments.},    author = {Javier Ortensi and Benjamin A. Baker and Matthew P. Johnson and Yaqi Wang and Vincent M. Labouré and Sebastian Schunert and Frederick N. Gleicher and Mark D. DeHart},    doi = {10.1016/j.nucengdes.2021.111478},    issn = {00295493},    journal = {Nuclear Engineering and Design},    keywords = {Griffin,MOOSE,Multiphysics,SPH,Simulation,TREAT,Transient Test Reactor,Validation},    month = {12},    publisher = {Elsevier Ltd},    title = {Validation of the Griffin application for TREAT transient modeling and simulation},    volume = {385},    year = {2021}, }
+
+@article{SPH_computational_time,
+title = {Development and verification of a Monte Carlo two-step method for lead-based fast reactor neutronics analysis},
+journal = {Nuclear Engineering and Technology},
+volume = {55},
+number = {6},
+pages = {2112-2124},
+year = {2023},
+issn = {1738-5733},
+doi = {https://doi.org/10.1016/j.net.2023.03.006},
+url = {https://www.sciencedirect.com/science/article/pii/S1738573323001158},
+author = {Yiwei Wu and Qufei Song and Ruixiang Wang and Yao Xiao and Hanyang Gu and Hui Guo},
+keywords = {Monte Carlo, Multi-group, Cross-sections, Local heterogeneity, LFR}
+}
+
+@article{Ortensi_normalization_factor,
+title = {A Newton solution for the Superhomogenization method: The PJFNK-SPH},
+journal = {Annals of Nuclear Energy},
+volume = {111},
+pages = {579-594},
+year = {2018},
+issn = {0306-4549},
+doi = {https://doi.org/10.1016/j.anucene.2017.09.027},
+url = {https://www.sciencedirect.com/science/article/pii/S0306454917303079},
+author = {Javier Ortensi and Yaqi Wang and Alexandre Laurier and Sebastian Schunert and Alain Hébert and Mark DeHart},
+keywords = {Superhomogenization, Equivalence, Homogenization, Rattlesnake, PJFNK, MOOSE},
+}
+
+@article{geuzaine2009gmsh,
+  title={Gmsh: A 3-D finite element mesh generator with built-in pre-and post-processing facilities},
+  author={Geuzaine, Christophe and Remacle, Jean-Fran{\c{c}}ois},
+  journal={International journal for numerical methods in engineering},
+  volume={79},
+  number={11},
+  pages={1309--1331},
+  year={2009},
+  publisher={Wiley Online Library}
+}
