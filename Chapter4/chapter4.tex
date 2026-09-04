@@ -629,9 +629,12 @@ and family by family: where the target changes most under a single boundary
 displacement, the metamodel errs most. Over the thirty pairs of measurements the
 rank correlation between local steepness and relative error, that is Spearman's
 coefficient, which compares the two orderings and is therefore unaffected by the
-scale of either quantity, is $+0.70$, with a
-probability of $2\times10^{-5}$ under the null hypothesis, and it is unchanged
-at $+0.68$ if the flux is excluded. The flux is worth keeping in view because it
+scale of either quantity, is $+0.70$. The probability that a correlation at
+least this strong arises by chance between two unrelated quantities is
+$2\times10^{-5}$. In what follows a correlation is quoted as $\rho$ and that
+probability as $p$, and a $p$ below one per cent is read as evidence that the
+association is not accidental. Excluding the flux leaves the result unchanged,
+$\rho = +0.68$. The flux is worth keeping in view because it
 is the control case: its steepness grows with the value of the fitness function
 instead of falling, and its accuracy degrades in the same direction, opposite to
 the other four families. What the error tracks is therefore the local steepness
@@ -1028,33 +1031,30 @@ A natural expectation is that boundaries should
 be placed where the spectrum changes shape most abruptly, since a single group
 cannot represent a rapidly varying flux, and that they should follow the flux
 itself, since a group carrying little flux contributes little to the reaction
-rates. Neither expectation is confirmed. The rank correlation between the
-frequency with which a boundary is selected and the variation of the flux shape
-across it is negative, $-0.51$ with a probability of $5\times10^{-3}$ under the
-null hypothesis, and the correlation with the flux surrounding the boundary is
-not significant, $+0.17$ with a probability of $0.37$. The three boundaries
-associated with the sharpest variations of shape in the fast region, at $1.353$,
-$0.8208$ and $0.4979$~MeV, are never used, although together they lie where
-$18\%$ of the flux is found.
+rates. Neither expectation is confirmed. The selection frequency runs against
+the variation of the flux shape ($\rho = -0.51$, $p = 5\times10^{-3}$), and bears
+no relation to the flux surrounding the boundary ($\rho = +0.17$, $p = 0.37$).
+The three boundaries of the fast region where the spectrum bends most sharply,
+at $1.35$, $0.821$ and $0.498$~MeV, are never used, although $18\%$ of the flux
+lies there.
 
 The quantity that does predict the placement is the one that the objective
 function itself uses as a weight. The flux fitness function of
 Eq.~(\ref{eg:eqn:distributed}) measures the flux error of every group weighted by
 the total importance $\phi\phi^{\ddagger}/v$, so that the relevant measure of
 how much a group matters is not how much flux it carries but how much importance
-it carries. The rank correlation between the selection frequency of a boundary
-and the importance surrounding it is $+0.53$, with a probability of
-$3\times10^{-3}$. The three boundaries of the fast region that are never
-selected lie where the importance is below $2.4\%$, against values between $1.9$
-and $5.0\%$ for the boundaries of the consensus skeleton, as
-Table~\ref{eg:tab:boundaries} shows column by column. The
-distinction between the two readings is sharp in that region. The adjoint flux
-of this core varies by less than a factor of two over the whole energy range, so
-that the importance follows essentially the ratio $\phi/v$: the fast groups
-carry a substantial part of the flux but, at those speeds, only a small part of
-the importance, the ratio between the two fractions rising monotonically from
-$0.10$ in the highest group to unity around $10$~keV. The optimizer places its
-boundaries according to the second quantity and not the first.
+it carries. The selection frequency does follow it ($\rho = +0.53$,
+$p = 3\times10^{-3}$), and Table~\ref{eg:tab:boundaries} shows the distinction
+boundary by boundary: the never-selected boundaries of the fast region have less
+than $2.4\%$ of the importance around them, the boundaries of the consensus
+skeleton between $1.9$ and $5.0\%$. The two readings part company precisely in
+the fast region, and for a physical reason. The adjoint flux of this core varies
+by less than a factor of two over the whole energy range, so the importance
+follows essentially the ratio $\phi/v$: the fast groups carry a substantial part
+of the flux but, at those speeds, only a small part of the importance, the ratio
+between the two fractions rising from $0.10$ in the highest group to unity
+around $10$~keV. The optimizer places its boundaries according to the second
+quantity and not the first.
 
 The tendency can be stated more directly. Computing for each structure the
 coefficient of variation of the importance contained in its groups gives $0.553$
