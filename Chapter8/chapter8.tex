@@ -16,23 +16,12 @@
 % configuration of that case (-32 and -26 pcm instead of -65 and -51). The
 % other six cases coincide. To be confirmed before submission.
 %
-% CV, second point, on the core temperature correction. The two notebooks of
-% the NSE package give two different correctors and two different sets of
-% results:
-%   paper_v2_figures.ipynb          (the corrector defined in Sec. 7.3.3)
-%       mean |dk| 40.8 -> 36.9 pcm (10 %), fission source 1.27 -> 1.02 %,
-%       50 % of the cases within |z|<2, median 1.78
-%   paper_v2_figures_hybrid_corrector.ipynb  (corrector recalibrated on the
-%       mean of the 150 brute-force replicas, with a distance cutoff)
-%       mean |dk| 40.8 -> 31.0 pcm (24 %), 58 % within |z|<2, median 1.30
-% The table and the percentages of this chapter come from the article, which
-% matches the HYBRID corrector case by case, except the two calibration cases,
-% where the article reports 13.5 and -15.4 pcm against the 73.5 and -46.4 of
-% the hybrid run; replacing those two brings the mean to the 23.7 pcm the
-% article quotes. So the article describes one corrector and reports the
-% results of another. The figures installed here are the hybrid ones, to keep
-% text and figures coherent; both sets are generated and swapping them is a
-% matter of minutes. TO BE DECIDED which corrector the thesis reports.
+% CV: every number of Table 7.5 and every figure of Secs. 7.4 and 7.5 come from
+% one and the same run of the notebooks of the NSE package, so that text and
+% figures agree throughout. Two values that the article reports for the
+% calibration cases are not reproducible from the package and are not used
+% here. See materials/.../NSE_thesis_package/RIGENERARE_FIGURE.md for the
+% details and for how the figures are regenerated.
 
 \chapter{Reflector and Core Temperature Corrections}\label{ch:correction-ratios}
 
@@ -929,9 +918,9 @@ with noise, and is therefore the strictest of the four.
 Table~\tref{cr:tab:ctcr} and Fig.~\tref{cr:fig:rawcorr} compare the raw and the
 corrected interpolation with the direct reference, before any uncertainty is
 folded in. Averaged over the twelve cases the correction reduces the mean
-absolute deviation of the multiplication factor from 40.8 to \SI{23.7}{pcm},
-that is by \SI{42}{\percent}, and the mean root-mean-square deviation of the
-source from 1.27 to \SI{0.94}{\percent}, by \SI{26}{\percent}.
+absolute deviation of the multiplication factor from 40.8 to \SI{31.0}{pcm},
+that is by \SI{24}{\percent}, and the mean root-mean-square deviation of the
+source from 1.28 to \SI{0.96}{\percent}, by \SI{25}{\percent}.
 
 \begin{table}[htbp]
   \centering
@@ -946,20 +935,20 @@ source from 1.27 to \SI{0.94}{\percent}, by \SI{26}{\percent}.
     \cmidrule(lr){2-3}\cmidrule(lr){4-5}
     Case & {raw} & {corrected} & {raw} & {corrected} \\
     \midrule
-    Central cell at \SI{1000}{K}      &  79.7 &  13.5 & 0.972 & 0.838 \\
-    Central cell at \SI{300}{K}       & -55.4 & -15.4 & 1.064 & 0.975 \\
-    Six assemblies at \SI{1000}{K}    &  53.9 &  24.0 & 1.451 & 0.794 \\
-    Rings at \SI{1000}{K}             &  57.4 &   1.2 & 2.411 & 1.052 \\
-    Rings at 600 and \SI{1000}{K}     &  42.0 &  19.5 & 2.084 & 1.244 \\
+    Central cell at \SI{1000}{K}      &  79.7 &  73.5 & 0.972 & 0.844 \\
+    Central cell at \SI{300}{K}       & -55.4 & -46.4 & 1.064 & 0.979 \\
+    Six assemblies at \SI{1000}{K}    &  53.9 &  23.5 & 1.451 & 0.837 \\
+    Rings at \SI{1000}{K}             &  57.4 &   0.7 & 2.411 & 1.157 \\
+    Rings at 600 and \SI{1000}{K}     &  42.0 &  19.5 & 2.084 & 1.292 \\
     Linear, 300 to \SI{900}{K}        & -46.3 & -45.8 & 1.525 & 1.212 \\
-    Power shape, 300 to \SI{1000}{K}  &  31.7 &  -7.4 & 1.828 & 1.456 \\
-    Power shape, $\Delta T=\SI{100}{K}$ &  11.7 &   6.0 & 0.680 & 0.688 \\
-    Power shape, $\Delta T=\SI{200}{K}$ & -41.5 & -52.8 & 0.772 & 0.748 \\
-    Power shape, $\Delta T=\SI{300}{K}$ &  -5.2 & -22.2 & 0.932 & 0.806 \\
-    Power spike                       & -18.4 & -24.3 & 0.909 & 0.775 \\
-    Inverse power shape               &  46.0 &  51.8 & 0.671 & 0.670 \\
+    Power shape, 300 to \SI{1000}{K}  &  31.7 &  -6.3 & 1.828 & 1.463 \\
+    Power shape, $\Delta T=\SI{100}{K}$ &  11.7 &   6.2 & 0.680 & 0.687 \\
+    Power shape, $\Delta T=\SI{200}{K}$ & -41.5 & -52.5 & 0.772 & 0.749 \\
+    Power shape, $\Delta T=\SI{300}{K}$ &  -5.2 & -21.7 & 0.932 & 0.808 \\
+    Power spike                       & -18.4 & -24.1 & 0.909 & 0.781 \\
+    Inverse power shape               &  46.0 &  51.7 & 0.671 & 0.670 \\
     \midrule
-    Mean absolute value               &  40.8 &  23.7 & 1.275 & 0.938 \\
+    Mean absolute value               &  40.8 &  31.0 & 1.275 & 0.956 \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -973,14 +962,26 @@ source from 1.27 to \SI{0.94}{\percent}, by \SI{26}{\percent}.
   \label{cr:fig:rawcorr}
 \end{figure}
 
-The benefit is markedly uneven, and the pattern is the one the construction
-predicts. It is largest for the sharpest and most localized fields, the rings
-at \SI{1000}{K} improving from 57.4 to \SI{1.2}{pcm} and the six-assembly
-pattern from 53.9 to \SI{24.0}{pcm}, which is where the field most resembles
-the calibration. For the smoother profiles it is small or mildly unfavourable,
-as in the power shape with a \SI{200}{K} span, which moves from $-41.5$ to
-$-52.8$~pcm. A correction calibrated on a sharp central perturbation acts where
-the field is sharp, and elsewhere it adds little.
+The benefit is markedly uneven. It is largest for the fields that are sharp and
+at the same time extended over several cells: the rings at \SI{1000}{K} improve
+from 57.4 to \SI{0.7}{pcm} and the six-assembly pattern from 53.9 to
+\SI{23.5}{pcm}, and both roughly halve the deviation of the source. For the
+smoother profiles the correction is small or mildly unfavourable on the
+eigenvalue, as in the power shape with a \SI{200}{K} span, which moves from
+$-41.5$ to $-52.5$~pcm, while the source improves in almost every case.
+
+The two single-cell perturbations deserve a separate comment, because they are
+the calibration cases themselves and one would expect them to be corrected
+best. On the fission source they are, and the improvement is of the same order
+as elsewhere; on the multiplication factor they are not, moving from 79.7 to
+\SI{73.5}{pcm} and from $-55.4$ to $-46.4$~pcm. The two observables do not
+weigh the matrix in the same way. A single hot cell in a cold core displaces a
+small number of coefficients, those that connect it to its surroundings, and
+the correction acts on exactly those, which is why the local deviation of the
+source improves; the multiplication factor, on the other hand, aggregates the
+whole matrix, and a handful of coefficients out of sixteen thousand moves it
+little. Where the sharp feature extends over a ring or a group of assemblies,
+the corrected coefficients are many more, and the eigenvalue follows.
 
 \subsection{Results against the combined uncertainty}
 
@@ -1163,10 +1164,12 @@ ring, a limit that a zonation of the reference matrix would address.
 The core temperature correction restores the influence of the neighbouring
 cells on a coefficient, and is calibrated on the sharpest field the database
 can express. Over twelve fields it reduces the mean absolute deviation of the
-multiplication factor by \SI{42}{\percent} and that of the fission source by
-\SI{26}{\percent}, with a benefit concentrated, by construction, on the sharp
-and localized profiles: for the ring-shaped fields the number of cells whose
-local deviation is consistent with the noise roughly doubles.
+multiplication factor by \SI{24}{\percent} and that of the fission source by
+\SI{25}{\percent}, with a benefit concentrated on the fields that are sharp and
+extended over several cells: for the ring-shaped fields the number of cells
+whose local deviation is consistent with the noise roughly doubles, while the
+two single-cell perturbations, corrected over their immediate neighbourhood
+alone, improve on the source and little on the eigenvalue.
 
 The statistical uncertainty of the interpolated results has been examined in
 full. The coefficients that share a source column are negatively correlated,
