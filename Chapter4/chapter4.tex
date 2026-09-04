@@ -626,15 +626,19 @@ to $0.395$ against $0.044$ decades for the generation time.
 The correspondence with the accuracy of the metamodel is direct.
 Figure~\ref{eg:fig:smallvalue} places the two quantities side by side, band by band
 and family by family: where the target changes most under a single boundary
-displacement, the metamodel errs most. Over the thirty pairs of measurements the
-rank correlation between local steepness and relative error, that is Spearman's
-coefficient, which compares the two orderings and is therefore unaffected by the
-scale of either quantity, is $+0.70$. The probability that a correlation at
-least this strong arises by chance between two unrelated quantities is
-$2\times10^{-5}$. In what follows a correlation is quoted as $\rho$ and that
-probability as $p$, and a $p$ below one per cent is read as evidence that the
-association is not accidental. Excluding the flux leaves the result unchanged,
-$\rho = +0.68$. The flux is worth keeping in view because it
+displacement, the metamodel errs most. The agreement between the two is measured over the thirty pairs by
+Spearman's rank correlation $r_s$. Each pair is given its rank on the two scales,
+first by steepness and then by error, and $r_s$ measures how far the two
+rankings agree: $+1$ if the bands with the steepest target are exactly the ones
+where the metamodel errs most, $-1$ if exactly the ones where it errs least,
+$0$ if the two orderings have nothing to do with each other. Ranks are used
+rather than the values themselves because both quantities span decades, so
+that a correlation of the values would depend on the scale chosen and be
+dominated by the few extreme points. Here $r_s = +0.70$. The probability that
+a correlation at least this strong arises by chance between two unrelated
+quantities is $2\times10^{-5}$; in what follows that probability is quoted as
+$p$, and a $p$ below one per cent is read as evidence that the association is
+not accidental. Excluding the flux leaves the result unchanged, $r_s = +0.68$. The flux is worth keeping in view because it
 is the control case: its steepness grows with the value of the fitness function
 instead of falling, and its accuracy degrades in the same direction, opposite to
 the other four families. What the error tracks is therefore the local steepness
@@ -1032,8 +1036,8 @@ be placed where the spectrum changes shape most abruptly, since a single group
 cannot represent a rapidly varying flux, and that they should follow the flux
 itself, since a group carrying little flux contributes little to the reaction
 rates. Neither expectation is confirmed. The selection frequency runs against
-the variation of the flux shape ($\rho = -0.51$, $p = 5\times10^{-3}$), and bears
-no relation to the flux surrounding the boundary ($\rho = +0.17$, $p = 0.37$).
+the variation of the flux shape ($r_s = -0.51$, $p = 5\times10^{-3}$), and bears
+no relation to the flux surrounding the boundary ($r_s = +0.17$, $p = 0.37$).
 The three boundaries of the fast region where the spectrum bends most sharply,
 at $1.35$, $0.821$ and $0.498$~MeV, are never used, although $18\%$ of the flux
 lies there.
@@ -1043,7 +1047,7 @@ function itself uses as a weight. The flux fitness function of
 Eq.~(\ref{eg:eqn:distributed}) measures the flux error of every group weighted by
 the total importance $\phi\phi^{\ddagger}/v$, so that the relevant measure of
 how much a group matters is not how much flux it carries but how much importance
-it carries. The selection frequency does follow it ($\rho = +0.53$,
+it carries. The selection frequency does follow it ($r_s = +0.53$,
 $p = 3\times10^{-3}$), and Table~\ref{eg:tab:boundaries} shows the distinction
 boundary by boundary: the never-selected boundaries of the fast region have less
 than $2.4\%$ of the importance around them, the boundaries of the consensus
