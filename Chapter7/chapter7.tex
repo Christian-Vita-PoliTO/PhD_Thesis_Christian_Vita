@@ -1,25 +1,1033 @@
 %!TEX root = ../Polito PhD thesis template.tex
 % ******************************* Chapter 7 ************************************
-% Criticality search built on the FM database: from database generation to the
-% (T, control drum) search, then extended over the cycle with burnup.
+% Criticality search with the fission matrix method: the (T, theta) database,
+% the power-temperature correlation, the search algorithm and its verification
+% at beginning of life, the extension to burnup (BCR, snapshot database, cycle),
+% the three assumptions measured, the density of the snapshot grid, the costs.
+%
+% Sources: AnE paper secs. 3.2, 3.3, 3.5, 3.6, 4.1, 4.5, 4.6 (database,
+% interpolation, correlation, algorithm, database selection, search test,
+% costs); M&C 2027 paper secs. 2-6 (BCR, snapshot database, cycle, ensemble,
+% results, assumptions, grid density); executed notebook
+% thesis_bundle_FM_burnup/notebook/FM_burnup_criticality_search_EXECUTED.ipynb
+% (every number of the burnup part and of the BOL search; figures in
+% notebook/figures/paper/). Only results WITHOUT the Reflector Correction
+% Ratio are reported: the four verification cases of the AnE paper at
+% 0/0.8/1.6/2.4 MW were run with the RCR and are therefore not used here.
 
-\chapter{Criticality Search with a Fission Matrix Database}\label{ch:crit-search}
+\chapter{Criticality Search with the Fission Matrix Method}\label{ch:crit-search}
 
-% =============================================================================
-% PLACEHOLDER -- planned content (agreed general indications):
-%   - Generation of the (temperature, drum angle) database
-%       [AnE sec. 3.2; nested databases figure]
-%   - Power / fuel temperature correlation [AnE sec. 3.5]
-%   - The criticality search algorithm with T and control drums as parameters
-%       [AnE sec. 3.6 + results sec. 5.5-5.6]
-%   - Extension to burnup: the database-size problem, the Burnup Correction
-%     Ratio (BCR), the snapshot database, the cycle
-%       [M&C 2027 paper, materials/fission_matrix_HPMR/thesis_bundle_FM_burnup/
-%        paper/main.tex, secs. 3-5]
-%   - Note: the interpolated matrices used here rely on the correction ratios
-%     detailed in Chapter 8 (forward reference, concept anticipated in Ch. 6).
-%   - Known caveat from tesi_FM_HPMR/CLAUDE.md: sigma_keff of the four
-%     criticality-search cases (16/19/15/17 pcm) is not reproducible (Serpent
-%     outputs lost) -- to be stated honestly in the text; Case 7 discrepancy
-%     notebook vs article still to be resolved with Christian.
-% =============================================================================
+\section{Scope}
+
+This chapter applies the framework of Chapter~\ref{ch:fm-theory} to the
+problem that motivates Part~II: finding, at a given power and at a given point
+of the fuel cycle, the drum angle that makes the VTB core critical, together
+with the temperature field and the fission source that correspond to it. The
+construction proceeds in three steps. A database of fission matrices is built
+over the two parameters that the search moves, the fuel temperature and the
+drum angle, and its density is settled by a convergence study. A correlation
+between power and fuel temperature replaces the thermal solver, so that the
+search can be closed on the fission matrix alone. The search algorithm is then
+defined, verified against reference Monte Carlo calculations at beginning of
+life, and extended along the fuel cycle through a multiplicative correction
+for burnup, the first instance of the correction ratios introduced in general
+terms in Sec.~\ref{fm:sec:ratios}.
+
+The Reflector Correction Ratio, which accounts for the temperature difference
+between core and reflector and is the subject of
+Chapter~\ref{ch:correction-ratios}, is not applied to any result of this
+chapter. At the reference state of the cycle analysis it would shift the
+multiplication factor by $+10$~pcm, uniformly along the cycle; the residuals
+reported below are therefore those of the interpolation alone, and the
+reflector correction is examined separately, on its own test cases, in the
+next chapter.
+
+\section{The fission matrix database}\label{cs:sec:database}
+
+\subsection{Parameters and entries}
+
+Two parameters are retained. The first is the temperature of the system: each
+entry of the database is a whole-core criticality calculation at one uniform
+temperature, applied to fuel, moderator, reflector and structures alike, with
+no spatial gradient. The second is the rotation angle $\theta$ of the control
+drums, one common angle for the twelve drums, which preserves a symmetric
+control strategy. The angle is measured from the position in which the
+absorber sector faces outwards, $\theta=\ang{0}$, drums fully extracted, to
+the position in which it faces the core, $\theta=\ang{180}$; the effect of the
+rotation is symmetric beyond \ang{180}, so the interval $[\ang{0},\ang{180}]$
+covers every configuration. The temperature axis has eight levels, from
+\SI{300}{K} to \SI{1000}{K} in steps of \SI{100}{K}. The number of levels on
+the drum axis is the object of the convergence study of
+Sec.~\ref{cs:sec:selection}.
+
+Each entry is tallied with the discretization of Sec.~\ref{fm:sec:model},
+ninety cells and $90\times90$ coefficients, from a Serpent~2 criticality
+calculation with $10^{5}$ neutrons per cycle and 500 active cycles. The
+complete database, eight temperatures by seventeen angles, contains 136
+matrices. Figure~\ref{cs:fig:sanity} shows the multiplication factor of the
+tallied matrices over the grid: it ranges from 0.9094 to 1.0467, decreasing
+with the temperature at fixed angle and with the angle at fixed temperature,
+and the locus $k_{\mathrm{eff}}=1$ crosses the grid from about \ang{57} at
+\SI{1000}{K} to about \ang{85} at \SI{300}{K}. Eighty-nine per cent of the
+coefficients are non-zero, and the median relative statistical uncertainty of
+the coefficients is \SI{9.0}{\percent}.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.95\textwidth]{Chapter7/Figs/fmdb_sanity_map_of_the_tallied_matrices.pdf}
+  \caption[Multiplication factor of the tallied database]{Multiplication factor
+  of the 136 tallied matrices of the database over the temperature and
+  drum-angle grid, with the locus $k_{\mathrm{eff}}=1$.}
+  \label{cs:fig:sanity}
+\end{figure}
+
+\subsection{Bilinear interpolation}\label{cs:sec:interp}
+
+With two parameters, the coefficient-wise interpolation of
+Sec.~\ref{fm:sec:database} is bilinear between the four entries that bracket
+the target point. Let $d_T$ and $d_\theta$ be the indices of the database
+levels immediately below the target temperature of cell $i$,
+$\tilde T_{f,i}$, and the target angle $\tilde\theta$, so that
+$\tilde T_{f,i}\in[T^{(d_T)},T^{(d_T+1)}]$ and
+$\tilde\theta\in[\theta^{(d_\theta)},\theta^{(d_\theta+1)}]$. Then
+%
+\begin{equation}
+  \tilde a_{ij}(\tilde T_{f,i},\tilde\theta) \;=\;
+  \sum_{p=0}^{1}\sum_{q=0}^{1}
+  w_T^{(p)}\!\left(\tilde T_{f,i}\right)\,
+  w_\theta^{(q)}\!\left(\tilde\theta\right)\,
+  a_{ij}^{(d_T+p,\;d_\theta+q)},
+  \label{cs:eq:interp}
+\end{equation}
+%
+where $a_{ij}^{(d_T+p,\,d_\theta+q)}$ is the coefficient tallied at the
+corresponding grid point and the weights are the linear ones,
+$w_T^{(1)} = (\tilde T_{f,i} - T^{(d_T)})/(T^{(d_T+1)} - T^{(d_T)})$,
+$w_T^{(0)} = 1 - w_T^{(1)}$, and likewise for $\theta$. The temperature that
+selects the position on the temperature axis is that of the destination cell
+$i$, the row of the coefficient, as stated in Sec.~\ref{fm:sec:database}; the
+angle is common to the whole matrix. The linear scheme is the simplest that
+could be tested. More elaborate interpolants, and in particular schemes that
+would reduce the number of entries required, were left to future work.
+
+\subsection{Selection of the database}\label{cs:sec:selection}
+
+The number of entries required for a given accuracy is not known in advance.
+It was settled by a nested procedure: a coarse database is built first, its
+adequacy is judged by reproducing a fixed set of reference calculations, and
+if the root-mean-square of $\Delta k_{\mathrm{eff}}$ over the set does not
+fall within the statistical uncertainty of the references, entries are added.
+The reference states are the same for every candidate and are taken at the
+midpoints between neighbouring points of the finest grid, where the
+interpolation error is largest: five temperatures, 350, 550, 650, 750 and
+\SI{950}{K}, combined with three angles, \ang{5.625}, \ang{84.375} and
+\ang{174.375}, fifteen cases in all. More elaborate adaptive strategies exist;
+the nested one was adopted deliberately for its transparency.
+
+Three databases were compared, Fig.~\ref{cs:fig:nested}. They share the eight
+temperature levels and differ only in the drum axis: five angles in steps of
+\ang{45} for Database~1, nine in steps of \ang{22.5} for Database~2 and
+seventeen in steps of \ang{11.25} for Database~3. Only the drum axis was
+refined because the rotation of the drums acts on the reactivity, and hence
+on the coefficients, more strongly and less linearly than the temperature
+does, as also observed on a research reactor with control rods
+\cite{RauWaltersNSE2021}.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.62\textwidth]{Chapter7/Figs/nested_databases.png}
+  \caption[The three nested databases]{Grid points of the three nested
+  databases over temperature and drum angle, and the fifteen reference states
+  used to compare them (crosses).}
+  \label{cs:fig:nested}
+\end{figure}
+
+Figure~\ref{cs:fig:dbsel} shows $\Delta k_{\mathrm{eff}}$ between the
+interpolated matrix and the reference calculation for the fifteen cases and
+the three databases, and Table~\ref{cs:tab:dbsel} summarizes the metrics of
+Sec.~\ref{fm:sec:metrics}. The root-mean-square deviation on the
+multiplication factor falls from 165~pcm with Database~1 to 74~pcm with
+Database~2 and to 29~pcm with Database~3, where most of the cases fall within
+the statistical uncertainty of the references; the fission source improves
+less, from \SI{1.1}{\percent} to \SI{0.8}{\percent}, since the source shape is
+less sensitive to the angle than the eigenvalue is. Database~3 is the one used
+in the rest of Part~II.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.95\textwidth]{Chapter7/Figs/linear_interpolation_improvement_changing_database.png}
+  \caption[Interpolation error for the three databases]{Deviation of the
+  multiplication factor of the interpolated matrix from the reference
+  calculation at the fifteen reference states, for the three nested databases,
+  with the $1\sigma$ statistical uncertainty of the references.}
+  \label{cs:fig:dbsel}
+\end{figure}
+
+\begin{table}[htbp]
+  \centering
+  \caption[Interpolation error for the three databases]{Interpolation error
+  over the fifteen reference states for the three nested databases: smallest,
+  largest and root-mean-square absolute deviation of the multiplication factor,
+  root-mean-square deviation of the fission source and largest local
+  deviation.}
+  \label{cs:tab:dbsel}
+  \begin{tabular}{lccccc}
+    \toprule
+    & \multicolumn{3}{c}{$|\Delta k_{\mathrm{eff}}|$ (pcm)} &
+    RMSE-$\tilde F$ (\%) & $\max|\delta\tilde F_i|$ (\%) \\
+    \cmidrule(lr){2-4}
+    & min & max & RMSE & & \\
+    \midrule
+    Database 1 (5 angles)  & 87.9 & 228.7 & 164.9 & 1.12 & 2.4 \\
+    Database 2 (9 angles)  &  8.4 & 122.8 &  74.2 & 1.10 & 1.6 \\
+    Database 3 (17 angles) &  0.1 &  61.0 &  28.5 & 0.82 & 1.2 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Power and fuel temperature correlation}\label{cs:sec:correlation}
+
+No thermal calculation is performed in this work: neither a conduction model
+of the assembly nor a model of the heat pipes is coupled to the fission
+matrix. The fuel temperature field that enters the interpolation is obtained
+from the reactor power and from the fission source through a prescribed
+correlation, under two assumptions: that the average fuel temperature scales
+linearly with the power, and that the spatial distribution of the temperature
+is proportional to that of the fission source, $T_{f,i}\propto\tilde F_i$. For
+cell $i$,
+%
+\begin{equation}
+  T_{f,i} \;=\; \frac{P}{P_N}\,\xi_i + T_{\min,\mathrm{DB}},
+  \qquad
+  \xi_i \;=\; \frac{\tilde F_i - \min(\tilde{\mathbf F})}
+                   {\max(\tilde{\mathbf F}) - \min(\tilde{\mathbf F})}\,
+              \Delta T_{\mathrm{range}} + \big(T_{f,\min} - T_{\min,\mathrm{DB}}\big),
+  \label{cs:eq:correlation}
+\end{equation}
+%
+where $P$ is the reactor power, the independent variable, $P_N=\SI{2}{MW}$ its
+nominal value, $T_{\min,\mathrm{DB}}=\SI{300}{K}$ the lowest temperature of
+the database, and $T_{f,\min}$ and $\Delta T_{\mathrm{range}}$ are the minimum
+fuel temperature and the temperature spread inside the core at nominal power,
+which have to be provided as inputs. Throughout Part~II they are
+$T_{f,\min}=\SI{823}{K}$ and $\Delta T_{\mathrm{range}}=\SI{51}{K}$, the values
+that reproduce, at nominal power, the \SIrange{823}{874}{K} range of the
+reference multiphysics solution of the same core distributed with the model
+\cite{moose_vtb_mrad_description}. Since the coldest cell of the core must not
+exceed the highest temperature of the database, $T_{\max,\mathrm{DB}}=\SI{1000}{K}$,
+the correlation is valid up to a maximum power
+%
+\begin{equation}
+  P_{\max} \;=\; \frac{\big(T_{\max,\mathrm{DB}} - T_{\min,\mathrm{DB}}\big)\,P_N}
+                      {\Delta T_{\mathrm{range}} + \big(T_{f,\min} - T_{\min,\mathrm{DB}}\big)},
+  \label{cs:eq:pmax}
+\end{equation}
+%
+which with the parameters above is \SI{2.44}{MW}. Powers beyond that limit
+would require entries at higher uniform temperatures.
+
+Three properties of this correlation determine what the verification of the
+following sections can and cannot measure. It is local and instantaneous:
+each cell is mapped on its own, with no conduction between cells and no
+dynamics of the heat pipes. It is normalized: the coldest and the hottest cell
+sit at the two ends of the interval by construction, so that what
+Eq.~(\ref{cs:eq:correlation}) provides is the spatial redistribution of the
+temperature, which assemblies are hot and which are cold, and not the absolute
+spread, which is fixed a priori at each power. And it is shared by the
+workflow and by the reference calculations against which the workflow is
+verified: the references impose the same temperature profile through the
+multiphysics interface of Serpent. The deviations reported in this chapter
+therefore measure the accuracy of the fission matrix interpolation and of the
+burnup correction, and not that of a thermal model. The coupling of the method
+with a dedicated thermal model, and with a heat-pipe model in particular, is
+left to future developments.
+
+\section{The criticality search algorithm}\label{cs:sec:algorithm}
+
+The correlation makes it possible to automate both the computation of the
+fuel temperature field and the search for the drum angle at which
+$k_{\mathrm{eff}}=1$, accounting for the thermal feedback on the fission
+source. The algorithm follows the scheme proposed for a research reactor with
+control rods \cite{Topham2020} and consists of two nested loops around the
+interpolated matrix.
+
+\begin{enumerate}
+  \item \textbf{Initialization.} The drum angle is set to $\theta=\ang{0}$, the
+  fission source to a flat guess, and the power $P$ and the parameters
+  $T_{f,\min}$ and $\Delta T_{\mathrm{range}}$ of the correlation are assigned.
+  \item \textbf{Neutronic--thermal equilibrium at fixed angle} (inner loop).
+  \begin{enumerate}
+    \item the fuel temperature field is computed from the current fission
+    source with Eq.~(\ref{cs:eq:correlation});
+    \item the matrix is interpolated at that field and at the current angle
+    with Eq.~(\ref{cs:eq:interp}), and the eigenproblem
+    (\ref{fm:eq:eigen}) is solved for $\tilde k_{\mathrm{eff}}$ and
+    $\tilde{\mathbf F}$;
+    \item the temperature field is recomputed from the new source;
+    \item if the field differs from the previous one by more than
+    $\epsilon=\SI{0.5}{\percent}$, the loop returns to step (b).
+  \end{enumerate}
+  \item \textbf{Criticality check} (outer loop). If
+  $|\tilde k_{\mathrm{eff}}-1|<\delta$, the state is critical; otherwise the
+  angle is updated by bisection on $[\ang{0},\ang{180}]$, rotating the absorber
+  towards the core when the system is supercritical and away from it when it
+  is subcritical, and the algorithm returns to step 2.
+  \item \textbf{Finalization.} The critical drum angle, the temperature field
+  and the fission source of the converged state are stored.
+\end{enumerate}
+
+The tolerance $\delta$ is \SI{1}{pcm} when the search is run deterministically,
+as in the power scans of Sec.~\ref{cs:sec:bol}. When the statistical
+uncertainty of the database is propagated, as described next, the search stops
+instead when the $\pm1\sigma$ band of the last two iterates contains
+$k_{\mathrm{eff}}=1$: the drum angle is not resolved beyond the statistical
+resolution of the database, and the condition on two consecutive iterates
+avoids stopping on a single favourable bisection step. A guard completes the
+algorithm for the cycle analysis: if the core is subcritical with the drums
+fully extracted, criticality cannot be restored, and that event defines the
+end of the cycle life. The complete scheme, burnup step included, is drawn in
+Fig.~\ref{cs:fig:flow} of Sec.~\ref{cs:sec:cycle}. Each outer iteration
+requires several evaluations of the fission matrix, one per pass of the inner
+loop; a warm start on the fission source of the previous iteration keeps the
+number of passes close to one.
+
+\subsection{Uncertainty of the search results}\label{cs:sec:ensemble}
+
+The uncertainty of the database is propagated with the ensemble method of
+Sec.~\ref{fm:sec:uq}, in the following form. The uncertainty of the tallied
+coefficients is systematic with respect to the search: one set of tallies,
+shared by every evaluation the search performs. It is therefore represented
+by a fixed ensemble of database realizations. In realization $r$ every
+coefficient is drawn from a Gaussian centred on its tallied value, with
+standard deviation equal to its tallied uncertainty, independently of all the
+others and truncated at zero; the realizations are generated once from a fixed
+seed and kept in memory, so that realization $r$ is the same database wherever
+it is used and all the results of the chapter are mutually coherent. Only the
+temperature levels that the search can reach at the given power are perturbed:
+at fixed power, Eq.~(\ref{cs:eq:correlation}) confines the profile to a single
+interval of the temperature grid, and the remaining coefficients are never
+read.
+
+At every state the search visits, the interpolated matrix is built from each
+realization and the eigenproblem is solved; the standard deviation of the
+eigenvalues over the ensemble is $\sigma_k$, while the estimate itself is
+evaluated on the tallied database. The uncertainty of the converged drum angle
+follows from the local differential drum worth,
+%
+\begin{equation}
+  \sigma_\theta \;=\; \frac{\sigma_k}{\,|\mathrm d k_{\mathrm{eff}}/\mathrm d\theta|\,},
+  \label{cs:eq:sigmatheta}
+\end{equation}
+%
+with the derivative evaluated by two additional eigenvalue solutions at
+$\pm\ang{1}$ from the converged angle. This linear propagation was verified
+against fifty complete searches per state, one per database realization: the
+two estimates of $\sigma_\theta$ agree within \SI{3}{\percent}. The same
+$\sigma_k$ drives the statistical stopping criterion of the search.
+
+The size of the ensemble was chosen after checking the convergence of
+$\sigma_k$. With twenty realizations $\sigma_k$ is underestimated by 10 to
+\SI{15}{\percent} and varies by as much between independent groups of twenty;
+with fifty it is within \SI{5}{\percent} of its value at two hundred. Fifty
+realizations are used along the cycle, Sec.~\ref{cs:sec:cycle}, and one
+hundred in the single search at nominal power of the next section. As
+discussed in Sec.~\ref{fm:sec:uq}, perturbing the coefficients independently
+neglects the correlations among the tallies of one run, so that the bands are
+conservative: the replicate comparisons of Sec.~\ref{cs:sec:hypotheses}
+indicate that they overestimate the observed scatter by roughly a factor 1.5.
+
+\subsection{Convergence at nominal power}\label{cs:sec:convergence}
+
+Figure~\ref{cs:fig:search} shows one search at $P=\SI{2}{MW}$ and fresh fuel,
+iteration by iteration: the multiplication factor and the drum angle returned
+by each outer iteration, with the cumulative computing time on the upper axis.
+Each outer iteration hides an inner loop and, once the iterates enter the
+stopping region, the evaluation of the whole ensemble, so that the times on
+the upper axis are the total cost of each step, uncertainty quantification
+included. The search converges in twelve outer iterations and \SI{1.1}{s} on a
+single core, of which sixteen nominal evaluations of the matrix and seven
+sweeps of the one hundred realizations. The critical angle is
+$\theta_{\mathrm{crit}}=\ang{62.31}\pm\ang{0.14}$, the uncertainty being that
+of Eq.~(\ref{cs:eq:sigmatheta}), and the multiplication factor at convergence
+is $1.00004\pm11$~pcm.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.95\textwidth]{Chapter7/Figs/criticality_search_at_p_2_mw.pdf}
+  \caption[Convergence of the criticality search at nominal power]{Criticality
+  search at nominal power and fresh fuel: multiplication factor (left axis) and
+  drum angle (right axis) at each outer iteration, with the cumulative computing
+  time on the upper axis, uncertainty quantification included. The inset
+  resolves the convergence region in pcm, with the $\pm1\sigma$ bands of the
+  ensemble and the reference Serpent~2 calculation at the drum angle returned
+  by the search.}
+  \label{cs:fig:search}
+\end{figure}
+
+A reference Serpent~2 criticality calculation at the converged state, drums at
+the angle returned by the search and the converged temperature field imposed
+through the multiphysics interface, gives $k_{\mathrm{eff}}=1.00060\pm12$~pcm.
+The deviation of the workflow from the reference is therefore $-56\pm16$~pcm,
+where the uncertainty combines the two contributions of
+Eq.~(\ref{fm:eq:sigma}). It is $3.4$ standard deviations from zero, so it is
+not statistical noise: it is the interpolation residual of the database at
+this state, of the same magnitude as the residuals of Table~\ref{cs:tab:dbsel},
+and it will be met again, unchanged, along the whole cycle
+(Sec.~\ref{cs:sec:cycle-results}).
+
+The cost of the search is dominated by the eigenvalue solutions. Run
+deterministically, with the \SI{1}{pcm} criterion and no ensemble, a search
+converges in thirteen outer iterations, seventeen evaluations of the matrix
+and \SI{29}{ms} on one core, averaged over twenty searches; \SI{77}{\percent}
+of the time is the eigenvalue solution, \SI{17}{\percent} the interpolation
+and \SI{6}{\percent} the inner loop with the correlation. With the ensemble,
+\SI{97}{\percent} of the \SI{1.1}{s} is the uncertainty quantification, again
+mostly eigenvalue solutions. For comparison, one criticality calculation of
+the database costs about \SI{63}{CPU\,h}, that is, about \SI{2.1}{h} on the
+thirty-core workstation on which the database was generated
+(Sec.~\ref{cs:sec:cost}); a Monte Carlo search with the same twelve
+iterations would take about a day of wall-clock time on that machine, against
+one second, and every additional search costs the same again, whereas the
+database is paid for once.
+
+\subsection{Critical drum angle against power at beginning of life}\label{cs:sec:bol}
+
+Figure~\ref{cs:fig:power} shows the critical drum angle as a function of the
+power, from zero to \SI{2.4}{MW}, obtained with the deterministic criterion,
+together with the minimum and maximum fuel temperature of the core at each
+power. The relation is close to linear: the critical angle moves from
+\ang{84.8} at zero power to \ang{62.4} at nominal power and to about \ang{58}
+at \SI{2.4}{MW}; the curvature is due to the thermal feedback, which is small
+compared with the drum worth. At nominal power the search gives
+$\theta_{\mathrm{crit}}=\ang{62.36}$ with a temperature range of
+\SIrange{823}{874}{K}, the range of the reference multiphysics solution by
+construction of the correlation. The zero-power point is a check that involves
+no temperature interpolation: at $P=0$ the system is uniform at \SI{300}{K},
+one of the database levels, and the critical angle of \ang{84.81} returned by
+the search compares with \ang{84.90} read directly from the crossing of unity
+of the tallied $k_{\mathrm{eff}}(\theta)$ at that temperature.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.90\textwidth]{Chapter7/Figs/bol_critical_drum_angle_vs_power_vita_fig_13_layout.pdf}
+  \caption[Critical drum angle against power]{Critical drum angle at beginning
+  of life as a function of the reactor power, from zero to \SI{2.4}{MW}
+  (crosses, left axis), with the minimum and maximum fuel temperature of the
+  core at each power (right axis).}
+  \label{cs:fig:power}
+\end{figure}
+
+The verification of the search against reference calculations at powers other
+than the nominal one was carried out, in the original study, with the
+Reflector Correction Ratio applied to the interpolated matrix. Those results
+belong to the next chapter and are not reported here; the verification of the
+uncorrected workflow rests on the nominal-power case above and on the twelve
+reference states of the cycle analysis that follows, all at nominal power. The
+construction does not depend on the power level, since the temperature axis of
+the database carries it, and the same procedure applies at any power below
+$P_{\max}$.
+
+\section{Extension to burnup}\label{cs:sec:burnup}
+
+\subsection{The size of the database}
+
+Fuel depletion changes the coefficients of the fission matrix through the
+composition of the fuel, and a cycle analysis needs those changes: the drum
+angle that keeps the core critical, the remaining excess reactivity and the
+cycle length. Burnup-dependent fission-matrix methods exist, for instance the
+burnup algorithm of the RAPID code system \cite{pungercic2023brapid} and the
+coupling of the fission matrix with depletion of Ref.~\cite{he2024combined}.
+The question here is different: how to add burnup to a database that already
+spans temperature and drum angle without multiplying its size.
+
+The direct extension is a third axis, one matrix for every combination of
+temperature level, drum angle and burnup step. With the twelve burnup steps
+used below this means $8\times17\times12=1632$ criticality calculations,
+twelve times the existing campaign, each one needing the composition of its
+step and therefore a depletion history behind it. The database would grow
+with every axis added, and the method would lose what makes it attractive:
+one tallying campaign, followed by an unlimited number of searches at
+negligible cost.
+
+\subsection{The Burnup Correction Ratio}\label{cs:sec:bcr}
+
+The composition effect is therefore factorized out of the interpolated matrix,
+in the form anticipated in Sec.~\ref{fm:sec:ratios}. The interpolated
+coefficient is multiplied element by element by a Burnup Correction Ratio
+(BCR), the ratio between the coefficient tallied at a burnup snapshot and the
+coefficient tallied at the fresh state, under fixed reference conditions:
+%
+\begin{equation}
+  \tilde a^{*}_{ij}(\tilde T_{f,i},\tilde\theta,t) \;=\;
+  \tilde a_{ij}(\tilde T_{f,i},\tilde\theta)\cdot \mathrm{BCR}_{ij}(t),
+  \qquad
+  \mathrm{BCR}_{ij}(t_s) \;=\; \frac{a^{\mathrm{snap}}_{ij}(t_s)}{a^{\mathrm{snap}}_{ij}(0)} .
+  \label{cs:eq:bcr}
+\end{equation}
+%
+Numerator and denominator are fission-matrix tallies at the same reference
+conditions, drums fully extracted, $\theta_{\mathrm{ref}}=\ang{0}$, and the
+nominal-power temperature state of Sec.~\ref{cs:sec:bol}; they differ only in
+the fuel composition, taken from a depletion history at the snapshot times
+$t_s$. Between snapshots the ratio is interpolated linearly in time. Among the
+correction ratios of Part~II this is the simplest instance: the weight that
+scales the reflector and core-temperature corrections of
+Chapter~\ref{ch:correction-ratios} with the temperature field is here
+identically one, because the effect corrected, the composition, is present in
+full at every state of the cycle. Systematic effects common to numerator and
+denominator cancel in the ratio, while the interpolated matrix keeps the
+temperature and drum dependence. Ratios far from unity can only come from
+coefficients tallied with a few counts, so the ratio is limited to the
+interval $[0.5,2]$: at 66 months the limit affects \SI{7}{\percent} of the
+coefficients, which carry \SI{0.02}{\percent} of the weight of the matrix, and
+removing it changes $k_{\mathrm{eff}}$ by \SI{5}{pcm}.
+
+Equation~(\ref{cs:eq:bcr}) rests on three assumptions, each of which is
+measured on a dedicated campaign in Sec.~\ref{cs:sec:hypotheses}: the burnup
+response of a coefficient does not depend on the drum angle at which it is
+tallied (angle independence); it does not depend on the temperature state
+(frozen temperature); and the compositions of one depletion history, run with
+the drums fully extracted, represent those of the operating reactor, whose
+drums follow the critical trajectory (single history).
+
+\subsection{The snapshot database}\label{cs:sec:snapshots}
+
+The snapshot times are $t_s\in\{0,\,0.25,\,0.5,\,1,\,2,\,4,\,8,\,15,\,24,\,36,\,51,\,66\}$
+months at nominal power. The grid is dense in the first two months and sparse
+afterwards. Early in life the fission-product inventory is furthest from
+linear: the snapshots carry the build-in of $^{135}$Xe, which saturates within
+days, and of $^{149}$Sm, which takes about two years at the low flux of this
+design (Sec.~\ref{cs:sec:inventory}). Afterwards the evolution is close to
+linear, because the design has no burnable poisons. The grid runs to 66
+months, so that the whole cycle, end of life included, is covered by the
+database and not by extrapolation.
+
+The campaign is split in two parts. One low-statistics depletion calculation,
+$2\times10^{4}$ neutrons per cycle and 260 active cycles, at the reference
+state gives the compositions at the snapshot times and writes a restart file.
+Twelve independent full-statistics transport calculations, with the same
+population as the database entries and their own random-number seeds, read one
+snapshot composition each from that file and tally the matrix. Numerator and
+denominator of every ratio are therefore statistically independent runs. The
+snapshot matrices have the same median relative uncertainty as the database,
+\SI{9.2}{\percent}. The restart file makes every additional variant a
+transport-only cost: the angle-resolved snapshots and the evolved-temperature
+snapshot used to test the assumptions come from the same depletion. The
+snapshot database receives the same ensemble treatment as the main database:
+numerator and denominator of the ratio are perturbed independently, and every
+uncertainty band of the cycle carries both databases.
+
+\subsection{The quasi-static cycle}\label{cs:sec:cycle}
+
+The workflow marches the cycle on an evolution grid, sub-monthly below one
+month and monthly afterwards, 71 steps in all. At every step the full
+criticality search of Sec.~\ref{cs:sec:algorithm} runs on the corrected matrix
+of Eq.~(\ref{cs:eq:bcr}), so that drum position, temperature field and
+fission source are updated together, consistently, at every step. The
+cell-wise burnup advances with a predictor--corrector step,
+%
+\begin{equation}
+  BU_i \;\leftarrow\; BU_i + \frac{P\,\bar F_i\,\Delta t}{m_i},
+  \label{cs:eq:bustep}
+\end{equation}
+%
+where $\bar F_i$ is the fission-source fraction of cell $i$ averaged over the
+step and $m_i$ the heavy-metal mass of the cell, the total inventory of
+\SI{448.5}{kg} being read from the Serpent output. The march ends when the
+search can no longer restore criticality with the drums fully extracted.
+Figure~\ref{cs:fig:flow} draws the complete scheme.
+
+\begin{figure}[htbp]
+  \centering
+  \scriptsize
+  \begin{tikzpicture}[
+      node distance = 2.2mm,
+      every node/.style = {font=\scriptsize},
+      box/.style   = {draw, rounded corners=1pt, align=center, inner sep=3pt,
+                      text width=62mm, minimum height=4.6mm},
+      dec/.style   = {draw, diamond, aspect=3.6, align=center, inner sep=0pt,
+                      text width=44mm, minimum height=4.6mm},
+      io/.style    = {draw, thick, rounded corners=3pt, align=center,
+                      inner sep=3pt, text width=62mm},
+      ar/.style    = {-{Latex[length=1.6mm]}}]
+
+    \node[io]                       (start) {$t=0$, \; $BU_i = 0$, \; $\theta=\ang{0}$, \; flat $\mathbf F$};
+    \node[box, below=of start]      (mat)   {$\tilde a^{*}_{ij} = \tilde a_{ij}(\tilde T_{f,i},\tilde\theta)\cdot \mathrm{BCR}_{ij}(t)$};
+    \node[box, below=of mat]        (th)    {$T_{f,i}$ from $\tilde{\mathbf F}$, Eq.~(\ref{cs:eq:correlation}); \;
+                                             $\tilde k_{\mathrm{eff}}, \tilde{\mathbf F}$ from Eq.~(\ref{fm:eq:eigen})};
+    \node[dec, below=3mm of th]     (dt)    {$\Delta T < 0.5\%$ ?};
+    \node[dec, below=3mm of dt]     (crit)  {$|\tilde k_{\mathrm{eff}}-1| \le \sigma_k$ twice ?};
+    \node[box, below=3mm of crit]   (bu)    {record $\theta_{\mathrm{crit}}(t)$ and $\sigma_\theta$, Eq.~(\ref{cs:eq:sigmatheta}); \\
+                                             $BU_i \leftarrow BU_i + P\,\bar F_i\,\Delta t/m_i$};
+    \node[dec, below=3mm of bu]     (eol)   {critical with $\theta = \ang{0}$ ?};
+    \node[io, below=3mm of eol]     (eolx)  {end of cycle life};
+
+    \draw[ar] (start) -- (mat);
+    \draw[ar] (mat) -- (th);
+    \draw[ar] (th) -- (dt);
+    \draw[ar] (dt) -- node[right, pos=0.45] {yes} (crit);
+    \draw[ar] (crit) -- node[right, pos=0.45] {yes} (bu);
+    \draw[ar] (bu) -- (eol);
+    \draw[ar] (eol) -- node[right, pos=0.45] {no} (eolx);
+
+    \draw[ar] (dt.west) -- ++(-5mm,0) node[midway, above] {no} |- (th.west);
+    \draw[ar] (crit.east) -- ++(6mm,0) node[midway, above] {no}
+              |- (mat.east) node[pos=0.28, right, xshift=1mm] {bisect $\theta$};
+    \draw[ar] (eol.west) -- ++(-8mm,0) node[midway, above] {yes}
+              |- (mat.west) node[pos=0.28, left, xshift=-1mm] {$t \leftarrow t+\Delta t$};
+  \end{tikzpicture}
+  \caption[The quasi-static cycle]{The criticality search and the quasi-static
+  cycle. The inner loop (left return) is the neutronic--thermal equilibrium at
+  fixed drum angle; the outer loop (right return) is the bisection on the drum
+  angle, stopped when the multiplication factor lies inside the $\pm\sigma_k$
+  band of the ensemble on two consecutive iterates; the outermost loop advances
+  the cell-wise burnup and enters the next time step. Burnup enters only
+  through the factor $\mathrm{BCR}_{ij}(t)$ of the second box; with the
+  deterministic criterion and no burnup step the same scheme is the search of
+  Sec.~\ref{cs:sec:algorithm}.}
+  \label{cs:fig:flow}
+\end{figure}
+
+\section{Results over the cycle}\label{cs:sec:cycle-results}
+
+\subsection{The critical drum angle and its verification}
+
+Figure~\ref{cs:fig:cycle} shows the critical drum angle over the 66-month
+cycle at \SI{2}{MW}, up to a core-average burnup of \SI{8.96}{MWd/kg}, with
+the $\pm1\sigma$ band of the fifty database realizations. The drums move
+monotonically from \ang{62.3} to \ang{12.0}. The build-in of $^{135}$Xe is
+visible in the first week, where the angle drops from \ang{62.4} to
+\ang{59.9}; the inset compares the quasi-static march with searches run
+directly at the snapshot times, which coincide within the band. The maps
+above the curve show the normalized fission source of the workflow at the
+twelve snapshot times, assembly-wise and axially integrated, and the maps
+below its assembly-wise error against the reference calculations.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{Chapter7/Figs/critical_drum_angle_fission_source_and_source_error_over_the.pdf}
+  \caption[Critical drum angle over the cycle]{Critical drum angle over the
+  cycle at nominal power (core-average burnup on the upper axis), with the
+  $\pm1\sigma$ band of the fifty database realizations and the twelve states at
+  which the reference calculations were run. For each of those states: the
+  normalized fission source of the workflow (upper maps) and its assembly-wise
+  error against the Serpent~2 reference (lower maps). The inset resolves the
+  first months, where the isotopic settling takes place, and compares the
+  quasi-static cycle with searches run directly at the snapshot times. Bottom
+  panel: deviation of the workflow multiplication factor from the reference at
+  the twelve states, with the combined $\pm1\sigma$ uncertainty; the cases are
+  equally spaced for readability.}
+  \label{cs:fig:cycle}
+\end{figure}
+
+The workflow is verified with twelve reference Serpent~2 criticality
+calculations, one per snapshot time, with the protocol of
+Sec.~\ref{cs:sec:convergence}. Each reference imposes the composition of that
+snapshot, the drums at the critical angle returned by the algorithm and the
+converged temperature field of the workflow, through the multiphysics
+interface; the workflow is evaluated at exactly that state.
+Table~\ref{cs:tab:verification} lists the twelve comparisons. The deviation
+$\Delta k_{\mathrm{eff}}$ lies between $-59$ and $-5$~pcm over the whole cycle,
+with a root-mean-square of \SI{40}{pcm}, against a combined statistical
+uncertainty of 31 to \SI{37}{pcm}. The bias is the one already present at
+beginning of life, where the correction ratio is identically one; it shows no
+trend with burnup, the twelve points scattering about $-35$~pcm within their
+bands. The burnup correction therefore adds no measurable error up to the
+exposure reached here. The assembly-wise fission source agrees with the
+references to \SI{0.35}{\percent} on average and \SI{1.37}{\percent} at most.
+
+\begin{table}[htbp]
+  \centering
+  \caption[Verification of the cycle against reference calculations]{Verification
+  of the workflow at the twelve snapshot times: critical drum angle returned by
+  the algorithm, multiplication factor of the reference Serpent~2 calculation at
+  that state, deviation of the workflow from the reference and combined
+  $1\sigma$ uncertainty.}
+  \label{cs:tab:verification}
+  \begin{tabular}{S[table-format=2.2] S[table-format=2.2] S[table-format=1.5] S[table-format=-2.0] S[table-format=2.0]}
+    \toprule
+    {$t$ (months)} & {$\theta_{\mathrm{crit}}$ (deg)} & {$k^{\mathrm{MC}}_{\mathrm{eff}}$} &
+    {$\Delta k_{\mathrm{eff}}$ (pcm)} & {$\sigma_{\mathrm{tot}}$ (pcm)} \\
+    \midrule
+     0    & 62.36 & 1.00060 & -59 & 16 \\
+     0.25 & 59.94 & 1.00030 & -30 & 35 \\
+     0.5  & 59.46 & 1.00047 & -46 & 35 \\
+     1    & 59.08 & 1.00045 & -44 & 31 \\
+     2    & 58.34 & 1.00005 &  -5 & 33 \\
+     4    & 56.12 & 1.00027 & -26 & 35 \\
+     8    & 52.73 & 1.00041 & -41 & 35 \\
+    15    & 47.77 & 1.00047 & -47 & 37 \\
+    24    & 42.41 & 1.00058 & -57 & 36 \\
+    36    & 36.06 & 1.00035 & -35 & 32 \\
+    51    & 26.72 & 1.00025 & -24 & 34 \\
+    66    & 12.35 & 1.00033 & -33 & 34 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The uncertainty of the results evolves along the cycle in a way that requires
+a comment. The uncertainty on the eigenvalue, $\sigma_k$, grows from
+\SI{11}{pcm} at beginning of life, where only the main database contributes,
+to 30 to \SI{36}{pcm} once the snapshot tallies enter the ratio, and stays
+nearly constant afterwards. The uncertainty on the angle, $\sigma_\theta$,
+grows instead from \ang{0.14} to \ang{1.3}, and it does so because the
+differential drum worth falls from 78 to \SI{25}{pcm} per degree as the drums
+are withdrawn: the same uncertainty on $k_{\mathrm{eff}}$ maps onto a wider
+interval in angle, and the band of Fig.~\ref{cs:fig:cycle} widens accordingly
+towards the end of the cycle.
+
+\subsection{Excess reactivity and cycle length}
+
+The multiplication factor with the drums fully extracted, evaluated along the
+cycle, sets the cycle length at its crossing of unity,
+Fig.~\ref{cs:fig:drumsout}. It starts at \SI{2870}{pcm} of excess reactivity
+at beginning of life, a value read from the tallied database and not a free
+parameter. The reactivity decreases by \SI{500}{pcm} per year over the second
+year and by \SI{376}{pcm} per year at the end of the window, that is, 307 and
+\SI{231}{pcm} per \si{MWd/kg}; \SI{120}{pcm} are left at 66 months, so that
+the end of life falls near month 70. The reference points of the figure are
+the snapshot transports themselves, full-statistics calculations at
+$\theta=\ang{0}$ with the composition of each snapshot, with their own
+statistics. They are tallied at the reference temperature state, while the
+workflow curve carries the evolved profile, a difference bounded by the
+frozen-temperature test of Sec.~\ref{cs:sec:hypotheses}. The combined
+uncertainty of the two databases on the drums-out multiplication factor is 17
+to \SI{36}{pcm}, and the assembly-wise error of the workflow source against
+the references is \SI{0.24}{\percent} on average and \SI{0.79}{\percent} at
+most.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{Chapter7/Figs/excess_reactivity_with_the_drums_fully_extracted.pdf}
+  \caption[Excess reactivity over the cycle]{Multiplication factor with the
+  drums fully extracted over the cycle: workflow with its $\pm1\sigma$ band and
+  the twelve reference Serpent~2 calculations. For each reference time, with
+  the drums fully extracted, the normalized fission source of the workflow
+  (upper maps) and its assembly-wise error against the reference (lower maps);
+  the maps of Fig.~\ref{cs:fig:cycle} are instead at the critical drum position
+  of each time.}
+  \label{cs:fig:drumsout}
+\end{figure}
+
+\subsection{Fission source, temperature and fuel inventory}\label{cs:sec:inventory}
+
+Without burnable poisons the cells with the highest source burn fastest, lose
+local reactivity, and the distribution flattens over the cycle: the centre
+loses and the drum-adjacent periphery gains. Figure~\ref{cs:fig:flattening}
+shows the assembly peaking factor, which decreases from 1.221 to 1.097, and
+the fuel temperature of the assemblies that are hottest and coldest at
+beginning of life, which converge as the source flattens. The maps of
+Fig.~\ref{cs:fig:bolmaps} locate the change: the source of the central
+assemblies decreases by \SI{11}{\percent} and that of the periphery increases
+by \SI{21}{\percent} between beginning and end of the window, and the
+temperature field of Eq.~(\ref{cs:eq:correlation}) follows, with a
+redistribution of a few kelvin. With that correlation the global extremes of
+the temperature are fixed at each power by construction; the physical content
+of the maps is the spatial redistribution.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{Chapter7/Figs/power_flattening_over_the_cycle.pdf}
+  \caption[Power flattening over the cycle]{Assembly peaking factor of the
+  fission source over the cycle (left) and fuel temperature of the assemblies
+  that are hottest and coldest at beginning of life (right).}
+  \label{cs:fig:flattening}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{Chapter7/Figs/bol.pdf}
+  \caption[Fission source and temperature redistribution]{Assembly-wise
+  normalized fission source at beginning of life (left), its relative change
+  between beginning and end of the 66-month window (centre) and the
+  corresponding change of the fuel temperature (right).}
+  \label{cs:fig:bolmaps}
+\end{figure}
+
+The nuclide inventories come directly from the depletion output,
+Fig.~\ref{cs:fig:inventory}. At 66 months the core-average depletion of
+$^{235}$U is \SI{5.75}{\percent}, \SI{6.58}{\percent} in the middle axial zone
+and \SI{4.28}{\percent} in the top zone, and \SI{6.59}{\percent} in the most
+depleted assembly; $^{239}$Pu builds up to \SI{1.05}{\percent} of the initial
+$^{235}$U atoms. The fission share of $^{235}$U decreases from 0.995 to 0.958
+and that of $^{239}$Pu reaches \SI{3.6}{\percent}; the conversion ratio
+increases from 0.199 to 0.207. The build-in of the two saturating absorbers is
+the physical content of the dense early snapshot grid: $^{135}$Xe is at
+equilibrium at the first snapshot, $^{149}$Sm reaches it after about two
+years. A second depletion, identical in input and with an independent seed,
+reproduces the core-total $^{235}$U inventory to \SI{0.013}{\percent}: the
+composition noise of the low-statistics depletion is far below the tally
+noise of the snapshot matrices, and the depletion is not a source of error.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{Chapter7/Figs/heavy_nuclide_inventory_serpent.pdf}
+  \caption[Fuel inventory over the cycle]{Core-total change of the heavy
+  nuclides over the cycle, in per cent of the initial $^{235}$U atoms (left);
+  build-in of $^{135}$Xe and $^{149}$Sm relative to their end-of-window value
+  (centre); assembly-wise depletion of $^{235}$U at 66 months from the
+  zone-wise depletion output (right).}
+  \label{cs:fig:inventory}
+\end{figure}
+
+\section{The three assumptions of the factorization, measured}\label{cs:sec:hypotheses}
+
+\subsection{Angle independence}
+
+The production snapshots are tallied at a single drum angle. To measure what
+this costs, the snapshot compositions of the same restart file were re-tallied
+at four more angles, \ang{45}, \ang{90}, \ang{135} and \ang{180}: 48
+transports and no additional depletion. The test compares tallied matrices
+only, with no interpolation. At each angle $\theta'$ and snapshot time $t_s$,
+%
+\begin{equation}
+  \Delta k(\theta', t_s) \;=\;
+  k\big[\,a^{\mathrm{tally}}(\theta',0)\cdot \mathrm{BCR}(t_s)\,\big]
+  \;-\; k\big[\,a^{\mathrm{tally}}(\theta', t_s)\,\big],
+  \label{cs:eq:thetatest}
+\end{equation}
+%
+the hypothesis on the left, the truth on the right. Each point carries the
+statistics of four independent tallies, the two matrices at $\theta'$ and the
+two behind the ratio, about \SI{22}{pcm} on $k_{\mathrm{eff}}$, and that is
+the resolution against which the structural error is judged. The 44 measured
+points, Fig.~\ref{cs:fig:theta}, have a root-mean-square of \SI{23}{pcm} and
+none is beyond \SI{59}{pcm}; the means over the cycle at the four angles are
+$-19$, $+11$, $+5$ and $+2$~pcm, with no trend in burnup or angle. The
+hypothesis holds at the resolution of the test at every angle, the \ang{180}
+corner included, which is where a shutdown-margin evaluation would apply the
+ratio farthest from its tally point.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.85\textwidth]{Chapter7/Figs/independence_hypothesis_structural_error_measured.pdf}
+  \caption[Angle-independence test of the burnup correction]{Structural error
+  of the angle-independent Burnup Correction Ratio, Eq.~(\ref{cs:eq:thetatest}),
+  at the four drum angles where the snapshot compositions were re-tallied: one
+  point per snapshot time (colour), the mean over the cycle with its standard
+  error, and the $\pm1\sigma$ band expected from the statistics of the four
+  tallies behind each point.}
+  \label{cs:fig:theta}
+\end{figure}
+
+The effect on the deliverable was also checked, by running the cycle with the
+ratio interpolated between the five tallied angles instead of taken from the
+single reference one, Fig.~\ref{cs:fig:thetacost}. The critical angle differs
+from the single-angle cycle by \ang{0.69} on average and \ang{1.54} at most,
+at 24 months; through the local drum worth of \SI{55}{pcm} per degree at that
+time, the maximum corresponds to \SI{85}{pcm} and the mean to \SI{38}{pcm}.
+Those are the tally statistics of the five-angle variant itself: between two
+tallied planes the ratio is interpolated from matrices that each carry the
+noise of two independent tallies, so that the difference to the single-angle
+variant is noise-dominated, in agreement with the absence of structural error
+found above, and is not a cost of the hypothesis.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.85\textwidth]{Chapter7/Figs/cost_of_the_hypothesis_on_the_critical_drum_angle_real_data.pdf}
+  \caption[Effect of the angle resolution of the correction on the critical
+  angle]{Difference of the critical drum angle over the cycle between the
+  workflow with the correction ratio tallied at a single angle and the
+  workflow with the ratio interpolated between five tallied angles, against
+  the $\pm1\sigma$ band of the databases on the critical angle.}
+  \label{cs:fig:thetacost}
+\end{figure}
+
+\subsection{Frozen temperature}
+
+The snapshots are tallied at the frozen nominal temperature state, so that the
+ratio isolates the composition effect. The temperature dependence is carried
+by the interpolation of Eq.~(\ref{cs:eq:interp}), and letting the snapshots
+follow the evolving profile would count it twice. What the factorization
+neglects is the cross-term between temperature and burnup, that is, the
+dependence of the burnup response itself on the temperature state. It was
+measured with one dedicated transport: the 51-month composition re-tallied
+with the workflow-evolved temperature profile, a redistribution of up to
+\SI{+10}{K} as the source flattens, against the reference-state snapshot with
+the same composition, the same drum angle and an independent seed. The result
+is $\Delta k_{\mathrm{eff}}=-9\pm15$~pcm, statistically zero. At the level of
+the coefficients, Fig.~\ref{cs:fig:frozen}, the dominant ratios have the same
+median in the two cases, 0.9775 against 0.9776, and their differences are
+distributed as the tally noise predicts, with an expected per-coefficient
+standard deviation of 0.021.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{Chapter7/Figs/frozen_t_hypothesis_dominant_coefficients.pdf}
+  \caption[Frozen-temperature test of the burnup correction]{Burnup Correction
+  Ratio at 51 months for the dominant coefficients (upper quarter of the
+  fresh-fuel matrix), tallied with the workflow-evolved temperature profile
+  against the reference temperature state (left), and distribution of the
+  differences compared with the expected tally noise (right).}
+  \label{cs:fig:frozen}
+\end{figure}
+
+\subsection{Single history}
+
+The production depletion runs with the drums fully extracted, while the
+operating reactor keeps them on the critical trajectory. With the drums
+inserted, the flux in the drum-adjacent periphery is depressed and those
+assemblies accumulate exposure more slowly. The hypothesis was measured with a
+second depletion, identical to the first except for the drums, frozen at
+\ang{33.75}, the database angle closest to the time average of the critical
+trajectory. Its compositions were re-tallied at the standard conditions at four
+snapshot times. Table~\ref{cs:tab:history} and Fig.~\ref{cs:fig:history} give
+the effect on the tallied matrices and the effect that survives in the
+workflow, where the ratio from the alternative history replaces the production
+one on the interpolated matrix. The compositions move $k_{\mathrm{eff}}$ by at
+most \SI{27}{pcm}, with a change of sign around mid-cycle, since the shielded
+periphery burns more slowly at first and catches up later. The workflow moves
+by at most \SI{58}{pcm} at mid-cycle and by \SI{3}{pcm} at end of life: the
+cycle length, read at the drums-out crossing, is insensitive to the drum
+history assumed in the depletion.
+
+\begin{table}[htbp]
+  \centering
+  \caption[Single-history test]{Single-history test: $k_{\mathrm{eff}}$ with the
+  drums-inserted depletion history minus $k_{\mathrm{eff}}$ with the production
+  history, on the tallied matrices and in the workflow (pcm). Each entry
+  carries the statistics of two and four independent tallies respectively,
+  about 16 and \SI{22}{pcm}.}
+  \label{cs:tab:history}
+  \begin{tabular}{lcccc}
+    \toprule
+    Time (months) & 8 & 24 & 51 & 66 \\
+    \midrule
+    Tallied matrices & $+22$ & $+27$ & $-26$ & $-26$ \\
+    Workflow         & $+54$ & $+58$ & $+4$  & $+3$  \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.85\textwidth]{Chapter7/Figs/single_history_hypothesis_drums_in_vs_drums_out_depletion.pdf}
+  \caption[Single-history test of the burnup correction]{Effect of the drum
+  history of the depletion on the multiplication factor, on the tallied
+  matrices and in the workflow, against the $\pm1\sigma$ band of the tally
+  statistics.}
+  \label{cs:fig:history}
+\end{figure}
+
+\section{Density of the snapshot grid}\label{cs:sec:grid}
+
+How many snapshot times are needed is answered with the acceptance method of
+Sec.~\ref{cs:sec:selection}, applied to the burnup axis. Nested sub-grids of
+the twelve-point grid, of 2, 4 and 7 points, are tested at the midpoints of
+the full grid, where the time-interpolation error peaks. At each test time the
+workflow gives the critical state on the full database, and every sub-grid is
+evaluated at that frozen state, so that $\Delta k_{\mathrm{eff}}$ isolates the
+effect of the density. The full grid reproduces the states it defined to
+\SI{0.4}{pcm}, the search tolerance, which is the floor of the test. Against
+it, Fig.~\ref{cs:fig:grid} and Table~\ref{cs:tab:grid}, the interpolation
+error falls from \SI{297}{pcm} with two snapshot times to \SI{80}{pcm} with
+four and to \SI{21}{pcm} with seven, where it first enters the \SI{22}{pcm}
+band of the reference statistics. Seven snapshot times are therefore
+sufficient on the burnup axis of this design. Beyond that, the residual is
+dominated by the tally noise that the ratio carries as a quotient of two
+independent runs; more snapshot times would not reduce it, only more histories
+per snapshot would.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.85\textwidth]{Chapter7/Figs/interpolation_error_vs_snapshot_grid_density.pdf}
+  \caption[Interpolation error against snapshot-grid density]{Time-interpolation
+  error of nested snapshot grids of 2, 4, 7 and 12 points, evaluated at the
+  midpoints of the full grid at the critical state given by the workflow,
+  compared with the $\pm2\sigma$ statistics of the reference calculations.}
+  \label{cs:fig:grid}
+\end{figure}
+
+\begin{table}[htbp]
+  \centering
+  \caption[Interpolation error against snapshot-grid density]{Interpolation
+  error of the nested snapshot grids at the eleven midpoints of the full grid:
+  smallest, largest and root-mean-square deviation of the multiplication
+  factor (pcm). The statistical uncertainty of the references is
+  \SI{11}{pcm}.}
+  \label{cs:tab:grid}
+  \begin{tabular}{lS[table-format=-2.1]S[table-format=3.1]S[table-format=3.1]}
+    \toprule
+    Snapshot grid & {min $\Delta k_{\mathrm{eff}}$} & {max $\Delta k_{\mathrm{eff}}$} & {RMSE} \\
+    \midrule
+     2 points &  76.9 & 459.7 & 297.3 \\
+     4 points &  -4.2 & 150.1 &  80.4 \\
+     7 points &   0.1 &  38.9 &  21.2 \\
+    12 points &  -0.3 &   0.8 &   0.4 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Computational cost}\label{cs:sec:cost}
+
+Table~\ref{cs:tab:cost} gathers the Serpent~2 campaigns behind this chapter
+and the cost of the workflow built on them. The database of
+Sec.~\ref{cs:sec:database} was generated on a thirty-core workstation with an
+Intel Xeon Gold 6130 processor at \SI{2.1}{GHz}: 136 criticality calculations,
+about \SI{63}{CPU\,h} each, \SI{324}{h} of wall-clock time in all. The burnup
+extension added two depletion calculations, twelve snapshot transports, twelve
+reference calculations and the 54 transports of the assumption tests, all
+restarted from the same depletion. The workflow itself runs on a single core
+of a personal computer: a deterministic search takes tens of milliseconds, a
+search with the uncertainty ensemble about one second, and the complete
+66-month cycle, 71 steps with fifty realizations at each step, \SI{40}{s}.
+
+\begin{table}[htbp]
+  \centering
+  \caption[Serpent 2 campaigns and cost of the workflow]{Serpent~2 campaigns of
+  this chapter (transports at $10^{5}$ neutrons per cycle and 500 active
+  cycles) and cost of the fission matrix workflow, measured on one core.}
+  \label{cs:tab:cost}
+  \begin{tabular}{p{74mm}cc}
+    \toprule
+    Campaign & Runs & Cost \\
+    \midrule
+    $(T,\theta)$ database, Sec.~\ref{cs:sec:database} & 136 & \SI{63}{CPU\,h} each \\
+    Depletions: drums out, and drums at \ang{33.75} for the history test & 2 & \SI{2.75}{h} on 64 cores each \\
+    Snapshot matrices at $\theta_{\mathrm{ref}}=\ang{0}$ & 12 & \SI{66}{CPU\,h} each \\
+    Reference criticality calculations along the cycle & 12 & \SI{62}{CPU\,h} each \\
+    Snapshots at \ang{45}, \ang{90}, \ang{135} and \ang{180}; evolved temperature; alternative history & $48+1+5$ & \SI{66}{CPU\,h} each \\
+    \midrule
+    Search, deterministic criterion & -- & \SI{29}{ms} \\
+    Search, ensemble of 100 realizations included & -- & \SI{1.1}{s} \\
+    Cycle, 71 steps, ensemble of 50 realizations & -- & \SI{40}{s} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Summary}
+
+The criticality search of this chapter rests on a database of 136 fission
+matrices over eight temperatures and seventeen drum angles, whose density was
+settled by a nested convergence study, and on a prescribed correlation between
+power and fuel temperature that closes the search on the fission matrix alone.
+At nominal power and fresh fuel the search converges in about one second on a
+single core, uncertainty quantification included, and the multiplication
+factor at the state it returns deviates from a reference Monte Carlo
+calculation by $-56\pm16$~pcm, the interpolation residual of the database.
+
+The extension to burnup adds no axis to the database. Burnup enters the
+interpolated matrix as a multiplicative correction ratio, tallied once per
+snapshot time at a single reference angle and temperature state; one
+low-statistics depletion gives the compositions, and twelve independent
+transports restarted from it tally the snapshot matrices. The workflow then
+drives a quasi-static cycle in which drum position, temperature field, fission
+source and cell-wise burnup are updated together at every step. Reference
+calculations at the states returned by the algorithm put $k_{\mathrm{eff}}$
+within $-59$ to $-5$~pcm of unity over 66 months, with the bias already
+present at beginning of life and no trend with burnup; the assembly-wise
+fission source agrees to about one per cent. The three assumptions of the
+factorization were measured on dedicated campaigns and found at or below that
+residual: the angle independence holds at the \SI{22}{pcm} resolution of the
+test at every angle up to \ang{180}, the temperature--burnup cross-term is
+$-9\pm15$~pcm, and the drum history behind the compositions moves the
+workflow by at most \SI{58}{pcm} at mid-cycle and by \SI{3}{pcm} at end of
+life. Seven snapshot times suffice on the burnup axis.
+
+The residual of the method is the interpolation of the original database, not
+the burnup correction. Two developments follow from it. The first is the
+treatment of the effects that the isothermal database cannot represent, the
+temperature difference between core and reflector first of all, which is the
+subject of Chapter~\ref{ch:correction-ratios}. The second is the replacement
+of the correlation of Eq.~(\ref{cs:eq:correlation}) with a thermal response
+from a conduction solver, which the interface of the workflow already allows.
