@@ -165,3 +165,51 @@
 \usetikzlibrary{shapes,shapes.geometric,arrows,arrows.meta,positioning,fit,backgrounds,calc}
 \usepackage{colortbl}
 \usepackage{array}
+
+% ***************** Citations, cross-references and hyperlinks *****************
+% Author-year citations (the class is loaded with `authoryear'), rendered in
+% parentheses: `\cite{key}' gives "(Author, year)", `\citet{key}' gives
+% "Author (year)" where the name has to carry the sentence.
+\let\cite\citep
+
+% Every link blue and clickable. The class sets black links for the `print'
+% option; this overrides it, keeping the same shade for cross-references,
+% citations and URLs.
+\definecolor{linkblue}{RGB}{0,84,166}
+\hypersetup{
+  colorlinks   = true,
+  linkcolor    = linkblue,
+  citecolor    = linkblue,
+  urlcolor     = linkblue,
+  filecolor    = linkblue,
+  anchorcolor  = linkblue,
+  linktocpage  = true,
+  bookmarksnumbered = true,
+}
+
+% Wording of the back-references printed at the end of each bibliography entry
+\renewcommand*{\backref}[1]{}
+\renewcommand*{\backrefalt}[4]{%
+  \ifcase #1 %
+    \relax
+  \or
+    \ (cited on page #2)%
+  \else
+    \ (cited on pages #2)%
+  \fi}
+
+% ***************************** Tooltips on references *************************
+% Hovering over a reference to a figure or a table shows its caption. The
+% tooltip is a PDF annotation: Adobe Acrobat Reader and Firefox display it,
+% other viewers ignore it and the reference stays an ordinary blue link.
+% To switch the tooltips off, change the line below to \thesistooltipsfalse.
+\usepackage{pdfcomment}
+\newif\ifthesistooltips
+\thesistooltipstrue
+
+\newcommand{\tref}[1]{%
+  \ifthesistooltips
+    \pdftooltip{\ref{#1}}{\nameref{#1}}%
+  \else
+    \ref{#1}%
+  \fi}
