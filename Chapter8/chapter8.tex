@@ -15,6 +15,24 @@
 % reproducible ones. The submitted article still carries the previous
 % configuration of that case (-32 and -26 pcm instead of -65 and -51). The
 % other six cases coincide. To be confirmed before submission.
+%
+% CV, second point, on the core temperature correction. The two notebooks of
+% the NSE package give two different correctors and two different sets of
+% results:
+%   paper_v2_figures.ipynb          (the corrector defined in Sec. 7.3.3)
+%       mean |dk| 40.8 -> 36.9 pcm (10 %), fission source 1.27 -> 1.02 %,
+%       50 % of the cases within |z|<2, median 1.78
+%   paper_v2_figures_hybrid_corrector.ipynb  (corrector recalibrated on the
+%       mean of the 150 brute-force replicas, with a distance cutoff)
+%       mean |dk| 40.8 -> 31.0 pcm (24 %), 58 % within |z|<2, median 1.30
+% The table and the percentages of this chapter come from the article, which
+% matches the HYBRID corrector case by case, except the two calibration cases,
+% where the article reports 13.5 and -15.4 pcm against the 73.5 and -46.4 of
+% the hybrid run; replacing those two brings the mean to the 23.7 pcm the
+% article quotes. So the article describes one corrector and reports the
+% results of another. The figures installed here are the hybrid ones, to keep
+% text and figures coherent; both sets are generated and swapping them is a
+% matter of minutes. TO BE DECIDED which corrector the thesis reports.
 
 \chapter{Reflector and Core Temperature Corrections}\label{ch:correction-ratios}
 
@@ -737,7 +755,7 @@ the one measured from the cycle-by-cycle tallies at \SI{300}{K}.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\textwidth]{Chapter8/Figs/correlation_matrices_300K.png}
+  \includegraphics[width=0.79\textwidth]{Chapter8/Figs/correlation_matrices_300K.pdf}
   \caption[Correlation of the tallied coefficients]{Correlation matrix of the
   coefficients of one source column at \SI{300}{K}: predicted in closed form by
   Eq.~(\ref{cr:eq:rho-pred}) and measured from the cycle-by-cycle tallies.}
@@ -848,7 +866,7 @@ and for both observables.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\textwidth]{Chapter8/Figs/fig1_reference_case_uncertainty.png}
+  \includegraphics[width=\textwidth]{Chapter8/Figs/fig1_reference_case_uncertainty.pdf}
   \caption[Uncertainty of the reference calculations]{Statistical uncertainty
   of the reference calculations of the twelve cases: multiplication factor
   (left) and root-mean-square of the fission source (right).}
@@ -857,7 +875,7 @@ and for both observables.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\textwidth]{Chapter8/Figs/fig2_validation_against_brute_force.png}
+  \includegraphics[width=\textwidth]{Chapter8/Figs/fig2_validation_against_brute_force.pdf}
   \caption[Validation of the database uncertainty]{Database contribution to the
   uncertainty predicted by the three inexpensive methods against the
   brute-force reconstruction with $150$ independent replicas: multiplication
@@ -876,12 +894,17 @@ uncertainty to within \SI{4.6}{\percent}, ahead of the measured correlation,
 \SI{8.7}{\percent}, and well ahead of the uncorrelated baseline,
 \SI{18.0}{\percent}. The reason is the sign of the intra-column correlations:
 they are negative, so neglecting them inflates the propagated variance of the
-eigenvalue. On the root-mean-square of the source the ranking changes, the
-measured correlation reaching \SI{3.3}{\percent} and the analytical model
-\SI{3.6}{\percent}, against \SI{7.3}{\percent} of the uncorrelated baseline.
-This too is consistent: the source is a less global quantity than the
-eigenvalue and is sensitive to the correlations between different columns,
-which are precisely what the analytical model leaves out.
+eigenvalue. On the root-mean-square of the source the ranking is reversed: the
+uncorrelated baseline reproduces the brute-force uncertainty to within
+\SI{3.3}{\percent} and the measured correlation to \SI{3.7}{\percent}, while
+the analytical model is the least accurate of the three, \SI{7.2}{\percent}.
+The reversal is consistent with what the model omits. The source is a less
+global quantity than the eigenvalue and is sensitive to the correlations
+between coefficients of different columns, which are precisely the ones the
+closed form of Eq.~(\ref{cr:eq:rho-pred}) does not describe, and which the
+bootstrap of the previous section measured as a small but non-zero residual.
+The eigenvalue, which aggregates the whole matrix, is instead governed by the
+intra-column structure that the closed form captures.
 
 One objection to the analytical model is that it is not free of Monte Carlo
 noise after all, since Eq.~(\ref{cr:eq:rho-pred}) is evaluated on the mean
@@ -943,7 +966,7 @@ source from 1.27 to \SI{0.94}{\percent}, by \SI{26}{\percent}.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\textwidth]{Chapter8/Figs/fig3_raw_vs_corrected.png}
+  \includegraphics[width=\textwidth]{Chapter8/Figs/fig3_raw_vs_corrected.pdf}
   \caption[Raw against corrected interpolation]{Deviation of the multiplication
   factor (left) and root-mean-square deviation of the fission source (right),
   raw against corrected interpolation, for the twelve cases.}
@@ -971,7 +994,7 @@ variants are judged against a relatively wide band.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\textwidth]{Chapter8/Figs/fig4_keff_distribution.png}
+  \includegraphics[width=\textwidth]{Chapter8/Figs/fig4_keff_distribution.pdf}
   \caption[Distribution of the multiplication factor]{Deviation of the
   multiplication factor, raw (left) and corrected (right): every realization of
   the analytical model, every independent brute-force replica, the interval of
@@ -1018,7 +1041,7 @@ isolates the population the correction is meant to act on.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\textwidth]{Chapter8/Figs/fig5a_fission_source.png}
+  \includegraphics[width=\textwidth]{Chapter8/Figs/fig5a_fission_source.pdf}
   \caption[Local deviation of the fission source]{Local deviation of the
   fission source, raw and corrected, for the first six test cases, with the
   dispersion of the brute-force replicas. The highlighted points are those
@@ -1028,7 +1051,7 @@ isolates the population the correction is meant to act on.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.55\textwidth]{Chapter8/Figs/hex_index_map.png}
+  \includegraphics[width=\textwidth]{Chapter8/Figs/hex_index_map.pdf}
   \caption[Numbering of the assemblies]{Numbering of the 127 assemblies used by
   the cell index of Fig.~\ref{cr:fig:source2d}. Assembly 64 is the central one
   of the calibration cases.}
