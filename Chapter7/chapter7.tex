@@ -302,37 +302,39 @@ one.
 
 \begin{figure}[htbp]
   \centering
+  \resizebox{\textwidth}{!}{%
   \begin{tikzpicture}[
-    font=\footnotesize,
-    node distance = 3.2mm and 8mm,
-    base/.style  = {rectangle, rounded corners=1pt, align=center, inner sep=3pt,
-                    minimum height=7mm, text width=52mm},
-    old/.style   = {base, draw=black!55, line width=.4pt},
-    round/.style = {rounded corners=3.2mm, fill=ga!55},
-    serp/.style  = {old, fill=serpent!55, text width=28mm},
+    font=\small,
+    node distance = 5mm and 13mm,
+    base/.style  = {rectangle, rounded corners=1.5pt, align=center, inner sep=4.5pt,
+                    minimum height=10mm, text width=68mm},
+    old/.style   = {base, draw=black!55, line width=.5pt},
+    round/.style = {rounded corners=4mm, fill=ga!55},
+    serp/.style  = {old, fill=serpent!55, text width=38mm},
     fm/.style    = {old, fill=nnc!28},
     grey/.style  = {old, fill=black!8},
-    dec/.style   = {diamond, aspect=2.4, draw=black!55, fill=ga!45, align=center,
-                    inner sep=0pt, text width=27mm, font=\scriptsize},
-    arO/.style   = {-{Latex[length=1.6mm]}, draw=black!65, line width=.45pt},
-    lbl/.style   = {font=\scriptsize, inner sep=1.5pt},
+    dec/.style   = {diamond, aspect=2.3, draw=black!55, fill=ga!45, align=center,
+                    inner sep=1pt, text width=38mm, font=\footnotesize},
+    arO/.style   = {-{Latex[length=2mm]}, draw=black!65, line width=.55pt},
+    lbl/.style   = {font=\footnotesize, inner sep=2pt},
   ]
-  \node[grey] (start) {power $P$; $T_{f,\min}$ and $\Delta T_{\mathrm{range}}$;\\
-                       $\theta=\ang{0}$, flat fission source};
+  \node[grey] (start) {power $P$; parameters $T_{f,\min}$ and $\Delta T_{\mathrm{range}}$;\\
+                       drum angle $\theta=\ang{0}$; flat fission source};
   \node[old, below=of start] (temp) {fuel temperature field $T_{f,i}$ from
                        $\tilde{\mathbf F}$ and $P$, Eq.~(\ref{cs:eq:correlation})};
   \node[fm, below=of temp] (interp) {interpolated matrix
                        $\tilde a_{ij}(\tilde T_{f,i},\tilde\theta)$, Eq.~(\ref{cs:eq:interp})};
   \node[fm, below=of interp] (eig) {eigenproblem
                        $\tilde{\mathbf A}\,\tilde{\mathbf F}=\tilde k_{\mathrm{eff}}\,\tilde{\mathbf F}$};
-  \node[dec, below=of eig] (dT) {temperature field\\changed by less\\than $\epsilon$?};
+  \node[dec, below=of eig] (dT) {temperature field changed\\by less than $\epsilon$?};
   \node[dec, below=of dT] (crit) {$|\tilde k_{\mathrm{eff}}-1|<\delta$?};
-  \node[grey, below=of crit] (end) {critical state: $\theta_{\mathrm{crit}}$,
-                       $T_{f,i}$, $\tilde{\mathbf F}$};
+  \node[grey, below=of crit] (end) {critical state: critical drum angle
+                       $\theta_{\mathrm{crit}}$,\\ temperature field $T_{f,i}$,
+                       fission source $\tilde{\mathbf F}$};
   \node[serp, right=of interp] (db) {database of tallied matrices,
                        Sec.~\ref{cs:sec:database}};
-  \node[old, round, right=of crit, text width=22mm] (bis) {bisection on $\theta$};
-  \coordinate (rx) at ($(temp.east)+(52mm,0)$);
+  \node[old, round, right=of crit, text width=28mm] (bis) {bisection on $\theta$};
+  \coordinate (rx) at ($(temp.east)+(70mm,0)$);
 
   \draw[arO] (start) -- (temp);
   \draw[arO] (temp) -- (interp);
@@ -341,16 +343,16 @@ one.
   \draw[arO] (dT) -- node[lbl, right] {yes} (crit);
   \draw[arO] (crit) -- node[lbl, right] {yes} (end);
   \draw[arO] (db) -- (interp);
-  \draw[arO] (dT.west) -- ++(-6mm,0) node[lbl, above, xshift=3mm] {no}
+  \draw[arO] (dT.west) -- ++(-9mm,0) node[lbl, above, xshift=4mm] {no}
              |- (temp.west);
   \draw[arO] (crit) -- node[lbl, above] {no} (bis);
   \draw[arO] (bis.east) -- (bis.east -| rx) -- (rx |- temp.east) -- (temp.east);
 
   \begin{scope}[on background layer]
-    \node[fill=ga!12, rounded corners=2mm, fit=(temp)(interp)(eig)(dT),
-          inner sep=2.5mm] {};
+    \node[fill=ga!12, rounded corners=2.5mm, fit=(temp)(interp)(eig)(dT),
+          inner sep=3.5mm] {};
   \end{scope}
-  \end{tikzpicture}
+  \end{tikzpicture}}
   \caption[The criticality search]{The criticality search. The shaded area
   encloses the inner loop, the neutronic--thermal equilibrium at fixed drum
   angle; the outer loop is the bisection on the drum angle. The tolerance
@@ -608,28 +610,30 @@ Figure~\ref{cs:fig:flow} draws the complete scheme.
 
 \begin{figure}[htbp]
   \centering
+  \resizebox{\textwidth}{!}{%
   \begin{tikzpicture}[
-    font=\footnotesize,
-    node distance = 3.2mm and 8mm,
-    base/.style  = {rectangle, rounded corners=1pt, align=center, inner sep=3pt,
-                    minimum height=7mm, text width=52mm},
-    old/.style   = {base, draw=black!55, line width=.4pt},
-    new/.style   = {base, draw=newc, line width=1.1pt},
-    round/.style = {rounded corners=3.2mm, fill=ga!55},
-    serp/.style  = {old, fill=serpent!55, text width=28mm},
-    serpN/.style = {new, fill=serpent!55, text width=28mm},
+    font=\small,
+    node distance = 5mm and 13mm,
+    base/.style  = {rectangle, rounded corners=1.5pt, align=center, inner sep=4.5pt,
+                    minimum height=10mm, text width=68mm},
+    old/.style   = {base, draw=black!55, line width=.5pt},
+    new/.style   = {base, draw=newc, line width=1.3pt},
+    round/.style = {rounded corners=4mm, fill=ga!55},
+    serp/.style  = {old, fill=serpent!55, text width=38mm},
+    serpN/.style = {new, fill=serpent!55, text width=38mm},
     fm/.style    = {old, fill=nnc!28},
     fmN/.style   = {new, fill=nnc!28},
     grey/.style  = {old, fill=black!8},
     greyN/.style = {new, fill=black!8},
-    dec/.style   = {diamond, aspect=2.4, draw=black!55, fill=ga!45, align=center,
-                    inner sep=0pt, text width=27mm, font=\scriptsize},
-    decN/.style  = {dec, draw=newc, line width=1.1pt},
-    arO/.style   = {-{Latex[length=1.6mm]}, draw=black!65, line width=.45pt},
-    arN/.style   = {-{Latex[length=1.6mm]}, draw=newc, line width=.9pt},
-    lbl/.style   = {font=\scriptsize, inner sep=1.5pt},
+    dec/.style   = {diamond, aspect=2.3, draw=black!55, fill=ga!45, align=center,
+                    inner sep=1pt, text width=38mm, font=\footnotesize},
+    decN/.style  = {dec, draw=newc, line width=1.3pt},
+    arO/.style   = {-{Latex[length=2mm]}, draw=black!65, line width=.55pt},
+    arN/.style   = {-{Latex[length=2mm]}, draw=newc, line width=1.1pt},
+    lbl/.style   = {font=\footnotesize, inner sep=2pt},
   ]
-  \node[greyN] (start) {$t=0$, $BU_i=0$; power $P$;\\ $\theta=\ang{0}$, flat fission source};
+  \node[greyN] (start) {time $t=0$, burnup $BU_i=0$; power $P$;\\
+                       drum angle $\theta=\ang{0}$; flat fission source};
   \node[old, below=of start] (temp) {fuel temperature field $T_{f,i}$ from
                        $\tilde{\mathbf F}$ and $P$, Eq.~(\ref{cs:eq:correlation})};
   \node[fmN, below=of temp] (interp) {corrected matrix
@@ -637,18 +641,18 @@ Figure~\ref{cs:fig:flow} draws the complete scheme.
                        Eq.~(\ref{cs:eq:bcr})};
   \node[fm, below=of interp] (eig) {eigenproblem
                        $\tilde{\mathbf A}^{*}\tilde{\mathbf F}=\tilde k_{\mathrm{eff}}\,\tilde{\mathbf F}$};
-  \node[dec, below=of eig] (dT) {temperature field\\changed by less\\than $\epsilon$?};
-  \node[decN, below=of dT] (crit) {$\pm\sigma_k$ band\\contains 1 on\\two iterates?};
+  \node[dec, below=of eig] (dT) {temperature field changed\\by less than $\epsilon$?};
+  \node[decN, below=of dT] (crit) {$\pm\sigma_k$ band contains 1\\on two iterates?};
   \node[greyN, below=of crit] (rec) {record $\theta_{\mathrm{crit}}(t)$ and $\sigma_\theta$,
                        Eq.~(\ref{cs:eq:sigmatheta});\\ advance the burnup $BU_i$, Eq.~(\ref{cs:eq:bustep})};
-  \node[decN, below=of rec] (eol) {critical with the\\drums fully\\extracted?};
+  \node[decN, below=of rec] (eol) {critical with the drums\\fully extracted?};
   \node[greyN, below=of eol] (end) {end of cycle life};
   \node[serp, right=of temp] (db) {database of tallied matrices,
                        Sec.~\ref{cs:sec:database}};
   \node[serpN, right=of eig] (snap) {snapshot database,
                        $\mathrm{BCR}_{ij}(t)$, Sec.~\ref{cs:sec:snapshots}};
-  \node[old, round, right=of crit, text width=22mm] (bis) {bisection on $\theta$};
-  \coordinate (rx) at ($(temp.east)+(52mm,0)$);
+  \node[old, round, right=of crit, text width=28mm] (bis) {bisection on $\theta$};
+  \coordinate (rx) at ($(temp.east)+(70mm,0)$);
 
   \draw[arN] (start) -- (temp);
   \draw[arO] (temp) -- (interp);
@@ -658,27 +662,27 @@ Figure~\ref{cs:fig:flow} draws the complete scheme.
   \draw[arN] (crit) -- node[lbl, right] {yes} (rec);
   \draw[arN] (rec) -- (eol);
   \draw[arN] (eol) -- node[lbl, right] {no} (end);
-  \draw[arO] (db.west) -- ++(-3mm,0) |- ([yshift=2.2mm]interp.east);
-  \draw[arN] (snap.west) -- ++(-3mm,0) |- ([yshift=-2.2mm]interp.east);
-  \draw[arO] (dT.west) -- ++(-6mm,0) node[lbl, above, xshift=3mm] {no}
+  \draw[arO] (db.west) -- ++(-4mm,0) |- ([yshift=3mm]interp.east);
+  \draw[arN] (snap.west) -- ++(-4mm,0) |- ([yshift=-3mm]interp.east);
+  \draw[arO] (dT.west) -- ++(-9mm,0) node[lbl, above, xshift=4mm] {no}
              |- (temp.west);
   \draw[arO] (crit) -- node[lbl, above] {no} (bis);
   \draw[arO] (bis.east) -- (bis.east -| rx) -- (rx |- temp.east) -- (temp.east);
-  \draw[arN] (eol.west) -- ++(-12mm,0) node[lbl, above, xshift=6mm] {yes}
+  \draw[arN] (eol.west) -- ++(-16mm,0) node[lbl, above, xshift=8mm] {yes}
              |- node[lbl, left, pos=0.25] {$t\leftarrow t+\Delta t$} (start.west);
 
   \begin{scope}[on background layer]
-    \node[fill=ga!12, rounded corners=2mm, fit=(temp)(interp)(eig)(dT),
-          inner sep=2.5mm] {};
+    \node[fill=ga!12, rounded corners=2.5mm, fit=(temp)(interp)(eig)(dT),
+          inner sep=3.5mm] {};
   \end{scope}
 
-  \node[new, fill=white, below left=6mm and -34mm of end, text width=3mm,
-        minimum height=3mm, inner sep=0pt] (lg1) {};
-  \node[lbl, right=1.5mm of lg1, anchor=west] {introduced by the burnup extension};
-  \node[old, fill=white, below=2.5mm of lg1, text width=3mm,
-        minimum height=3mm, inner sep=0pt] (lg2) {};
-  \node[lbl, right=1.5mm of lg2, anchor=west] {inherited from the search of Fig.~\ref{cs:fig:flow-search}};
-  \end{tikzpicture}
+  \node[new, fill=white, below left=8mm and -44mm of end, text width=4mm,
+        minimum height=4mm, inner sep=0pt] (lg1) {};
+  \node[lbl, right=2mm of lg1, anchor=west] {introduced by the burnup extension};
+  \node[old, fill=white, below=3mm of lg1, text width=4mm,
+        minimum height=4mm, inner sep=0pt] (lg2) {};
+  \node[lbl, right=2mm of lg2, anchor=west] {inherited from the search of Fig.~\ref{cs:fig:flow-search}};
+  \end{tikzpicture}}
   \caption[The quasi-static cycle]{The quasi-static cycle. Boxes and arrows
   outlined in blue are introduced by the burnup extension, those with a thin
   grey outline are the search of Fig.~\ref{cs:fig:flow-search}. The shaded
