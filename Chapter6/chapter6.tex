@@ -1,29 +1,430 @@
 %!TEX root = ../Polito PhD thesis template.tex
 % ******************************* Chapter 6 ************************************
-% PART II OPENER ("cappello"): all the theory shared by the fission matrix
-% works, gathered in one place.
-
-\chapter{The Fission Matrix Method: Generation, Interpolation and Uncertainty Quantification}\label{ch:fm-theory}
-
-% =============================================================================
-% PLACEHOLDER -- planned content (agreed general indications):
-%   - The VTB heat-pipe micro reactor model
-%       [AnE paper sec. 2; NSE paper sec. 2]
-%   - The fission matrix: definition and generation from a Serpent criticality
-%     calculation
-%       [AnE sec. 3.1; NSE sec. 3.1 -- conventions in tesi_FM_HPMR/CLAUDE.md:
-%        matrix stored as Serpent writes it, RIGHT eigenvector]
-%   - The FM database concept and its interpolation
-%       [AnE sec. 3.2-3.3; NSE sec. 3.2]
-%   - Uncertainty quantification, treated once for all the works:
-%       * the two sources of uncertainty for k_eff and F  [NSE sec. 3.3]
-%       * Monte Carlo propagation of the database noise    [NSE sec. 3.4-3.5]
-%       * combined per-cell uncertainty sigma_tot          [AnE sec. 3.8]
-%   - Error metrics used throughout Part II [AnE sec. 3.7; NSE sec. 3.6]
-%   - Correction ratios introduced as a concept here; their specific forms
-%     (CTCR, RCR, BCR) are developed in Chapters 7-8.
+% Part II opener: the fission matrix method, its generation, the reactor model,
+% database and interpolation, the correction-ratio scheme, uncertainty
+% quantification and the error metrics shared by Chapters 7 and 8.
 %
-% Sources:
-%   materials/fission_matrix_HPMR/tesi_FM_HPMR/testo/capitolo_FM_HPMR.tex  (AnE)
-%   materials/fission_matrix_HPMR/NSE_thesis_package/paper/paper_updated.tex (NSE)
-% =============================================================================
+% Sources (materials/fission_matrix_HPMR/): NSE paper secs. 1, 3.1-3.6, 4.2
+% (formal definition, two generation strategies, uncertainty); AnE paper
+% secs. 2, 3.1-3.3, 3.7-3.8 (VTB model, Serpent tally, bivariate interpolation,
+% metrics); M&C paper sec. 4 (fixed ensemble of realizations). Written fresh in
+% the style of the M&C paper; every number traceable to those texts.
+
+\chapter{The Fission Matrix Method for Heat-Pipe Micro Reactors}\label{ch:fm-theory}
+
+\section{Why a reduced-order model}
+
+Heat-pipe micro reactors (HPMRs) are controlled by drums rotating in the radial
+reflector. Their design and their operation ask for the same calculation over
+and over: at a given power, at a given point of the cycle, which drum angle
+makes the core critical, and what does the core look like there. A full-core
+Monte Carlo calculation answers the question for one state at a cost of tens of
+CPU hours. It is affordable for a handful of states and not for the thousands
+that a design space, a fuel cycle or an online monitoring tool require.
+
+The fission matrix (FM) method \cite{CarneyANE2014} is a way out. A single
+Monte Carlo calculation is made to tally, besides its usual results, a matrix
+that couples every fissile region of the core to every other. That matrix
+carries the eigenvalue and the fission source of the state it was tallied at,
+and it can be stored. A database of matrices tallied at a set of reference
+states then represents any intermediate state by interpolation, at the cost of
+an eigenproblem of modest size: seconds instead of hours, with no Monte Carlo
+run in the loop.
+
+The three works of this Part build on that idea for the same reactor and with
+the same tools. Chapter~\ref{ch:crit-search} builds the database over the fuel
+temperature and the drum angle, uses it for a criticality search, and extends it
+along the cycle with a correction for burnup. Chapter~\ref{ch:correction-ratios}
+deals with what the interpolation cannot see, the temperature of the reflector
+and sharp temperature gradients inside the core, through two multiplicative
+corrections. This chapter gathers what the two share: the definition of the
+matrix and the way it is generated, the reactor model, the interpolation
+scheme, the common form of the corrections, the treatment of the statistical
+uncertainty and the metrics used to judge the results.
+
+\section{The fission matrix}\label{fm:sec:definition}
+
+The fissile domain is divided into $N$ regions, and the neutron transport
+between them is described over one averaged generation. Integrating the
+$k$-eigenvalue transport equation over the volume of a source region $j$ and
+of a destination region $i$ yields an algebraic eigenvalue problem
+\cite{CarneyANE2014},
+%
+\begin{equation}
+  F_i = \frac{1}{k_{\mathrm{eff}}}\sum_{j=1}^{N} a_{ij}\,F_j
+  \qquad\Longleftrightarrow\qquad
+  \mathbf{A}\,\mathbf{F} = k_{\mathrm{eff}}\,\mathbf{F},
+  \label{fm:eq:eigen}
+\end{equation}
+%
+where $F_j$ is the fission-neutron source integrated over region $j$ and the
+coefficient $a_{ij}$ is the expected number of fission neutrons born in region
+$i$ per fission neutron emitted in region $j$. The $N\times N$ array of these
+coefficients is the fission matrix $\mathbf{A}$: its dominant eigenvalue is
+$k_{\mathrm{eff}}$ and the associated eigenvector is the region-wise fission
+source. Since each coefficient is defined per emitted source neutron, the
+fission multiplicity is already embedded in it: a source neutron that induces a
+fission contributes $\bar\nu$ neutrons to the destination region.
+
+Two conventions are fixed here once and for all, because both circulate in the
+literature. The column index $j$ labels the \emph{source} region and the row
+index $i$ the \emph{destination} region, and the source $\mathbf{F}$ is the
+\emph{right} eigenvector of $\mathbf{A}$, that is, the matrix acts on the
+source vector as written in Eq.~(\ref{fm:eq:eigen}). The distinction is not
+academic: with the transposed convention the fission source reconstructed from
+the same tallies departs from the detector estimate by several per cent, against
+a fraction of a per cent with the convention above. Throughout Part II the
+eigenproblem is solved with the dense solver of the SciPy library
+\cite{VirtanenSciPy2020}; for matrices of the size used here the solution takes
+a fraction of a second.
+
+\subsection{Two ways of generating the matrix}\label{fm:sec:generation}
+
+The matrix of one core configuration can be obtained in two ways. The first
+assembles it from a set of fixed-source calculations, one for each
+``fundamental cell'' of the system \cite{WaltersNSE2018}. The fundamental units
+are identified by exploiting the geometrical and material similarity between
+repeated units, so that a few calculations serve for the whole core; reflectors
+and structural materials are deliberately left out of the tally to preserve
+that similarity, and their influence is restored afterwards through boundary
+and discontinuity corrections. This is the route taken by the RAPID code
+system, a mature implementation that delivers whole-core solutions within
+minutes at an accuracy comparable to the underlying Monte Carlo, supported by
+dedicated techniques for homogenization \cite{HePNE2020Homog}, temperature
+interpolation \cite{HeANE2020Temp} and the treatment of material and
+control-rod discontinuities \cite{HeANE2019,HePNE2020,Mascolino2022}. Its cost
+is a mesh fine enough to resolve every local effect, which in turn sets the
+size of the matrix and the storage it needs; in exchange, the fixed-source
+calculations are cheap and the uncertainty of the tallied coefficients is
+small once enough histories are run.
+
+The second way tallies the matrix directly during a single whole-core
+criticality calculation. Serpent~2 \cite{LeppanenEPJN2025} accumulates the
+coefficients on the fly, at negligible additional cost, by recording over the
+active cycles the region of birth of every fission neutron against the region
+of birth of its parent. The tally uses the converged fission source of the
+criticality calculation, so the within-cell distribution of the source is far
+better resolved than in a fixed-source run and much larger cells can be used;
+reflectors, structural materials and inter-assembly heterogeneity are embedded
+in every coefficient, and one calculation yields one complete matrix instead
+of a set of responses to be assembled. The price is statistical: the
+uncertainty of the coefficients comes down only with the number of histories of
+the criticality run, which becomes demanding when pin-wise cells are wanted.
+
+The choice between the two is specific to the design and to the purpose. All
+the work of this Part takes the second route. The aim is a straightforward
+workflow feeding an online core-monitoring tool, for which assembly-level
+resolution is what is needed and pin-wise accuracy is not; a matrix that
+already contains the reflector and the drums, tallied from the same model used
+for the reference calculations, is the simplest object that serves that aim.
+
+\section{The reactor model}\label{fm:sec:model}
+
+The reactor is the heat-pipe micro reactor developed at Argonne National
+Laboratory within the NEAMS Micro-Reactor Application Drivers area
+\cite{Stauff2024}, a modelling exercise designed to collect the challenges that
+the micro-reactor industry faces at once: heat pipes for the removal of the
+nuclear heat, TRISO fuel for operation at very high temperature, yttrium
+hydride pins for moderation and rotating drums in the radial reflector for
+control. Its Serpent~2 and multiphysics models are distributed on the Virtual
+Test Bed \cite{moose_vtb_mrad_description}, and the acronym VTB is used for the
+model in what follows.
+
+The core is rated at \SI{2}{MW}. The fuel is TRISO particles of low-enriched
+uranium oxycarbide (\SI{19.95}{at\percent} $^{235}$U) embedded in a hexagonal
+graphite matrix at a packing fraction of \SI{40}{\percent}; the heavy-metal
+inventory is \SI{448.5}{kg}. The active length is \SI{160}{cm}, bounded at the
+top and at the bottom by \SI{20}{cm} of beryllium reflector. Thirty fuel
+assemblies sit inside a single ring of beryllium radial reflector that houses
+the twelve control drums, and a shutdown rod in the centre of the core provides
+redundancy. The heat is removed by heat pipes with a stainless steel envelope
+and potassium as working fluid. Figure~\ref{fm:fig:vtb} sketches the geometry.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.62\textwidth]{Chapter6/Figs/VTB_fullcore_3D_slice_sextant.png}
+  \caption[The VTB heat-pipe micro reactor]{Three-dimensional sketch of the VTB
+  heat-pipe micro reactor. One sextant of the geometry is drawn for legibility;
+  the fission matrix is tallied over the whole core.}
+  \label{fm:fig:vtb}
+\end{figure}
+
+% NOTE for Christian: the AnE paper states that "only one-sixth of the core
+% geometry is modeled", while the mesh is 30 assemblies x 3 axial zones = the
+% whole core and Case 6 of the RCR tests imposes a non-symmetric gradient. The
+% wording above (whole core tallied, sextant only drawn) follows the mesh. To
+% be confirmed.
+
+Serpent~2 tallies the fission matrix on a Cartesian mesh. That is convenient
+for a square lattice, where the mesh can be made to coincide with the fissile
+elements at pin or assembly level, and unsuited to the hexagonal lattice of the
+HPMR. The tally is therefore taken per fissile material instead: each fuel
+assembly is one material, and each assembly is split into three axial zones to
+resolve the axial dependence, so that the mesh has $30\times3 = 90$ cells and
+the matrix $90\times90 = 8100$ coefficients. The discretization is fully
+three-dimensional. The indices $i$ and $j$ do not label a radial position but a
+cell obtained by combining the radial position of an assembly with one of its
+axial zones, and every quantity defined on the matrix in the following,
+corrections included, connects two such cells, so radial and axial effects are
+treated together and not as separate factors. Tallied with the population used
+throughout Part II, the coefficients carry a median relative uncertainty of
+about \SI{9}{\percent}; that figure, and the populations behind it, are given
+with the campaigns of Chapter~\ref{ch:crit-search}.
+
+\section{Database and interpolation}\label{fm:sec:database}
+
+A matrix describes one state of the core. The method becomes predictive when a
+database of matrices, tallied at a set of reference states, is interpolated to
+represent a state that was never simulated. The database is paid for once, in
+Monte Carlo calculations, and then used any number of times; how many entries
+it must contain for a given accuracy is not known in advance, and is settled
+for each axis by a convergence study, reported where the axis is introduced.
+
+Each entry is a whole-core calculation at a uniform state: one temperature for
+the entire system, fuel, moderator and structures alike, with no spatial
+gradient, and, where the drums enter, one rotation angle common to all drums.
+The temperature axis used in Part II spans \SIrange{300}{1000}{K} in steps of
+\SI{100}{K}, eight levels; the drum axis is described in
+Chapter~\ref{ch:crit-search}.
+
+An arbitrary state is represented coefficient by coefficient. For a
+temperature field that differs from cell to cell, the interpolation of the
+coefficient $a_{ij}$ uses the temperature of its \emph{destination} cell $i$,
+that is, the row: the coefficient is assumed to depend on the local temperature
+of the region where the fission neutrons are born. With a drum angle $\theta$
+as second axis, the interpolation is bilinear between the four database entries
+that bracket the target point,
+%
+\begin{equation}
+  \tilde a_{ij}(\tilde T_{f,i},\tilde\theta) \;=\;
+  \sum_{p=0}^{1}\sum_{q=0}^{1}
+  w_T^{(p)}\!\left(\tilde T_{f,i}\right)\,
+  w_\theta^{(q)}\!\left(\tilde\theta\right)\,
+  a_{ij}^{(d_T+p,\;d_\theta+q)},
+  \label{fm:eq:interp}
+\end{equation}
+%
+where $d_T$ and $d_\theta$ index the database levels immediately below the
+target values, $a_{ij}^{(d_T+p,\,d_\theta+q)}$ is the coefficient tallied at
+the corresponding grid point, and the weights are the linear ones,
+$w_T^{(1)} = (\tilde T_{f,i} - T^{(d_T)})/(T^{(d_T+1)} - T^{(d_T)})$ and
+$w_T^{(0)} = 1 - w_T^{(1)}$, and likewise for $\theta$. Along a single axis
+the scheme reduces to the linear interpolation between the two bracketing
+levels, which is the form used when only the temperature varies. The tilde
+marks an interpolated quantity from here on: $\tilde{\mathbf A}$ is the
+interpolated matrix, and $\tilde k_{\mathrm{eff}}$ and $\tilde{\mathbf F}$ its
+eigenpair. More elaborate interpolants are possible and were left for future
+work; the linear scheme is the simplest that could be tested, and the accuracy
+it reaches is the subject of the next two chapters.
+
+\section{Correction ratios}\label{fm:sec:ratios}
+
+The interpolation sees only what the database axes contain. Three effects lie
+outside them and are met in Part II. The temperature of the reflector is not an
+axis: the coefficients are defined between fissile cells, so the reflector
+enters only through the uniform-temperature entries, and a core hotter than its
+reflector has no entry to draw on. Sharp temperature gradients between
+neighbouring fuel cells are not an axis either, since each entry is isothermal.
+And the composition of the fuel, which changes with burnup, is not an axis,
+because adding one would multiply the size of the database.
+
+The three works handle the three effects in the same way. A correction ratio
+is a ratio of two matrices tallied at reference conditions that differ in the
+effect of interest alone, and it is applied to the interpolated matrix
+element by element,
+%
+\begin{equation}
+  \tilde a^{*}_{ij} \;=\; \Big[\, w_{ij}\,\big(r_{ij} - 1\big) + 1 \,\Big]\;
+  \tilde a_{ij},
+  \label{fm:eq:ratio}
+\end{equation}
+%
+where $r_{ij}$ is the ratio and $w_{ij}$ a weight between zero and one that
+measures how much of the reference effect is present at the target state. The
+weight reduces the correction to the identity where the effect is absent and
+applies it in full where the target state coincides with the reference; the
+ratio, being a quotient of two tallies of the same quantity, cancels the
+systematic errors common to numerator and denominator. The Burnup Correction
+Ratio of Chapter~\ref{ch:crit-search} is the case $w_{ij}=1$, with the ratio
+interpolated in time between snapshots; the Reflector Correction Ratio and the
+Core Temperature Correction Ratio of Chapter~\ref{ch:correction-ratios} differ
+in what the ratio compares and in how the weight is built from the temperature
+field. Their definitions, and the tests that justify them, are given there.
+
+\section{Statistical uncertainty of the interpolated results}\label{fm:sec:uq}
+
+A result obtained from the interpolated matrix is compared with a reference
+Monte Carlo calculation of the same state. Both carry statistical noise, and a
+residual discrepancy that falls within that noise cannot be read as a modelling
+bias; quantifying the noise on both sides is therefore part of the method. Two
+independent sources combine in quadrature,
+%
+\begin{equation}
+  \sigma_{X,\mathrm{tot}}^2 \;=\; \sigma_{X,\mathrm{ref}}^2 + \sigma_{X,\mathrm{DB}}^2,
+  \label{fm:eq:sigma}
+\end{equation}
+%
+for any observable $X$, be it $k_{\mathrm{eff}}$ or the source of one cell. The
+first term is the uncertainty of the reference run, which Serpent reports for
+the multiplication factor and, through the fission-source detector, for every
+cell. The second is less immediate. The interpolated matrix is not the outcome
+of a Monte Carlo run of its own: it is a new object assembled from database
+entries that carry finite statistics, and it has no replicas from which an
+uncertainty could be read off. Its contribution has to be estimated. (The NSE
+paper writes $\sigma_{\mathrm{interp}}$ for this term; $\sigma_{\mathrm{DB}}$ is
+used here throughout.)
+
+\subsection{Resampling the database}
+
+The estimate is built by resampling. Every database coefficient is treated as
+a Gaussian variable centred on its tallied value with the standard deviation
+Serpent reports for it; a complete realization of the database is drawn, and
+the whole pipeline is rerun on it, interpolation, correction ratio and
+eigenproblem, yielding one realization of $\tilde k_{\mathrm{eff}}$ and of the
+normalized source. Repeating the draw $M$ times, the standard deviation of the
+$M$ results is $\sigma_{\mathrm{DB}}$. Propagating the database covariance
+through a linearized sensitivity would be cheaper, but the correction ratios
+are nonlinear in the coefficients, which appear in both numerator and
+denominator; resampling the full pipeline avoids any linearization. Since the
+fission source is normalized to its sum, the relative uncertainty of a
+normalized value coincides with that of the corresponding tally, and the
+relative quantities of Eq.~(\ref{fm:eq:sigma}) combine directly.
+
+The draw is defined by a covariance. Writing the perturbation of the retained
+coefficients as $\boldsymbol\delta\sim\mathcal N(\mathbf 0,\boldsymbol\Sigma)$,
+the covariance factors as $\boldsymbol\Sigma = \mathbf D\,\boldsymbol\rho\,\mathbf D$,
+with $\mathbf D$ the diagonal matrix of the per-coefficient standard deviations
+read from the database and $\boldsymbol\rho$ the correlation matrix. The
+amplitude $\mathbf D$ is fixed by the tallies; what has to be decided is
+$\boldsymbol\rho$, and the decision is not innocuous.
+
+\subsection{Why the coefficients of one column are correlated}
+
+Coefficients tallied within a single criticality calculation are not
+independent, because the number of histories per active cycle is fixed
+\cite{BrissendenGarlick1986}. Consider two coefficients of the same source
+column, $a_{ij}$ and $a_{lj}$ with $i\neq l$. At the start of a cycle the
+number $N_j$ of source neutrons born in $j$ is inherited from the fission bank.
+Each of them, independently of the others, either causes a fission in cell $i$,
+with probability $\pi_i$, or elsewhere; in the analog tracking used here a
+history is terminated when it causes fission, so it contributes to one
+destination only, with all its $\bar\nu$ secondaries born there. The
+coefficient is the per-source-neutron average of these contributions, and the
+standard multinomial results \cite{CasellaBerger2002} give
+%
+\begin{equation}
+  \operatorname{Var}(a_{ij}) = \frac{\bar\nu^2\,\pi_i(1-\pi_i)}{N_j},\qquad
+  \operatorname{Cov}(a_{ij},a_{lj}) = -\frac{\bar\nu^2\,\pi_i\pi_l}{N_j}.
+  \label{fm:eq:multinomial}
+\end{equation}
+%
+The covariance is negative for every pair of destinations sharing a source
+column: a fixed number of histories is split, exhaustively and exclusively,
+among the destinations, and more of them going to $i$ means fewer going to
+$l$. In the correlation the run-time factor $\bar\nu^2/N_j$ cancels, and what
+remains depends only on the destination probabilities, which are themselves
+readable from the tallied means, $a_i = \bar\nu\,\pi_i$. Writing
+$\kappa = -1/\bar\nu$,
+%
+\begin{equation}
+  \rho_{\mathrm{pred}}(i,l) \;=\;
+  \kappa\,\frac{\sqrt{a_i\,a_l}}{\sqrt{(1+\kappa a_i)(1+\kappa a_l)}},
+  \label{fm:eq:rho}
+\end{equation}
+%
+a closed form that needs only $\bar\nu$ and the mean coefficients of the
+database itself, no additional Monte Carlo replica. The multiplicity is treated
+as a constant and every history is given unit weight; neither simplification
+touches the covariance, which vanishes term by term as long as a history
+fissions at most once, and their effect on the variance that normalizes it
+was quantified at a few parts in $10^{4}$ for the calculations of Part II.
+
+\subsection{Four estimates and their validation}
+
+Four ways of fixing $\boldsymbol\rho$ were compared on the same twelve test
+cases, on both $k_{\mathrm{eff}}$ and the source. (i) \emph{Uncorrelated
+resampling}, $\boldsymbol\rho=\mathbf I$: every coefficient perturbed on its
+own, which is the assumption of earlier FM uncertainty work
+\cite{HeWaltersNSE2022} and the natural baseline. (ii) The \emph{analytical
+model}, $\boldsymbol\rho=\boldsymbol\rho_{\mathrm{pred}}$ of
+Eq.~(\ref{fm:eq:rho}), imposed column by column through a Cholesky factor
+shared by the coefficients of the same source column. (iii) \emph{Measured
+correlation}, obtained from the cycle-by-cycle tallies of one run by treating
+each active cycle as a pseudo-replica, which required modifying Serpent to print
+the matrix of every active cycle. (iv) \emph{Brute force}: the whole database
+rebuilt $150$ times from genuinely independent runs, one per temperature and
+repetition, with no model of the covariance at all; the most expensive estimate
+and the reference for the other three.
+
+Against brute force, the uncorrelated baseline gives systematically the largest
+$\sigma_{\mathrm{DB}}$ and the analytical model the smallest, with the measured
+correlation in between. On $k_{\mathrm{eff}}$ the analytical model reproduces
+the brute-force uncertainty to within \SI{4.6}{\percent}, ahead of the measured
+correlation (\SI{8.7}{\percent}) and well ahead of the uncorrelated baseline
+(\SI{18.0}{\percent}): the intra-column correlations are negative, so
+neglecting them inflates the propagated variance of the eigenvalue. On the
+root-mean-square of the source the measured (\SI{3.3}{\percent}) and the
+analytical (\SI{3.6}{\percent}) models both track brute force more closely
+than the uncorrelated one (\SI{7.3}{\percent}), the source being more
+sensitive than the eigenvalue to the cross-column correlations that the
+analytical model leaves out.
+
+One word needs fixing before the results are read, because the three works use
+it in opposite senses. A wider uncertainty band is \emph{conservative} for the
+uncertainty estimate, since it overstates the noise, and \emph{permissive} as
+an acceptance test, since it makes a residual easier to declare compatible with
+noise. The uncorrelated baseline is conservative in the first sense, by a
+factor of roughly $1.5$ where it was measured against replicates; the
+analytical model, giving the smallest $\sigma_{\mathrm{DB}}$, yields the
+narrowest acceptance window and is therefore the strictest test.
+
+The three works draw on this framework with different settings, each stated
+where the results appear. The temperature-correction study of
+Chapter~\ref{ch:correction-ratios} uses the analytical model with $M=500$
+realizations. The reflector-correction study of the same chapter and the
+criticality search of Chapter~\ref{ch:crit-search} use the uncorrelated
+baseline, with the correction ratio rebuilt inside every realization; the
+former with $M=500$, the latter with a fixed ensemble of $M=50$ realizations
+drawn once from a fixed seed, truncated at zero and kept in memory, so that
+every result of the cycle analysis is evaluated on the same fifty databases.
+Fifty was chosen after checking the convergence of $\sigma_k$: with twenty
+realizations it is underestimated by 10--15\% and varies by as much between
+independent groups of twenty, with fifty it is within \SI{5}{\percent} of its
+value at two hundred.
+
+\section{Error metrics}\label{fm:sec:metrics}
+
+Two observables are compared with the reference throughout Part II, the
+multiplication factor and the fission source, and the same four measures are
+used for them. For the multiplication factor,
+%
+\begin{equation}
+  \Delta k_{\mathrm{eff}} = \big(\tilde k_{\mathrm{eff}} - k^{\mathrm{MC}}_{\mathrm{eff}}\big)\times10^{5}
+  \quad\text{(pcm)},
+  \qquad
+  z = \frac{\Delta k_{\mathrm{eff}}}{\sigma_{\mathrm{tot}}},
+  \label{fm:eq:dk}
+\end{equation}
+%
+the second being the residual in units of its own uncertainty. The fission
+source is normalized to unit sum over the cells, and its local relative
+deviation and the root-mean-square of the deviations over the core are
+%
+\begin{equation}
+  \delta\tilde F_i = \frac{\tilde F_i - F_i^{\mathrm{MC}}}{F_i^{\mathrm{MC}}}\times100
+  \quad(\%),
+  \qquad
+  \mathrm{RMSE} = \sqrt{\frac{1}{N}\sum_{i=1}^{N}\big(\delta\tilde F_i\big)^2}.
+  \label{fm:eq:source}
+\end{equation}
+%
+These are plain metrics, chosen over a covariance-weighted distance such as
+Mahalanobis's on purpose: they are less sensitive to the spatial pattern of a
+residual, and directly interpretable, which is what a case-by-case comparison
+needs. Every uncertainty band drawn in the following is $\pm2\sigma_{\mathrm{tot}}$,
+so that a point falling inside or outside a band coincides with passing or
+failing the $|z|<2$ test used as the ``consistent with noise'' criterion. As a
+check of the reference side, the reference calculations of the reflector tests
+were each repeated three times with different seeds: the root-mean-square
+deviations of the source obtained against the three runs are consistent with
+one another, and the seed has no visible effect on the comparison.
