@@ -1,7 +1,11 @@
 % ******************************* PhD Thesis Template **************************
 % Please have a look at the README.md file for info on how to use the template
 
-\documentclass[a4paper,12pt,times,numbered,print,index,custommargin]{Classes/PhDThesisPSnPDF}
+% Back-references in the bibliography ("cited on page ..."): the option has
+% to reach hyperref before the class loads it.
+\PassOptionsToPackage{pagebackref}{hyperref}
+
+\documentclass[a4paper,12pt,times,authoryear,print,index,custommargin]{Classes/PhDThesisPSnPDF}
 
 \usepackage{nomencl} 
 \makenomenclature
@@ -159,8 +163,8 @@
 % Reference styles: http://sites.stat.psu.edu/~surajit/present/bib.htm
 
 %\bibliographystyle{apalike}
-\bibliographystyle{unsrt} % Use for unsorted references  
-%\bibliographystyle{plainnat} % use this to have URLs listed in References
+%\bibliographystyle{unsrt} % unsorted, numbered
+\bibliographystyle{plainnat} % author-year, alphabetical, with URLs
 \cleardoublepage
 \bibliography{References/references,Chapter3/refs_sph,Chapter4/refs_eg,Chapter6/refs_fm} % Path to your References.bib file
 
