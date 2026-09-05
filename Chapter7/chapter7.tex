@@ -1181,6 +1181,26 @@ depletion of its own.
   \end{tabular}
 \end{table}
 
+\begin{table}[htbp]
+  \centering
+  \caption[Verification and assumption-test campaigns]{Serpent~2 campaigns
+  run to verify the workflow and to measure the assumptions of the burnup
+  correction, Sec.~\ref{cs:sec:hypotheses}; same statistics as the database
+  entries.}
+  \label{cs:tab:testcost}
+  \begin{tabular}{p{74mm}cc}
+    \toprule
+    Campaign & Runs & Cost \\
+    \midrule
+    Reference criticality calculations along the cycle & 12 & \SI{62}{CPU\,h} each \\
+    Snapshots re-tallied at \ang{45}, \ang{90}, \ang{135} and \ang{180} (angle independence) & 48 & \SI{66}{CPU\,h} each \\
+    Snapshot re-tallied at the evolved temperature (frozen temperature) & 1 & \SI{66}{CPU\,h} \\
+    Depletion with the drums frozen at \ang{33.75} (single history) & 1 & \SI{2.75}{h} on 64 cores \\
+    Snapshots of that history, re-tallied at the standard conditions & 5 & \SI{66}{CPU\,h} each \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
 \section{Summary}
 
 The criticality search of this chapter rests on a database of 136 fission
@@ -1215,25 +1235,5 @@ the burnup correction. Two developments follow from it. The first is the
 treatment of the effects that the isothermal database cannot represent, the
 temperature difference between core and reflector first of all, which is the
 subject of Chapter~\ref{ch:correction-ratios}. The second is the replacement
-\begin{table}[htbp]
-  \centering
-  \caption[Verification and assumption-test campaigns]{Serpent~2 campaigns
-  run to verify the workflow and to measure the assumptions of the burnup
-  correction, Sec.~\ref{cs:sec:hypotheses}; same statistics as the database
-  entries.}
-  \label{cs:tab:testcost}
-  \begin{tabular}{p{74mm}cc}
-    \toprule
-    Campaign & Runs & Cost \\
-    \midrule
-    Reference criticality calculations along the cycle & 12 & \SI{62}{CPU\,h} each \\
-    Snapshots re-tallied at \ang{45}, \ang{90}, \ang{135} and \ang{180} (angle independence) & 48 & \SI{66}{CPU\,h} each \\
-    Snapshot re-tallied at the evolved temperature (frozen temperature) & 1 & \SI{66}{CPU\,h} \\
-    Depletion with the drums frozen at \ang{33.75} (single history) & 1 & \SI{2.75}{h} on 64 cores \\
-    Snapshots of that history, re-tallied at the standard conditions & 5 & \SI{66}{CPU\,h} each \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
 of the correlation of Eq.~(\ref{cs:eq:correlation}) with a thermal response
 from a conduction solver, which the interface of the workflow already allows.
