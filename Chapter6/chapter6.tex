@@ -72,8 +72,8 @@ results, a matrix that couples every fissile region of the core to every other.
 That matrix contains the eigenvalue and the fission source of the state at
 which it was tallied, and it can be stored. A database of matrices tallied at a
 set of reference states then represents any intermediate state by
-interpolation, at the cost of an eigenvalue problem of modest size: seconds
-instead of hours, with no Monte Carlo calculation in the loop.
+interpolation, at the cost of an eigenvalue problem of modest size, solved in seconds and
+requiring no further Monte Carlo calculation.
 
 The three works of this Part build on that idea for the same reactor and with
 the same tools. Chapter~\ref{ch:crit-search} builds the database over the fuel
@@ -81,7 +81,7 @@ temperature and the drum angle, uses it for a criticality search, and extends it
 along the cycle with a correction for burnup. Chapter~\ref{ch:correction-ratios}
 addresses what the interpolation cannot represent, the temperature of the
 reflector and sharp temperature gradients inside the core, through two
-multiplicative corrections. The present chapter provides the common ground: the
+multiplicative corrections. The present chapter provides the material common to the three works: the
 derivation of the fission matrix from the transport equation, the strategies
 available for its generation, the reactor model, and the general framework
 within which the database, the statistical uncertainty and the error
@@ -163,8 +163,7 @@ reflectors and control elements emit no fission neutrons and enter the problem
 through the kernel, that is, through the value of the coefficients.
 
 Equations~(\ref{fm:eq:eigen}) and (\ref{fm:eq:coef}) are an exact consequence
-of Eq.~(\ref{fm:eq:integral}). What turns them into a method is the observation
-that $a_{ij}$ depends on the source only through its shape inside the region
+of Eq.~(\ref{fm:eq:integral}). They become a method through the observation that $a_{ij}$ depends on the source only through its shape inside the region
 $V_j$, and neither on its amplitude nor on the source elsewhere. If the regions
 are small enough, or the shape within them stable enough, for that internal
 shape to be insensitive to the global configuration, the coefficients become
@@ -216,8 +215,8 @@ repeated units, so that a limited number of calculations serves for the whole
 core; reflectors and structural materials are deliberately excluded from the
 tally to preserve that similarity, and their influence is restored afterwards
 through boundary and discontinuity corrections. This is the approach of the
-RAPID code system, a mature implementation that delivers whole-core solutions
-within minutes at an accuracy comparable to that of the underlying Monte Carlo,
+RAPID code system, a mature implementation that provides whole-core solutions within minutes with
+an accuracy comparable to that of the underlying Monte Carlo calculation,
 supported by dedicated techniques for homogenization \cite{HePNE2020Homog},
 temperature interpolation \cite{HeANE2020Temp} and the treatment of material and
 control-rod discontinuities \cite{HeANE2019,HePNE2020,Mascolino2022}. The
@@ -251,14 +250,14 @@ resolved at pin level would multiply the number of cells by the number of fuel
 pins per assembly, and the number of coefficients by its square, with a
 corresponding growth of the histories required. For a large power reactor such
 as a pressurized water reactor, with some two hundred assemblies and several
-tens of thousands of fuel pins, a pin-wise matrix tallied in a single
-criticality calculation is beyond reach; that regime is precisely where the
-fixed-source strategy prevails, because the repetition of the fundamental units
+tens of thousands of fuel pins, a pin-wise matrix cannot be tallied in a single criticality calculation at an
+acceptable cost; in that regime the fixed-source strategy is the appropriate
+one, because the repetition of the fundamental units
 makes the cost of the tally independent of the size of the core
 \cite{WaltersNSE2018}.
 
 The choice between the two strategies is therefore specific to the design and
-to the purpose. All the work of this Part adopts the second one. The aim is a
+to the purpose. The three works of this Part all adopt the second strategy. The aim is a
 direct workflow feeding an online core-monitoring tool, for which
 assembly-level resolution is sufficient and pin-wise accuracy is not required;
 a matrix that already contains the reflector and the drums, tallied from the
@@ -314,10 +313,10 @@ three-dimensional. The indices $i$ and $j$ do not label a radial position but a
 cell obtained by combining the radial position of an assembly with one of its
 axial zones, and every quantity defined on the matrix in the following,
 corrections included, connects two such cells, so that radial and axial effects
-are treated together and not as separate factors. The Monte Carlo populations
-used to tally the matrices, and the statistical uncertainty of the coefficients
-that results from them, are given with the campaigns of
-Chapter~\ref{ch:crit-search}.
+are treated together and not as separate factors. The Monte Carlo populations used to tally the matrices, and the statistical
+uncertainty of the coefficients that results from them, are reported with the
+database of Sec.~\ref{cs:sec:database} and with the snapshot database of
+Sec.~\ref{cs:sec:snapshots}.
 
 \section{Parametrization over the operating state}\label{fm:sec:database}
 
@@ -326,17 +325,14 @@ database of matrices, tallied at a set of reference states, is interpolated to
 represent a state that was never simulated. The operating state is described by
 a small number of parameters, the temperature field, the angle of the drums and
 the burnup of the fuel in the works of this Part; the database is a grid over
-those parameters, or over a subset of them, computed once and used any number
-of times. The number of entries required for a given accuracy is not known in
-advance and is settled for each parameter by a convergence study,
+those parameters, or over a subset of them, computed once and reused for every subsequent evaluation. The number of entries required for a given accuracy is not known in advance
+and is determined for each parameter by the convergence studies of
 Secs.~\ref{cs:sec:selection} and \ref{cs:sec:grid}.
 
-Two features of the interpolation are common to all the works and are stated
-here. The first is that the state is represented coefficient by coefficient:
+Two features of the interpolation are common to all the works of this Part. The first is that the state is represented coefficient by coefficient:
 each $a_{ij}$ is interpolated with the local value of the parameters that
-concern it, not with a single global value. This is what allows a non-uniform
-temperature field to be represented from database entries that are, each of
-them, isothermal. The second is the assignment of that local value. For a
+concern it, not with a single global value. This property allows a non-uniform temperature field to be represented from
+database entries each of which is isothermal. The second is the assignment of that local value. For a
 temperature field that differs from cell to cell, the interpolation of
 $a_{ij}$ uses the temperature of its destination cell $i$, that is, of the
 row: the coefficient is assumed to depend on the temperature of the region
@@ -374,8 +370,8 @@ replicas from which an uncertainty could be read.
 The estimate adopted in all the works of this Part is an ensemble method. Every
 database coefficient is treated as a random variable centred on its tallied
 value, with the standard deviation that Serpent reports for it; a complete
-realization of the database is drawn, and the whole chain of the method is
-rerun on it, interpolation, correction and eigenvalue problem, yielding one
+realization of the database is drawn, and the whole chain of the method, namely interpolation, correction and eigenvalue
+problem, is rerun on it, yielding one
 realization of $\tilde k_{\mathrm{eff}}$ and of the normalized source. The
 standard deviation of the results over $M$ realizations is
 $\sigma_{\mathrm{DB}}$. Propagating the covariance of the database through a
@@ -403,8 +399,7 @@ easier to declare compatible with noise. The structure of the correlations,
 their analytical modelling and the validation of the resulting estimate against
 independent replicas of the whole database are examined in
 Chapter~\ref{ch:correction-ratios}, in connection with the core temperature
-correction. The number of realizations and the treatment of the ensemble differ
-between the works and are stated where the results appear.
+correction.
 
 \section{Error metrics}\label{fm:sec:metrics}
 
@@ -434,7 +429,7 @@ deviation and the root-mean-square of the deviations over the core are
 %
 These metrics were preferred to a covariance-weighted distance, such as the
 Mahalanobis distance, because they are less sensitive to the spatial pattern of
-a residual and directly interpretable, as a case-by-case comparison requires. Every uncertainty band drawn in the following is
-$\pm2\sigma_{\mathrm{tot}}$, so that a point falling inside or outside a band
-coincides with passing or failing the $|z|<2$ test adopted as the criterion of
+a residual and directly interpretable, as a case-by-case comparison requires. Every uncertainty band drawn in Chapters~\ref{ch:crit-search} and
+\ref{ch:correction-ratios} is $\pm2\sigma_{\mathrm{tot}}$, so that a point
+falling inside or outside a band corresponds to passing or failing the $|z|<2$ test adopted as the criterion of
 consistency with the statistical noise.
