@@ -429,9 +429,10 @@ is $1.00004\pm11$~pcm.
   search at nominal power and fresh fuel: multiplication factor (left axis) and
   drum angle (right axis) at each outer iteration, with the cumulative computing
   time on the upper axis, uncertainty quantification included. The inset
-  resolves the convergence region in pcm, with the $\pm1\sigma$ bands of the
-  ensemble and the reference Serpent~2 calculation at the drum angle returned
-  by the search.}
+  resolves the convergence region in pcm, with the $\pm2\sigma$ bands of the
+  ensemble and of the reference Serpent~2 calculation at the drum angle
+  returned by the search. The right panel shows how the computing time divides
+  among the steps of the search, measured on an instrumented run.}
   \label{cs:fig:search}
 \end{figure}
 
@@ -647,7 +648,7 @@ Figure~\tref{cs:fig:flow} draws the complete scheme.
                        Eq.~(\ref{cs:eq:sigmatheta});\\ advance the burnup $BU_i$, Eq.~(\ref{cs:eq:bustep})};
   \node[decN, below=of rec] (eol) {critical with the drums\\fully extracted?};
   \node[greyN, below=of eol] (end) {end of cycle life};
-  \node[serp, right=of temp] (db) {database of tallied matrices,
+  \node[serp, right=of start] (db) {database of tallied matrices,
                        Sec.~\ref{cs:sec:database}};
   \node[serpN, right=of eig] (snap) {snapshot database,
                        $\mathrm{BCR}_{ij}(t)$, Sec.~\ref{cs:sec:snapshots}};

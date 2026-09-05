@@ -81,7 +81,7 @@ temperatures.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.72\textwidth]{Chapter8/Figs/grad_temp_core_reflector.png}
+  \includegraphics[width=0.52\textwidth]{Chapter8/Figs/grad_temp_core_reflector.png}
   \caption[Temperature difference between core and reflector]{Temperature field
   with the fuel (red) and the reflector (blue) at two different uniform
   temperatures, the configuration the reflector correction is built for.}
@@ -739,16 +739,38 @@ $a_i = \bar\nu\pi_i$. Writing $\kappa=-1/\bar\nu$ and substituting,
 \end{equation}
 %
 a closed form that needs only the multiplicity and the mean coefficients of the
-database itself. Figure~\tref{cr:fig:corr} compares the predicted matrix with
-the one measured from the cycle-by-cycle tallies at \SI{300}{K}.
+database itself. Figures~\tref{cr:fig:corr-unc} to \tref{cr:fig:corr-meas} show
+the correlation matrix of the coefficients of one source column at
+\SI{300}{K} under the three assumptions: absent, predicted in closed form, and
+measured from the cycle-by-cycle tallies. The predicted matrix reproduces the
+block structure of the measured one, with the same sign and the same order of
+magnitude, and without its statistical noise.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.79\textwidth]{Chapter8/Figs/correlation_matrices_300K.pdf}
-  \caption[Correlation of the tallied coefficients]{Correlation matrix of the
-  coefficients of one source column at \SI{300}{K}: predicted in closed form by
-  Eq.~(\ref{cr:eq:rho-pred}) and measured from the cycle-by-cycle tallies.}
-  \label{cr:fig:corr}
+  \includegraphics[width=0.57\textwidth]{Chapter8/Figs/correlation_matrix_uncorrelated.pdf}
+  \caption[Correlation of the coefficients, uncorrelated assumption]{Correlation
+  matrix of the coefficients of one source column at \SI{300}{K} under the
+  uncorrelated assumption, which is the identity by construction.}
+  \label{cr:fig:corr-unc}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.57\textwidth]{Chapter8/Figs/correlation_matrix_analytical.pdf}
+  \caption[Correlation of the coefficients, analytical model]{The same
+  correlation matrix predicted in closed form by Eq.~(\ref{cr:eq:rho-pred}),
+  which needs the mean coefficients and the multiplicity alone.}
+  \label{cr:fig:corr-analyt}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.57\textwidth]{Chapter8/Figs/correlation_matrix_measured.pdf}
+  \caption[Correlation of the coefficients, measured]{The same correlation
+  matrix measured from the cycle-by-cycle tallies of one calculation, each
+  active cycle treated as a pseudo-replica.}
+  \label{cr:fig:corr-meas}
 \end{figure}
 
 Two simplifications enter the derivation. The multiplicity is treated as a
@@ -858,7 +880,10 @@ and for both observables.
   \includegraphics[width=\textwidth]{Chapter8/Figs/fig1_reference_case_uncertainty.pdf}
   \caption[Uncertainty of the reference calculations]{Statistical uncertainty
   of the reference calculations of the twelve cases: multiplication factor
-  (left) and root-mean-square of the fission source (right).}
+  (top) and root-mean-square of the fission source (bottom). Each case is
+  identified by its temperature field, drawn under the horizontal axis with the
+  colour scale of Figs.~\tref{cr:fig:cases2d-a}
+  and~\tref{cr:fig:cases2d-b}.}
   \label{cr:fig:sigref}
 \end{figure}
 
@@ -869,7 +894,8 @@ and for both observables.
   uncertainty predicted by the three inexpensive methods against the
   brute-force reconstruction with $150$ independent replicas: multiplication
   factor (left) and root-mean-square of the fission source (right), corrected
-  variant, twelve cases.}
+  variant, twelve cases, each identified by its temperature field on the left
+  of the axis.}
   \label{cr:fig:validation}
 \end{figure}
 
@@ -957,8 +983,9 @@ source from 1.28 to \SI{0.96}{\percent}, by \SI{25}{\percent}.
   \centering
   \includegraphics[width=\textwidth]{Chapter8/Figs/fig3_raw_vs_corrected.pdf}
   \caption[Raw against corrected interpolation]{Deviation of the multiplication
-  factor (left) and root-mean-square deviation of the fission source (right),
-  raw against corrected interpolation, for the twelve cases.}
+  factor (top) and root-mean-square deviation of the fission source (bottom),
+  raw against corrected interpolation, for the twelve cases, each identified by
+  its temperature field under the horizontal axis.}
   \label{cr:fig:rawcorr}
 \end{figure}
 
@@ -1052,7 +1079,7 @@ isolates the population the correction is meant to act on.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\textwidth]{Chapter8/Figs/hex_index_map.pdf}
+  \includegraphics[width=0.75\textwidth]{Chapter8/Figs/hex_index_map.pdf}
   \caption[Numbering of the assemblies]{Numbering of the 127 assemblies used by
   the cell index of Fig.~\ref{cr:fig:source2d}. Assembly 64 is the central one
   of the calibration cases.}
