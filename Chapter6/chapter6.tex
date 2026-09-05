@@ -20,13 +20,51 @@
 
 Heat-pipe micro reactors (HPMRs) are controlled by drums rotating in the radial
 reflector. Their design and their operation require the same calculation to be
-repeated many times: at a given power and at a given point of the cycle, the
-drum angle that makes the core critical, and the fission-source distribution
-that corresponds to it. A full-core Monte Carlo calculation answers the
-question for one state at a cost of several tens of CPU hours, as quantified in
-Chapter~\ref{ch:crit-search}. Such a cost is acceptable for a limited number of
-states and not for the thousands demanded by a design space, a fuel cycle or an
-online monitoring tool.
+repeated many times: the determination, at a given power and at a given point
+of the cycle, of the drum angle that makes the core critical and of the
+fission-source distribution that corresponds to it.
+
+For light-water reactors this is a routine calculation. The core simulators
+used in their design and operation solve the few-group diffusion equation with
+coarse-mesh nodal methods, one node per assembly, on cross sections
+homogenized by a lattice code \cite{Lawrence1986,Smith1986}, and offer a
+criticality search on the soluble boron concentration or on the position of
+the control rods as a standard option
+\cite{Downar2010parcs,Studsvik2026simulate5,Rohde2016,Grundmann2005}; the
+on-line core monitoring systems built on the same models predict the critical
+conditions of the operating core from a nodal model continuously updated with
+the plant history \cite{BoydMiller1996}. The accuracy of the chain rests on
+the equivalence between the homogenized assembly and the heterogeneous one,
+which was established for the lattices of light-water reactors
+\cite{Smith1986}.
+
+The same chain does not transfer to a micro reactor without modification. The
+developers of the reactor physics tools of the Nuclear Energy Advanced
+Modeling and Simulation (NEAMS) program of the United States Department of
+Energy observe that the geometries of the advanced designs depart from those
+of light-water reactors, that tristructural-isotropic (TRISO) fuel with
+graphite or metal-hydride moderators lengthens the neutron migration length
+and produces strong spectral variations inside the core, and that the general
+geometrical treatment which traditional nodal methods lack becomes necessary
+\cite{Wang2025griffin}. On a heat-pipe micro reactor benchmark the differences
+between heterogeneous and homogenized solutions are larger than in light-water
+reactors, and equivalence corrections are required to recover the eigenvalue
+and the power distribution \cite{Pandya2022}; the cross-section library has to
+be tabulated against the drum angle in addition to the temperatures and the
+burnup, with a dedicated treatment of the rotation between the tabulated
+angles \cite{Roskoff2022physor}. The tools of that program were developed for
+features, heat pipes, hydride moderators and control drums among them, for
+which the traditional commercial tools may be inadequately prepared
+\cite{Stauff2024}. The reference for micro reactors therefore remains the
+explicit heterogeneous solution, by transport \cite{Stauff2024} or by Monte
+Carlo, which is the usual way of obtaining the worth of the drums
+\cite{PriceANE2022}. A full-core Monte Carlo calculation provides the critical
+state of one configuration at a cost of several tens of CPU hours, as
+quantified in Chapter~\ref{ch:crit-search}, and returns an estimate affected
+by statistical noise, which complicates the search itself
+\cite{PriceRoskoffPNE2023}. Such a cost is acceptable for a limited number of
+states and not for the thousands demanded by a design space, a fuel cycle or
+an online monitoring tool.
 
 The fission matrix (FM) method \cite{CarneyANE2014} addresses this limitation.
 A single Monte Carlo calculation is made to tally, in addition to its usual
