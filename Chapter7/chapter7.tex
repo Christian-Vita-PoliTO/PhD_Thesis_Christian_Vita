@@ -710,7 +710,13 @@ Figure~\tref{cs:fig:flow} draws the complete scheme.
 
 Figure~\tref{cs:fig:cycle} shows the critical drum angle over the 66-month
 cycle at \SI{2}{MW}, up to a core-average burnup of \SI{8.96}{MWd/kg}, with
-the $\pm1\sigma$ band of the fifty database realizations. The drums move
+the $\pm1\sigma$ band of the fifty database realizations, and marks the
+twelve states at which the workflow was verified. Each of them is an
+independent Serpent~2 criticality calculation set up for the purpose, which
+imposes the composition of that snapshot, the drums at the critical angle
+returned by the workflow and the temperature field of the workflow, through
+the multiphysics interface, with the protocol of
+Sec.~\ref{cs:sec:convergence}. The drums move
 monotonically from \ang{62.3} to \ang{12.0}. The build-in of $^{135}$Xe is
 visible in the first week, where the angle drops from \ang{62.4} to
 \ang{59.9}; the inset compares the quasi-static march with searches run
@@ -724,8 +730,9 @@ and its assembly-wise deviation from the reference calculations.
   \includegraphics[width=\textwidth]{Chapter7/Figs/cycle_angle_verification.pdf}
   \caption[Critical drum angle over the cycle]{Upper panel: critical drum
   angle over the cycle at nominal power (core-average burnup on the upper
-  axis), with the $\pm1\sigma$ band of the fifty database realizations and the
-  twelve states at which the reference calculations were run; the inset
+  axis), with the $\pm1\sigma$ band of the fifty database realizations and,
+  in green, the twelve states at which independent reference Serpent~2
+  calculations were run; the inset
   resolves the first months, where the isotopic settling takes place, and
   compares the quasi-static cycle with searches run directly at the snapshot
   times. Lower panel: deviation of the workflow multiplication factor from the
@@ -744,13 +751,9 @@ and its assembly-wise deviation from the reference calculations.
   \label{cs:fig:cyclemaps}
 \end{figure}
 
-The workflow is verified with twelve reference Serpent~2 criticality
-calculations, one per snapshot time, with the protocol of
-Sec.~\ref{cs:sec:convergence}. Each reference imposes the composition of that
-snapshot, the drums at the critical angle returned by the algorithm and the
-converged temperature field of the workflow, through the multiphysics
-interface; the workflow is evaluated at exactly that state.
-Table~\tref{cs:tab:verification} lists the twelve comparisons. The deviation
+Table~\tref{cs:tab:verification} lists the twelve comparisons between the
+workflow and the reference calculations, the workflow being evaluated at
+exactly the state imposed on each reference. The deviation
 $\Delta k_{\mathrm{eff}}$ lies between $-59$ and $-5$~pcm over the whole cycle,
 with a root-mean-square of \SI{40}{pcm}, against a combined statistical
 uncertainty of 31 to \SI{37}{pcm}. The bias is the one already present at
