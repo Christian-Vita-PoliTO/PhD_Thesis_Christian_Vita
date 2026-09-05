@@ -1022,18 +1022,24 @@ history assumed in the depletion.
 
 \begin{table}[htbp]
   \centering
-  \caption[Single-history test]{Single-history test: $k_{\mathrm{eff}}$ with the
-  drums-inserted depletion history minus $k_{\mathrm{eff}}$ with the production
-  history, on the tallied matrices and in the workflow (pcm). Each entry
-  carries the statistics of two and four independent tallies respectively,
-  about 16 and \SI{22}{pcm}.}
+  \caption[Single-history test]{Single-history test: change of the
+  multiplication factor when the compositions of the depletion with the drums
+  frozen at \ang{33.75} replace those of the production depletion, drums
+  fully extracted, at four snapshot times. The first row compares the
+  matrices tallied from the two sets of compositions at the standard
+  conditions; the second compares the workflow at its critical state, with the
+  burnup correction ratio of one history replacing that of the other. The
+  statistical uncertainty of an entry, from the two and the four independent
+  tallies that enter it, is about 16 and \SI{22}{pcm} respectively.}
   \label{cs:tab:history}
   \begin{tabular}{lcccc}
     \toprule
-    Time (months) & 8 & 24 & 51 & 66 \\
+    & \multicolumn{4}{c}{$\Delta k_{\mathrm{eff}}$ (pcm)} \\
+    \cmidrule(lr){2-5}
+    Snapshot time (months) & 8 & 24 & 51 & 66 \\
     \midrule
-    Tallied matrices & $+22$ & $+27$ & $-26$ & $-26$ \\
-    Workflow         & $+54$ & $+58$ & $+4$  & $+3$  \\
+    Tallied matrices, $\pm16$~pcm & $+22$ & $+27$ & $-26$ & $-26$ \\
+    Workflow, $\pm22$~pcm         & $+54$ & $+58$ & $+4$  & $+3$  \\
     \bottomrule
   \end{tabular}
 \end{table}
