@@ -611,6 +611,24 @@ snapshot database receives the same ensemble treatment as the main database:
 numerator and denominator of the ratio are perturbed independently, and every
 uncertainty band of the cycle carries both databases.
 
+Burnup has entered fission matrix methods before in two forms. In the RAPID
+code system the matrix is precomputed from fixed-source calculations at a
+set of points in power and irradiation time and interpolated between them at
+every depletion step \cite{pungercic2023brapid}; in the combined fission
+matrix of \citet{he2024combined} the database matrices are corrected for the
+evolution of the composition inside a transport--depletion loop. The
+databases interpolated over temperature and control-rod position
+\cite{Topham2020,RauWaltersNSE2021} do not include burnup, and the
+multiplicative correction ratios of RAPID \cite{HeANE2019,HePNE2020} address
+reflectors, heterogeneous assemblies and control rods. The scheme adopted
+here differs from those in two respects. The snapshot matrices are tallied
+whole-core, during criticality calculations restarted from a single
+depletion run once at reference conditions, so that the compositions are
+computed once and every matrix is a transport-only cost; and the ratio
+between the burned and the fresh matrix multiplies a matrix interpolated over
+temperature and drum angle, so that burnup adds a factor to the database
+and not an axis.
+
 \subsection{The quasi-static cycle}\label{cs:sec:cycle}
 
 The workflow marches the cycle on an evolution grid, sub-monthly below one
