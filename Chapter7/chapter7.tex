@@ -461,6 +461,19 @@ iterations would take about a day of wall-clock time on that machine, against
 one second, and every additional search costs the same again, whereas the
 database is paid for once.
 
+The same comparison explains why the search algorithm itself becomes a
+subject of study when the neutronics is Monte Carlo. Each evaluation of
+$k_{\mathrm{eff}}$ then costs tens of CPU hours, so that the number of
+iterations decides the cost of the search, and it returns an estimate with a
+statistical uncertainty that can disrupt the progression of a root-finding
+scheme. \citet{PriceRoskoffPNE2023} developed for this purpose secant-type
+methods with explicit provisions for the statistical uncertainty of the
+estimates, applied to the drum position of micro reactors, and the same
+method was later embedded in a multiphysics depletion workflow that searches
+the critical drum position at every burnup point \cite{PriceNSE2024}. With
+the fission matrix the evaluation is deterministic and costs milliseconds,
+and the plain bisection of Sec.~\ref{cs:sec:algorithm} is sufficient.
+
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.75\textwidth]{Chapter7/Figs/search_cost.pdf}
