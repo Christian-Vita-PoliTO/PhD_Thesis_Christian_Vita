@@ -431,8 +431,7 @@ is $1.00004\pm11$~pcm.
   time on the upper axis, uncertainty quantification included. The inset
   resolves the convergence region in pcm, with the $\pm2\sigma$ bands of the
   ensemble and of the reference Serpent~2 calculation at the drum angle
-  returned by the search. The right panel shows how the computing time divides
-  among the steps of the search, measured on an instrumented run.}
+  returned by the search.}
   \label{cs:fig:search}
 \end{figure}
 
@@ -447,7 +446,8 @@ this state, of the same magnitude as the residuals of Table~\tref{cs:tab:dbsel},
 and it will be met again, unchanged, along the whole cycle
 (Sec.~\ref{cs:sec:cycle-results}).
 
-The cost of the search is dominated by the eigenvalue solutions. Run
+The cost of the search is dominated by the eigenvalue solutions,
+Fig.~\tref{cs:fig:searchcost}. Run
 deterministically, with the \SI{1}{pcm} criterion and no ensemble, a search
 converges in thirteen outer iterations, seventeen evaluations of the matrix
 and \SI{29}{ms} on one core, averaged over twenty searches; \SI{77}{\percent}
@@ -461,6 +461,18 @@ thirty-core workstation on which the database was generated
 iterations would take about a day of wall-clock time on that machine, against
 one second, and every additional search costs the same again, whereas the
 database is paid for once.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.75\textwidth]{Chapter7/Figs/search_cost.pdf}
+  \caption[Composition of the cost of one search]{Composition of the computing
+  time of one search with the ensemble, measured on an instrumented run with
+  the steps timed one by one. The uncertainty quantification, that is,
+  everything but the search itself and the bisection, takes
+  \SI{97}{\percent} of the total, and most of it is the eigenvalue solution of
+  the realizations.}
+  \label{cs:fig:searchcost}
+\end{figure}
 
 \subsection{Critical drum angle against power at beginning of life}\label{cs:sec:bol}
 
