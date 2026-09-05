@@ -1105,33 +1105,40 @@ per snapshot would.
 
 \section{Computational cost}\label{cs:sec:cost}
 
-Table~\tref{cs:tab:cost} gathers the Serpent~2 campaigns behind this chapter
-and the cost of the workflow built on them. The database of
-Sec.~\ref{cs:sec:database} was generated on a thirty-core workstation with an
-Intel Xeon Gold 6130 processor at \SI{2.1}{GHz}: 136 criticality calculations,
-about \SI{63}{CPU\,h} each, \SI{324}{h} of wall-clock time in all. The burnup
-extension added two depletion calculations, twelve snapshot transports, twelve
-reference calculations and the 54 transports of the assumption tests, all
-restarted from the same depletion. The workflow itself runs on a single core
-of a personal computer: a deterministic search takes tens of milliseconds, a
-search with the uncertainty ensemble about one second, and the complete
-66-month cycle, 71 steps with fifty realizations at each step, \SI{40}{s}.
+Table~\tref{cs:tab:cost} gathers the Serpent~2 campaigns on which the workflow
+rests, that is, the cost paid once before any search is run, together with the
+cost of the workflow itself. The database of Sec.~\ref{cs:sec:database} was
+generated on a thirty-core workstation with an Intel Xeon Gold 6130 processor
+at \SI{2.1}{GHz}: 136 criticality calculations, about \SI{63}{CPU\,h} each,
+\SI{324}{h} of wall-clock time in all. The burnup extension added one depletion
+calculation and the twelve snapshot transports restarted from it. The upfront
+cost amounts to about \SI{9500}{CPU\,h}, nine tenths of which are the
+$(T,\theta)$ database. Against it, the workflow runs on a single core of a
+personal computer: a deterministic search takes tens of milliseconds, a search
+with the uncertainty ensemble about one second, and the complete 66-month
+cycle, 71 steps with fifty realizations at each step, \SI{40}{s}.
+
+The campaigns run to verify the workflow and to measure its assumptions are
+listed separately in Table~\tref{cs:tab:testcost}, because they are not part
+of the cost of the method: an application would not repeat them. They amount to
+66 transports and one further depletion, about \SI{4500}{CPU\,h}, all
+restarted from the production depletion except the history test, which has a
+depletion of its own.
 
 \begin{table}[htbp]
   \centering
-  \caption[Serpent 2 campaigns and cost of the workflow]{Serpent~2 campaigns of
-  this chapter (transports at $10^{5}$ neutrons per cycle and 500 active
-  cycles) and cost of the fission matrix workflow, measured on one core.}
+  \caption[Upfront campaigns and cost of the workflow]{Serpent~2 campaigns
+  paid once, before any search (transports at $10^{5}$ neutrons per cycle and
+  500 active cycles), and cost of the fission matrix workflow, measured on one
+  core.}
   \label{cs:tab:cost}
   \begin{tabular}{p{74mm}cc}
     \toprule
     Campaign & Runs & Cost \\
     \midrule
     $(T,\theta)$ database, Sec.~\ref{cs:sec:database} & 136 & \SI{63}{CPU\,h} each \\
-    Depletions: drums out, and drums at \ang{33.75} for the history test & 2 & \SI{2.75}{h} on 64 cores each \\
-    Snapshot matrices at $\theta_{\mathrm{ref}}=\ang{0}$ & 12 & \SI{66}{CPU\,h} each \\
-    Reference criticality calculations along the cycle & 12 & \SI{62}{CPU\,h} each \\
-    Snapshots at \ang{45}, \ang{90}, \ang{135} and \ang{180}; evolved temperature; alternative history & $48+1+5$ & \SI{66}{CPU\,h} each \\
+    Depletion at the reference state, drums fully extracted & 1 & \SI{2.75}{h} on 64 cores \\
+    Snapshot matrices at $\theta_{\mathrm{ref}}=\ang{0}$, Sec.~\ref{cs:sec:snapshots} & 12 & \SI{66}{CPU\,h} each \\
     \midrule
     Search, deterministic criterion & -- & \SI{29}{ms} \\
     Search, ensemble of 100 realizations included & -- & \SI{1.1}{s} \\
@@ -1174,5 +1181,25 @@ the burnup correction. Two developments follow from it. The first is the
 treatment of the effects that the isothermal database cannot represent, the
 temperature difference between core and reflector first of all, which is the
 subject of Chapter~\ref{ch:correction-ratios}. The second is the replacement
+\begin{table}[htbp]
+  \centering
+  \caption[Verification and assumption-test campaigns]{Serpent~2 campaigns
+  run to verify the workflow and to measure the assumptions of the burnup
+  correction, Sec.~\ref{cs:sec:hypotheses}; same statistics as the database
+  entries.}
+  \label{cs:tab:testcost}
+  \begin{tabular}{p{74mm}cc}
+    \toprule
+    Campaign & Runs & Cost \\
+    \midrule
+    Reference criticality calculations along the cycle & 12 & \SI{62}{CPU\,h} each \\
+    Snapshots re-tallied at \ang{45}, \ang{90}, \ang{135} and \ang{180} (angle independence) & 48 & \SI{66}{CPU\,h} each \\
+    Snapshot re-tallied at the evolved temperature (frozen temperature) & 1 & \SI{66}{CPU\,h} \\
+    Depletion with the drums frozen at \ang{33.75} (single history) & 1 & \SI{2.75}{h} on 64 cores \\
+    Snapshots of that history, re-tallied at the standard conditions & 5 & \SI{66}{CPU\,h} each \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
 of the correlation of Eq.~(\ref{cs:eq:correlation}) with a thermal response
 from a conduction solver, which the interface of the workflow already allows.
