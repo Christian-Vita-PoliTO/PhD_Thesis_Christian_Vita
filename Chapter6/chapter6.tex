@@ -296,11 +296,11 @@ geometry.
   \label{fm:fig:vtb}
 \end{figure}
 
-% NOTE for Christian: the AnE paper states that "only one-sixth of the core
+% NOTE (Claude): the AnE paper states that "only one-sixth of the core
 % geometry is modeled", while the mesh is 30 assemblies x 3 axial zones = the
 % whole core and Case 6 of the RCR tests imposes a non-symmetric gradient. The
-% wording above (whole core tallied, sextant only drawn) follows the mesh. To
-% be confirmed.
+% wording above (whole core tallied, sextant only drawn) follows the mesh and
+% was confirmed by Christian on 5 Sep 2026: leave it as it stands.
 
 Serpent~2 tallies the fission matrix on a Cartesian mesh. That is convenient
 for a square lattice, where the mesh can be made to coincide with the fissile
@@ -337,13 +337,13 @@ temperature field that differs from cell to cell, the interpolation of
 $a_{ij}$ uses the temperature of its destination cell $i$, that is, of the
 row: the coefficient is assumed to depend on the temperature of the region
 where the fission neutrons are born, which is where the cross sections that
-determine their production are evaluated. The interpolated matrix is denoted by
-$\tilde{\mathbf A}$, and the tilde marks an interpolated quantity from here
-on; $\tilde k_{\mathrm{eff}}$ and $\tilde{\mathbf F}$ are the eigenpair of
-$\tilde{\mathbf A}$, obtained by solving Eq.~(\ref{fm:eq:eigen}) on the
-interpolated matrix, since nothing is interpolated in the eigenvalue or in the
-source directly. The interpolation is bilinear in temperature and drum angle
-in Chapter~\ref{ch:crit-search}, Eq.~(\ref{cs:eq:interp}), and linear in
+determine their production are evaluated. The interpolated matrix is denoted
+by $\tilde{\mathbf A}$, and the tilde denotes an interpolated quantity
+throughout Part~II; $\tilde k_{\mathrm{eff}}$ and $\tilde{\mathbf F}$ are the
+eigenpair of $\tilde{\mathbf A}$, obtained by solving Eq.~(\ref{fm:eq:eigen})
+on the interpolated matrix: neither the eigenvalue nor the source is
+interpolated directly. The interpolation is bilinear in temperature and drum
+angle in Chapter~\ref{ch:crit-search}, Eq.~(\ref{cs:eq:interp}), and linear in
 temperature in Chapter~\ref{ch:correction-ratios}, Eq.~(\ref{cr:eq:interp1d}).
 
 \section{Statistical uncertainty of the interpolated results}\label{fm:sec:uq}
