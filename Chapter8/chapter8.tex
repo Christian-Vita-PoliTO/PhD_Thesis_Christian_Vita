@@ -43,11 +43,12 @@ coefficient the temperature of its destination cell alone, so a cell that is
 much hotter than its neighbours is treated as if the whole core were at its
 own temperature.
 
-Both are treated with the scheme of Sec.~\ref{fm:sec:ratios}: a ratio of two
-matrices tallied at reference conditions that differ in the effect of interest
-alone, applied element by element to the interpolated matrix and scaled by a
-weight that measures how much of the reference effect is present at the target
-state. The first correction, the Reflector Correction Ratio, is developed on
+Both are treated with the scheme already used for burnup in
+Sec.~\ref{cs:sec:bcr}: a ratio of two matrices tallied at reference
+conditions that differ in the effect of interest alone, applied element by
+element to the interpolated matrix. The new element is a weight, which
+scales the ratio by how much of the reference effect is present at the
+target state. The first correction, the Reflector Correction Ratio, is developed on
 the three-dimensional VTB model of Sec.~\ref{fm:sec:model}, the same used for
 the criticality search. The second, the Core Temperature Correction Ratio, is
 developed on a two-dimensional variant of the same design, described where it
@@ -1176,8 +1177,7 @@ delimit what it would have to reconcile.
 \section{Summary}
 
 Two effects that the isothermal database cannot represent have been corrected
-with the scheme of Sec.~\ref{fm:sec:ratios}, each with its own reference case
-and its own weight.
+with correction ratios, each with its own reference case and its own weight.
 
 The reflector correction restores the temperature difference between the core
 and the reflector. On a uniformly hot core it reduces the deviation of the

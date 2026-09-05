@@ -36,8 +36,7 @@ between power and fuel temperature replaces the thermal solver, so that the
 search can be closed on the fission matrix alone. The search algorithm is then
 defined, verified against reference Monte Carlo calculations at beginning of
 life, and extended along the fuel cycle through a multiplicative correction
-for burnup, the first instance of the correction ratios introduced in general
-terms in Sec.~\ref{fm:sec:ratios}.
+for burnup, the Burnup Correction Ratio.
 
 The Reflector Correction Ratio, which accounts for the temperature difference
 between core and reflector and is the subject of
@@ -535,11 +534,14 @@ negligible cost.
 
 \subsection{The Burnup Correction Ratio}\label{cs:sec:bcr}
 
-The composition effect is therefore factorized out of the interpolated matrix,
-in the form anticipated in Sec.~\ref{fm:sec:ratios}. The interpolated
-coefficient is multiplied element by element by a Burnup Correction Ratio
-(BCR), the ratio between the coefficient tallied at a burnup snapshot and the
-coefficient tallied at the fresh state, under fixed reference conditions:
+The composition effect is therefore factorized out of the interpolated matrix
+through a correction ratio: a multiplicative factor applied element by
+element to the interpolated matrix, built as the ratio of two matrices
+tallied at reference conditions that differ in the effect of interest alone.
+Here the effect is the composition. The interpolated coefficient is
+multiplied by a Burnup Correction Ratio (BCR), the ratio between the
+coefficient tallied at a burnup snapshot and the coefficient tallied at the
+fresh state, under fixed reference conditions:
 %
 \begin{equation}
   \tilde a^{*}_{ij}(\tilde T_{f,i},\tilde\theta,t) \;=\;
@@ -553,14 +555,9 @@ Numerator and denominator are fission-matrix tallies at the same reference
 conditions, drums fully extracted, $\theta_{\mathrm{ref}}=\ang{0}$, and the
 nominal-power temperature state of Sec.~\ref{cs:sec:bol}; they differ only in
 the fuel composition, taken from a depletion history at the snapshot times
-$t_s$. Between snapshots the ratio is interpolated linearly in time. Among the
-correction ratios of Part~II this is the simplest instance: the weight that
-scales the reflector and core-temperature corrections of
-Chapter~\ref{ch:correction-ratios} with the temperature field is here
-identically one, because the effect corrected, the composition, is present in
-full at every state of the cycle. Systematic effects common to numerator and
-denominator cancel in the ratio, while the interpolated matrix keeps the
-temperature and drum dependence. Ratios far from unity can only come from
+$t_s$. Between snapshots the ratio is interpolated linearly in time.
+Systematic effects common to numerator and denominator cancel in the ratio,
+while the interpolated matrix keeps the temperature and drum dependence. Ratios far from unity can only come from
 coefficients tallied with a few counts, so the ratio is limited to the
 interval $[0.5,2]$: at 66 months the limit affects \SI{7}{\percent} of the
 coefficients, which carry \SI{0.02}{\percent} of the weight of the matrix, and

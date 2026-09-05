@@ -2,8 +2,9 @@
 % ******************************* Chapter 6 ************************************
 % Part II opener: the fission matrix method derived from the transport
 % equation, its generation strategies, the reactor model, and the general
-% framework (parametrization, corrections, statistical uncertainty, error
-% metrics) shared by Chapters 7 and 8. Chapter-specific material (database
+% framework (parametrization, statistical uncertainty, error metrics) shared
+% by Chapters 7 and 8; the correction ratios are introduced where they are
+% used (CV, 5 Sep 2026). Chapter-specific material (database
 % axes, interpolation formulae, correction-ratio definitions, correlation model
 % of the coefficients, validation numbers) lives in Chapters 7 and 8.
 %
@@ -304,32 +305,9 @@ $\tilde{\mathbf A}$, and the tilde marks an interpolated quantity from here
 on; $\tilde k_{\mathrm{eff}}$ and $\tilde{\mathbf F}$ are the eigenpair of
 $\tilde{\mathbf A}$, obtained by solving Eq.~(\ref{fm:eq:eigen}) on the
 interpolated matrix, since nothing is interpolated in the eigenvalue or in the
-source directly. The interpolation schemes themselves, bilinear in temperature
-and drum angle in Chapter~\ref{ch:crit-search} and linear in temperature in
-Chapter~\ref{ch:correction-ratios}, are defined where they are used.
-
-\subsection{Corrections to the interpolated matrix}\label{fm:sec:ratios}
-
-The interpolation reproduces only the dependence on the parameters that span
-the database. Three effects lie outside them in the works of this Part. The
-temperature of the reflector is not a parameter of the database: the
-coefficients are defined between fissile cells, so the reflector enters only
-through the isothermal entries, and a core hotter than its reflector has no
-entry to draw on. Sharp temperature gradients between neighbouring fuel cells
-are not represented either, since each entry is isothermal. The composition of
-the fuel, which changes with burnup, is not a parameter because adding one
-would multiply the size of the database.
-
-The three effects are treated in the same manner, through correction ratios.
-A correction ratio is a ratio of two matrices tallied at reference conditions
-that differ in the effect of interest alone, applied element by element to the
-interpolated matrix as a multiplicative factor. Being a quotient of two tallies
-of the same quantity, the ratio cancels the systematic errors common to
-numerator and denominator, and it can be weighted according to how much of the
-reference effect is present in the target state. The Burnup Correction Ratio is
-defined in Chapter~\ref{ch:crit-search}; the Reflector Correction Ratio and the
-Core Temperature Correction Ratio, together with the weights that scale them
-with the temperature field, are defined in Chapter~\ref{ch:correction-ratios}.
+source directly. The interpolation is bilinear in temperature and drum angle
+in Chapter~\ref{ch:crit-search}, Eq.~(\ref{cs:eq:interp}), and linear in
+temperature in Chapter~\ref{ch:correction-ratios}, Eq.~(\ref{cr:eq:interp1d}).
 
 \section{Statistical uncertainty of the interpolated results}\label{fm:sec:uq}
 
@@ -360,8 +338,10 @@ rerun on it, interpolation, correction and eigenvalue problem, yielding one
 realization of $\tilde k_{\mathrm{eff}}$ and of the normalized source. The
 standard deviation of the results over $M$ realizations is
 $\sigma_{\mathrm{DB}}$. Propagating the covariance of the database through a
-linearized sensitivity would be less expensive, but the correction ratios are
-nonlinear in the coefficients, which appear in both numerator and denominator;
+linearized sensitivity would be less expensive, but the corrections of
+Chapters~\ref{ch:crit-search} and \ref{ch:correction-ratios} are ratios of
+tallied coefficients, nonlinear in them because the coefficients appear in
+both numerator and denominator;
 rerunning the full chain on each realization avoids any linearization. Since
 the fission source is normalized to its sum, the relative uncertainty of a
 normalized value coincides with that of the corresponding tally, and the
