@@ -1136,44 +1136,6 @@ the reliability of the model is decided by its accuracy at that one location
 and not by the agreement of the multiplication factor or of a
 root-mean-square.
 
-\section{The two corrections together}\label{cr:sec:combined}
-
-The two corrections act on the same interpolated matrix and share the structure
-of Sec.~\ref{fm:sec:ratios}, but they are calibrated on different reference
-cases and answer different questions. Their relation is stated here precisely.
-
-The reflector correction is a function of the difference between a fissile cell
-and the non-fissile region closest to it, and its reference case is a core hot
-and a reflector cold. It acts most strongly on the cells that face the
-reflector, and it is indispensable when the core is uniformly hot: without it
-the deviation of the multiplication factor reaches several hundred pcm,
-Table~\tref{cr:tab:res14}. The core temperature correction is a function of the
-difference between two fissile cells, and its reference case is one assembly
-hot in a cold core. It acts on the cells that surround a sharp internal
-feature, and it is indispensable when the field inside the core is spatially
-sharp, Table~\tref{cr:tab:zones}.
-
-The two therefore do not overlap in what they correct, and the results of this
-chapter show each one leaving the other's effect untouched. The residual offset
-of the replica clouds of Fig.~\tref{cr:fig:keffdist} is the reflector effect
-seen from within the core temperature study, since the test fields of that
-study hold the reflector at \SI{300}{K} while the database is uniform; and
-Case 5 of Sec.~\ref{cr:sec:rcr-nonuniform}, where the reflector correction
-recovers less than elsewhere, has a ring-wise field whose internal steps are
-exactly what the core temperature correction is calibrated on.
-
-Applying both at once is the natural next step, and it is not a matter of
-multiplying the two ratios and stopping there. They are calibrated on two
-different models, the three-dimensional core with drums and the
-two-dimensional core without them, so a combined application requires the
-calibration of both on the same model. Their weights would also have to be
-made compatible, since one is built on the difference between a cell and the
-reflector and the other on the difference between two cells, and a field that
-is both hot overall and internally sharp would otherwise be counted twice in
-the region where the two overlap, the outermost ring of assemblies. The
-combined correction is left to future work, and the results of this chapter
-delimit what it would have to reconcile.
-
 \section{Summary}
 
 Two effects that the isothermal database cannot represent have been corrected
@@ -1211,3 +1173,10 @@ so that the bands reported in Chapter~\ref{ch:crit-search} are conservative.
 On the fission source the ordering changes, and the residual correlation
 between different columns, which the closed form omits, is what accounts for
 the difference.
+
+The two corrections have been developed on different models, the
+three-dimensional core with its drums and the two-dimensional core without
+them, and have been applied separately. Their combined application requires
+the calibration of both on the same model, and a weight that does not count
+twice a field that is hot overall and sharp inside, in the outermost ring of
+assemblies where the two effects overlap. It is left to future work.
