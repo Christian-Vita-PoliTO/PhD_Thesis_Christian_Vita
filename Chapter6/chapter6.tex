@@ -46,9 +46,12 @@ reflector and sharp temperature gradients inside the core, through two
 multiplicative corrections. The present chapter provides the common ground: the
 derivation of the fission matrix from the transport equation, the strategies
 available for its generation, the reactor model, and the general framework
-within which the database, the corrections, the statistical uncertainty and
-the error metrics are defined. The specific choices made in each work are
-presented in the chapter that uses them.
+within which the database, the statistical uncertainty and the error
+metrics are defined. The axes and the density of the database, the
+interpolation formulae and the corrections applied to the interpolated
+matrix are specific to each work, and are introduced in
+Chapters~\ref{ch:crit-search} and \ref{ch:correction-ratios} together with
+the results that depend on them.
 
 \section{The fission matrix}\label{fm:sec:definition}
 
@@ -287,8 +290,8 @@ a small number of parameters, the temperature field, the angle of the drums and
 the burnup of the fuel in the works of this Part; the database is a grid over
 those parameters, or over a subset of them, computed once and used any number
 of times. The number of entries required for a given accuracy is not known in
-advance and is settled for each parameter by a convergence study, reported in
-the chapter where the parameter is introduced.
+advance and is settled for each parameter by a convergence study,
+Secs.~\ref{cs:sec:selection} and \ref{cs:sec:grid}.
 
 Two features of the interpolation are common to all the works and are stated
 here. The first is that the state is represented coefficient by coefficient:
