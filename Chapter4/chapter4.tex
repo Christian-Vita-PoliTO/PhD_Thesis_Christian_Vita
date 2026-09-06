@@ -19,7 +19,7 @@
 \providecolor{ga}{HTML}{F2C14E}
 \providecolor{newc}{HTML}{1F6FB2}
 
-\chapter{Neural Network-Assisted Genetic Optimization of the Multi-Group Energy Structure}\label{ch:energy-grid}
+\chapter{Neural Network-Assisted Optimization of the LFR Multi-Group Energy Grid Driven by Genetic Algorithms}\label{ch:energy-grid}  %CV: ho cambiato il titolo qua
 
 \section{Introduction}
 
@@ -235,9 +235,8 @@ Three control-rod configurations are considered simultaneously, shown in
 Fig.~\tref{eg:fig:core} together with the radial layout of the core: rods fully
 withdrawn, with the absorber entirely below the active fuel; rods partially
 inserted, with the absorber facing the fuel over a length of $28$~cm; and rods
-fully inserted, with the absorber covering the whole active height. The
-multiplication factor of the reference calculation falls from $1.094$ to $1.070$
-and then to $1.014$ across the three. For a candidate structure $I$, the agreement with
+fully inserted, with the absorber covering the whole active height. The multiplication factor of the reference calculation falls from $1.096$ to
+$1.072$ and then to $1.019$ across the three. For a candidate structure $I$, the agreement with
 the Monte Carlo reference is measured by five fitness functions per
 configuration~\cite{prevMulti}. Three of them concern integral quantities,
 %
@@ -245,8 +244,8 @@ configuration~\cite{prevMulti}. Three of them concern integral quantities,
   f_k^I = \left|k^I - k^\mathrm{MC}\right|\times10^5, \qquad
   f_{\beta}^I = \left|\beta_\mathrm{eff}^I - \beta_\mathrm{eff}^\mathrm{MC}\right|
   \times10^5, \qquad
-  f_{\Lambda}^I = \frac{\Lambda_\mathrm{eff}^I -
-  \Lambda_\mathrm{eff}^\mathrm{MC}}{\Lambda_\mathrm{eff}^\mathrm{MC}}\times10^2,
+  f_{\Lambda}^I = \left|\frac{\Lambda_\mathrm{eff}^I -
+  \Lambda_\mathrm{eff}^\mathrm{MC}}{\Lambda_\mathrm{eff}^\mathrm{MC}}\right|\times10^2,
   \label{eg:eqn:integral}
 \end{equation}
 %
@@ -292,12 +291,24 @@ three configurations,
   \label{eg:eqn:joint}
 \end{equation}
 %
-Before the scaling, the three integral fitness functions are clipped from below
-at a value of ten, which is of the order of the Monte Carlo uncertainty on the
-corresponding quantity, and the flux fitness function is replaced by its
-base-ten logarithm floored at unity. Both operations prevent a single term
-already at the level of the reference uncertainty from dominating the product,
-and are applied identically to the reference values and to the candidate ones.
+Before the scaling, the three integral fitness functions are clipped from
+below at a value of ten, and the flux fitness function is replaced by its
+base-ten logarithm floored at unity. The threshold is applied in the units in
+which each function is expressed, and Eq.~(\ref{eg:eqn:integral}) does not
+express the three in the same units. For $f_k$ and $f_{\beta}$, which are
+absolute deviations in pcm, ten is a few times the statistical uncertainty of
+the reference, which stays below two pcm on the multiplication factor and
+below one on the delayed neutron fraction, and it marks the level below which
+a difference between two structures is not treated as an improvement. For
+$f_{\Lambda}$, which is a relative deviation in per cent, the same threshold
+stands for ten per cent, against a reference whose own uncertainty is about
+\SI{0.05}{\percent}: it is a deviation the optimized structures never
+approach, and the consequence is examined in Sec.~\ref{eg:sec:active}. The
+clipping of $f_k$ and $f_{\beta}$ therefore prevents a term already close to
+the precision of the reference from dominating the product, while the
+threshold on $f_{\Lambda}$ and the logarithmic floor on the flux act as a
+compression of scale. All of them are applied identically to the reference
+values and to the candidate ones.
 
 \begin{figure}[htbp]
   \centering
@@ -320,7 +331,7 @@ fixed, so that a candidate structure corresponds to a subset of the remaining
 $H-1=29$ internal boundaries and the design space contains
 $2^{29}\approx5.4\times10^{8}$ elements.
 
-The representation adopted here is the polyploid encoding of
+The representation adopted here is the polyploid encoding of  %CV: se non sbaglio in un paper di abrate (o di aimetta) spiega perchè siamo passati dalla rappresentazione alpha (vettore con gene binario 0 1) a gamma aggiunig brevemente questo contesto e perchè siamo passati a gamma.
 \citet{prevMulti}, reproduced in full because it determines both the
 behaviour of the genetic operators and the input of the metamodel. A chromosome
 consists of two sets. The first, $\gamma_0$, is a single gene holding the number
@@ -408,7 +419,8 @@ parameters. Adding the configuration branch below them changes neither figure
 appreciably, $0.9905$ and $1.49\%$.
 
 That second comparison deserves a quantitative statement rather than an
-impression, because the two architectures differ by four ten-thousandths in the
+impression, %CV: non mi piace questa frase
+because the two architectures differ by four ten-thousandths in the
 coefficient of determination and by seven thousandths of a point in relative
 error, and such margins are meaningless unless the reproducibility of the
 training is known. It was therefore measured: five networks of identical
@@ -421,7 +433,7 @@ the same one, and fifteen times smaller on the relative error. The comparison of
 the fifteen outputs one by one leads to the same conclusion: the family necks
 improve twelve outputs out of fifteen with respect to the flat network, a
 consistent effect, while the configuration branch improves eight out of fifteen,
-which is what a coin toss would produce.
+which is what a coin toss would produce. % CV: mi piace la descrizione piu colorata, ma frose poco professionale (sopratutto scritta cosi)
 
 The physical quantity, and not the core configuration, is therefore the
 dimension along which the fifteen outputs need separate parameters, and this is
@@ -452,8 +464,8 @@ Architecture & Parameters & $R^2$ & Rel.\ err.\ [\%] \\ \midrule
     \emph{Spread over five random initialisations} & & $\pm$0.0013 & $\pm$0.11 \\ \bottomrule
 \end{tabular}
 \end{table}
-
-Twelve of the fifteen outputs span several orders of magnitude and are learned
+% CV: NOTA GENERALE: vorrei che le notazioni tipo "codice" beta_CRout o cose del genere vengano sostituite da simboli matematici e pedici per le configurazioni (ad esempio conf A,B,C o cose del genere, scegli tu cosa sembra meglio e più intuitiva)
+Twelve of the fifteen outputs span several orders of magnitude and are learned 
 as $\log_{10}(y+10^{-6})$, while the three power fitness functions are learned
 directly. Predictions are averaged over an ensemble of five networks trained
 from different random initialisations~\cite{deepEnsembles}; the average is taken
@@ -534,7 +546,7 @@ Output & $R^2$ & Rel.\ err.\ [\%] & Output & $R^2$ & Rel.\ err.\ [\%] \\ \midrul
 \end{tabular}
 \end{table}
 
-\begin{figure}[htbp]
+\begin{figure}[htbp] %CV : togli la griglia a questo plot
   \centering
   \includegraphics[width=\textwidth]{Chapter4/Figs/fig_scatter.pdf}
   \caption[Predicted against reference values of the fitness functions]{Predicted against reference values of the fifteen fitness functions
@@ -557,7 +569,7 @@ by the model. The campaign was stopped because the pool was exhausted, and the
 error obtained with the full set is sufficient for the use made of the metamodel
 in the following, for the reason set out when the workflow is described.
 
-\begin{figure}[htbp]
+\begin{figure}[htbp] % CV: togli la griglia a questo plot
   \centering
   \includegraphics[width=\textwidth]{Chapter4/Figs/fig_learning.pdf}
   \caption[External validation error against the size of the training set]{External validation error as a function of the size of the training
@@ -593,7 +605,7 @@ model worse rather than better on fourteen of the fifteen outputs, and worse
 overall, $0.460\%$ against $0.403\%$ on the same data and with the same training
 recipe. What the measurement establishes is the exclusion; the natural reading
 is that a network of this capacity constructs such features internally where
-they are useful, so that supplying them explicitly only costs it parameters.
+they are useful, so that supplying them explicitly only costs it parameters. % Forse questo paragrafo potrebbe meritare una lista(?), sull'ultimo punto siamo sicuri che abbiamo fatto tutti gli studi possbili? Puoi controllare da
 
 \begin{table}[htbp]
 \centering
@@ -693,16 +705,25 @@ Since this work rests on comparing a hundred independent searches, the two
 extremes of Eq.~(\ref{eg:eqn:scaling}) are removed from the run and fixed once and
 for all. They are taken as the minimum and the maximum of each fitness function
 over all the configurations computed with FRENETIC at the time the window was
-established, 89\,723 of them, after the controls described above have been
+established, % CV: ma no, rimani piu generico, di semplicemente dei casi che abbimo nel database di training, se dici che l'abbiamo fatto strada facendo senza itegrare anche i nuovi dati ci fa sembrare pigri... 
+ 89\,723 of them, after the controls described above have been
 applied and after discarding the calculations that failed to converge. The
 window is therefore a property of the data set and not of the search, and it is
 deliberately not recomputed when the data set grows, since doing so would move
 the scale and make every previously reported value incomparable. This fixed
 window, and the fitness values expressed through it, are referred to as
-canonical in the following. Because the
-window spans the whole range observed in that population, the values reported
-here are almost always well inside $[1,100]$; a structure would have to be worse
-than anything computed so far to fall outside it.
+canonical in the following. The two ends of the window are not of the same kind. The upper end is a
+genuine extreme of the data, so that a structure would have to be worse than
+anything computed so far to exceed one hundred. The lower end is, for twelve
+of the fifteen functions, the threshold of the controls rather than the
+smallest value observed: only the three power functions, to which no control
+is applied, begin at a value read from the data. Reaching unity therefore does not require a structure better than every other
+computed so far, but only one better than the threshold, which for the
+generation time is the ordinary case and not the exception, as
+Sec.~\ref{eg:sec:active} shows. Strictly below unity a controlled term cannot
+fall, since the control raises to the threshold every value that would go
+there; only the three power functions could, and that would take a structure
+better than any computed so far.
 
 Whether a fixed window changes the behaviour of the algorithm was verified
 rather than assumed, by repeating thirty searches with each formulation from
@@ -1254,7 +1275,8 @@ quantity: two built with standard spacing rules and the finest structure the
 collapsing procedure admits, obtained by suppressing a single boundary of the
 fine mesh. Each entry is the scaled contribution entering the joint fitness,
 obtained from the FRENETIC values through the fixed canonical window: unity is
-the best attainable value and 100 the worst. Six of the fifteen terms score
+the lower end of that window, which any term already at the threshold of the
+controls attains, and 100 the upper end. Six of the fifteen terms score
 unity for all four structures, a saturation discussed in Sec.~\ref{eg:sec:active}.}
 \label{eg:tab:standard}
 \begin{tabular}{lcccc}
@@ -1336,9 +1358,10 @@ isothermal state point at which the reference data were generated. It is
 specific to the deterministic scheme whose error it offsets, the diffusion
 approximation together with the assembly-wise homogenization: it would not
 offset the error of a transport solver, nor that of a different homogenization.
-It is specific to the reference against which the agreement is measured, and to
-the precision of that reference, which enters the objective directly through the
-clipping of the integral terms at the level of the Monte Carlo uncertainty. It
+It is specific to the reference against which the agreement is measured, and
+to the precision of that reference, which enters the objective directly through the clipping of the multiplication
+factor and of the delayed neutron fraction, whose threshold of ten pcm is set
+a few times above the statistical uncertainty of that reference. It
 is specific to the objective itself, in the five quantities chosen and equally
 in the way they are combined by Eq.~(\ref{eg:eqn:joint}), since the clipping and
 the logarithm decide which deviations the search is still allowed to see. And it
@@ -1360,24 +1383,41 @@ unity, and the observation generalises. Evaluating the fifteen scaled terms for
 each of the 67 verified structures shows that eight of them sit at the minimum
 of the canonical window for every one of them: the three flux terms, the three
 generation-time terms and the delayed neutron fraction in the withdrawn and
-partially inserted configurations. The multiplication factor with the rods
-partially inserted is saturated for 61 structures out of 67. Only six terms
-therefore discriminate among the optimized structures, namely the delayed
-neutron fraction and the multiplication factor with the rods fully inserted, the
-multiplication factor with the rods withdrawn and the three power terms.
+partially inserted configurations. The multiplication factor with the rods partially inserted is saturated for 61
+structures out of 67, a term being counted as saturated when its scaled value
+remains below $1.05$; requiring exact equality with the minimum lowers that
+count to 47. Only six terms therefore discriminate among the optimized
+structures, namely the delayed neutron fraction and the multiplication factor
+with the rods fully inserted, the multiplication factor with the rods
+withdrawn and the three power terms. The counts refer to the 67 structures of
+the hundred searches; over the 309 of Sec.~\ref{eg:sec:thousand} the terms
+saturated for every structure are seven, the delayed neutron fraction with the
+rods withdrawn falling to 306 cases out of 309.
 
-This is not a defect of the formulation but the intended effect of the controls
-introduced with Eq.~(\ref{eg:eqn:joint}). A quantity that has been reproduced to
-within the uncertainty of the reference is clipped, and stops contributing to
-the ranking, so that the search is directed towards the quantities still worth
-improving. It has, however, two consequences that matter here. The first is that
+The eight terms do not share a single cause. Two of them, the delayed neutron fraction in the withdrawn and partially
+inserted configurations, are held at the minimum by the clipping applied
+before the scaling of Eq.~(\ref{eg:eqn:scaling}), in the sense for which it
+was introduced: the quantity is reproduced to within the threshold, is
+clipped, and stops contributing to the ranking, so that the search is directed
+towards what is still worth improving. Their deviations stay below \SI{8.9}{pcm} over the 67 structures, so they are
+inside the threshold without being inside the uncertainty of the reference. The three flux terms
+are held there by the logarithmic floor. The three generation-time terms are
+held there by a threshold which, in the units of that function, stands for ten
+per cent, while over the 67 structures the deviation of the generation time
+never exceeds seven per cent: those three terms are constant by construction,
+and the generation time takes no part in the ranking. That follows from the
+units in which the objective function was inherited rather than from a
+deliberate exclusion, and it is stated here because it bounds what the
+optimization can be said to have achieved on that quantity. The formulation
+has, however, two consequences that matter here. The first is that
 the joint fitness of a good structure is effectively a product of six terms, not
 fifteen, which is part of the reason why it varies so sharply under a single
-boundary displacement. The second concerns the metamodel: the quantities on
-which it is least accurate, the flux functions with a median error between $2.0$
-and $2.3\%$, are precisely those that carry no information in the region where
-the search operates, while the terms that do decide the ranking are predicted to
-better than $1\%$. The accuracy of the metamodel is therefore concentrated where
+boundary displacement. The second concerns the metamodel: the quantities on which it is least
+accurate, the flux functions, whose median error is between $2.0$ and $2.3\%$
+on the external validation set and reaches $3.8\%$ on the structures the
+searches propose, are precisely those that carry no information in the region
+where the search operates, while the terms that do decide the ranking are
+predicted to better than $1\%$ on both sets. The accuracy of the metamodel is therefore concentrated where
 the optimization needs it, which was not designed but is worth recording.
 
 \subsection{Accuracy of the Metamodel on the Proposed Structures}\label{eg:sec:accuracy}
