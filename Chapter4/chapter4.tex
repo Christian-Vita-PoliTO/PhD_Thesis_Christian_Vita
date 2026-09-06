@@ -138,7 +138,7 @@ produce, and of the features those structures have in common.
 \node[greyO] (fine) {fine-group homogenised\\constants (30 groups)};
 \node[serp, below=of fine] (serpent) {Serpent 2\\Monte Carlo};
 \node[greyO, below=of serpent] (ref) {reference output\\$k_\mathrm{eff}$, $P$, $\Phi$,
-  $\Lambda_\mathrm{eff}$, $\beta_\mathrm{eff}$};
+  $\ell_\mathrm{eff}$, $\beta_\mathrm{eff}$};
 
 % ── addestramento del metamodello (nuovo) ───────────────────────────────
 \node[frenN, below=8mm of ref] (train) {FRENETIC (NE module)\\$91\,723$ full-core\\evaluations};
@@ -244,13 +244,15 @@ configuration~\cite{prevMulti}. Three of them concern integral quantities,
   f_k^I = \left|k^I - k^\mathrm{MC}\right|\times10^5, \qquad
   f_{\beta}^I = \left|\beta_\mathrm{eff}^I - \beta_\mathrm{eff}^\mathrm{MC}\right|
   \times10^5, \qquad
-  f_{\Lambda}^I = \left|\frac{\Lambda_\mathrm{eff}^I -
-  \Lambda_\mathrm{eff}^\mathrm{MC}}{\Lambda_\mathrm{eff}^\mathrm{MC}}\right|\times10^2,
+  f_{\ell}^I = \left|\frac{\ell_\mathrm{eff}^I -
+  \ell_\mathrm{eff}^\mathrm{MC}}{\ell_\mathrm{eff}^\mathrm{MC}}\right|\times10^2,
   \label{eg:eqn:integral}
 \end{equation}
 %
-namely the multiplication factor, the effective delayed neutron fraction and the
-effective neutron generation time, while the remaining two concern the
+namely the multiplication factor, the effective delayed neutron fraction and
+the effective neutron lifetime, the last being the adjoint-weighted lifetime
+that the reference calculation tallies, and not the generation time, which
+differs from it by the multiplication factor. The remaining two concern the
 distributions over the $J$ core assemblies,
 %
 \begin{equation}
@@ -286,7 +288,7 @@ three configurations,
 \begin{equation}
   FF^I = \prod_{c\in\{\mathrm{out},\,\mathrm{partial},\,\mathrm{in}\}}
   h_L\!\left(f_{k,c}^I\right) h_L\!\left(f_{P,c}^I\right)
-  h_L\!\left(f_{\Phi,c}^I\right) h_L\!\left(f_{\Lambda,c}^I\right)
+  h_L\!\left(f_{\Phi,c}^I\right) h_L\!\left(f_{\ell,c}^I\right)
   h_L\!\left(f_{\beta,c}^I\right).
   \label{eg:eqn:joint}
 \end{equation}
@@ -299,14 +301,13 @@ express the three in the same units. For $f_k$ and $f_{\beta}$, which are
 absolute deviations in pcm, ten is a few times the statistical uncertainty of
 the reference, which stays below two pcm on the multiplication factor and
 below one on the delayed neutron fraction, and it marks the level below which
-a difference between two structures is not treated as an improvement. For
-$f_{\Lambda}$, which is a relative deviation in per cent, the same threshold
+a difference between two structures is not treated as an improvement. For $f_{\ell}$, which is a relative deviation in per cent, the same threshold
 stands for ten per cent, against a reference whose own uncertainty is about
 \SI{0.05}{\percent}: it is a deviation the optimized structures never
 approach, and the consequence is examined in Sec.~\ref{eg:sec:active}. The
 clipping of $f_k$ and $f_{\beta}$ therefore prevents a term already close to
 the precision of the reference from dominating the product, while the
-threshold on $f_{\Lambda}$ and the logarithmic floor on the flux act as a
+threshold on $f_{\ell}$ and the logarithmic floor on the flux act as a
 compression of scale. All of them are applied identically to the reference
 values and to the candidate ones.
 
@@ -634,7 +635,7 @@ pairs of structures differing by exactly one boundary yields 55\,058 such pairs.
 The median change of the base-ten logarithm of the fitness function across a
 pair amounts to $0.414$ decades in the lowest band of multiplication-factor
 deviations, against $0.024$ decades in the highest, a factor of seventeen, and
-to $0.395$ against $0.044$ decades for the generation time.
+to $0.395$ against $0.044$ decades for the lifetime.
 The correspondence with the accuracy of the metamodel is direct.
 Figure~\tref{eg:fig:smallvalue} places the two quantities side by side, band by band
 and family by family: where the target changes most under a single boundary
@@ -719,7 +720,7 @@ of the fifteen functions, the threshold of the controls rather than the
 smallest value observed: only the three power functions, to which no control
 is applied, begin at a value read from the data. Reaching unity therefore does not require a structure better than every other
 computed so far, but only one better than the threshold, which for the
-generation time is the ordinary case and not the exception, as
+lifetime is the ordinary case and not the exception, as
 Sec.~\ref{eg:sec:active} shows. Strictly below unity a controlled term cannot
 fall, since the control raises to the threshold every value that would go
 there; only the three power functions could, and that would take a structure
@@ -1250,12 +1251,18 @@ Fig.~\tref{eg:fig:tradeoff} together with the curve of the best attainable fitne
 and they lie above it: at $G=20$ the best of the three reaches
 $1.38\times10^{7}$ against $8.99\times10^{6}$ attainable, at $G=14$
 $1.83\times10^{7}$ against $8.78\times10^{6}$, and at $G=13$ $6.38\times10^{7}$
-against $1.06\times10^{7}$. The gap, between $1.5$ and $6.0$ times at equal
-group count, measures the number of searches and not the quality of the method:
-with the reference solver inside the loop, three tribes were what a reasonable
-budget allowed, and the same three tribes are the reason this chapter exists,
-since it was their disagreement that first showed the outcome to depend on the
-seed.
+against $1.06\times10^{7}$. The gap, between $1.5$ and $6.0$ times at equal group count, is largely a
+question of how many searches were affordable: with the reference solver
+inside the loop, three tribes were what a reasonable budget allowed, and the
+same three tribes are the reason this chapter exists, since it was their
+disagreement that first showed the outcome to depend on the seed. Part of it,
+however, cannot be attributed to the number of searches, because the objective
+is not identical: in that work the lifetime was still able to separate one
+structure from another, whereas the threshold adopted here holds its three
+terms constant, so that those searches were spending part of their effort on a
+quantity that the canonical scale no longer rewards. The comparison itself is
+unaffected, since the three structures are scored on that scale exactly as
+ours are.
 
 Table~\tref{eg:tab:standard} compares the optimized structure with three further
 reference constructions.
@@ -1321,7 +1328,7 @@ by one in Table~\tref{eg:tab:standard}.
 
 The finest structure behaves exactly as the physics of condensation would
 suggest on the distributed quantities. It reproduces the flux distribution $2.4$
-times better than the optimized structure and the neutron generation time six
+times better than the optimized structure and the neutron lifetime six
 times better, which is the expected reward for a mesh that barely condenses
 anything. Where it loses is on the integral parameters: the deviation on the
 multiplication factor with the rods partially inserted is $189$~pcm against
@@ -1381,9 +1388,8 @@ pair of errors it was tuned to annul.
 Table~\tref{eg:tab:standard} shows six rows in which all four structures score
 unity, and the observation generalises. Evaluating the fifteen scaled terms for
 each of the 67 verified structures shows that eight of them sit at the minimum
-of the canonical window for every one of them: the three flux terms, the three
-generation-time terms and the delayed neutron fraction in the withdrawn and
-partially inserted configurations. The multiplication factor with the rods partially inserted is saturated for 61
+of the canonical window for every one of them: the three flux terms, the three lifetime terms and the delayed neutron
+fraction in the withdrawn and partially inserted configurations. The multiplication factor with the rods partially inserted is saturated for 61
 structures out of 67, a term being counted as saturated when its scaled value
 remains below $1.05$; requiring exact equality with the minimum lowers that
 count to 47. Only six terms therefore discriminate among the optimized
@@ -1401,11 +1407,11 @@ was introduced: the quantity is reproduced to within the threshold, is
 clipped, and stops contributing to the ranking, so that the search is directed
 towards what is still worth improving. Their deviations stay below \SI{8.9}{pcm} over the 67 structures, so they are
 inside the threshold without being inside the uncertainty of the reference. The three flux terms
-are held there by the logarithmic floor. The three generation-time terms are
-held there by a threshold which, in the units of that function, stands for ten
-per cent, while over the 67 structures the deviation of the generation time
-never exceeds seven per cent: those three terms are constant by construction,
-and the generation time takes no part in the ranking. That follows from the
+are held there by the logarithmic floor. The three lifetime terms are held
+there by a threshold which, in the units of that function, stands for ten per
+cent, while over the 67 structures the deviation of the lifetime never exceeds
+seven per cent: those three terms are constant by construction, and the
+lifetime takes no part in the ranking. That follows from the
 units in which the objective function was inherited rather than from a
 deliberate exclusion, and it is stated here because it bounds what the
 optimization can be said to have achieved on that quantity. The formulation
