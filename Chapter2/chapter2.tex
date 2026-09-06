@@ -7,6 +7,10 @@
 %
 % Notation: Part I uses \vec{r} and \vec{\Omega}, as Chapter 3 does; Part II
 % uses \mathbf{r}. Harmonising the two is a cosmetic decision left open.
+% The angular flux is \phi and the total flux, integrated over the angle,
+% is \Phi; \psi is left free for the weighting function. Chapter 3 still
+% writes \phi for the total flux, which is the notation of the published
+% paper.
 %
 % Sources: standard transport theory (Bell and Glasstone); the definitions of
 % the group constants follow the introductions of the two works of this Part,
@@ -25,21 +29,24 @@ ultimately intended, for many instants in time. A Monte Carlo (MC) calculation
 answers each of those questions with the fewest approximations, since it treats
 energy and angle as continuous variables and represents the geometry of the
 system in full detail. Its cost per configuration is what confines it to a
-limited number of reference states.
+limited number of reference states. % CV: riporta come esempi i software Serpent, openMC e MCNP
 
 Deterministic solvers return the same quantities in a time smaller by orders of
 magnitude, and they are therefore the tools with which parametric studies and
-transients are actually performed. What they consume, however, is not the
-continuous nuclear data. It is a condensed and homogenized version of them, the
+transients are actually performed. % CV: E' vero, ma si puo' usare anche Monte Carlo, non essere cosi perentorio
+ What they consume, however, is not the
+continuous nuclear data. %CV: che brutta formulazione.
+ It is a condensed and homogenized version of them, the
 multi-group constants: a set of cross sections defined over a finite number of
 energy intervals and over regions of the core within which the material is
 treated as uniform. Producing those constants is a calculation in its own right,
-and the accuracy of everything computed afterwards is bounded by their quality.
+and the accuracy of everything computed afterwards is bounded by their quality. % CV: mi sto rendendo conto che lo stile è molto lavativo, assicurati che non sia cosi su tutto il resto della tesi. Voglio che lo stile di scrittura sia ispirato a quello che trovi dentro la nuova cartella che ti ho generato: phd_tesis_sampel_nicolo (tesi del mio supervisor).
 
 This Part examines two of the degrees of freedom that decide that quality, for
 Lead-cooled Fast Reactors (LFRs). Chapter~\ref{ch:sph-lfr} concerns the
 equivalence between the heterogeneous system and its homogenized representation,
-restored by correcting the constants themselves. Chapter~\ref{ch:energy-grid}
+restored by correcting the constants themselves. % CV: C'è anche uno studio su quale combinazione di modelli (full core, lattice core ecc..) sono più accurati o in generale come si possono combinare per alta accuratezza e risparmio di tempo computazionale.
+ Chapter~\ref{ch:energy-grid}
 concerns the energy mesh on which the condensation is performed, whose
 boundaries are treated as the unknown of an optimization. The two works share
 the same scheme, in which the Monte Carlo code Serpent~2
@@ -57,21 +64,21 @@ error that follows from it.
 \section{The neutron transport equation}
 
 The stationary state of a multiplying system is described by the linear
-Boltzmann equation for the angular flux $\psi(\vec{r},E,\vec{\Omega})$, the
+Boltzmann equation for the angular flux $\phi(\vec{r},E,\vec{\Omega})$, the
 density of neutrons at the position $\vec{r}$, with energy $E$, travelling in
 the direction $\vec{\Omega}$, multiplied by their speed. In the form in which
 criticality is expressed as an eigenvalue problem the equation reads
 \cite{SPH_book_Bell_Glasstone}
 %
 \begin{align}
-  \vec{\Omega}\cdot\nabla\psi(\vec{r},E,\vec{\Omega})
-  &+ \Sigma_t(\vec{r},E)\,\psi(\vec{r},E,\vec{\Omega}) = \notag \\
+  \vec{\Omega}\cdot\nabla\phi(\vec{r},E,\vec{\Omega})
+  &+ \Sigma_t(\vec{r},E)\,\phi(\vec{r},E,\vec{\Omega}) = \notag \\
   &\int_{0}^{\infty}\!\!\mathrm{d}E'\int_{4\pi}\!\!\mathrm{d}\vec{\Omega}'\,
    \Sigma_s(\vec{r},E'\!\to\!E,\vec{\Omega}'\!\to\!\vec{\Omega})\,
-   \psi(\vec{r},E',\vec{\Omega}') \notag \\
+   \phi(\vec{r},E',\vec{\Omega}') \notag \\
   &+ \frac{\chi(E)}{4\pi\,k_{\mathrm{eff}}}
    \int_{0}^{\infty}\!\!\mathrm{d}E'\,
-   \nu\Sigma_f(\vec{r},E')\,\phi(\vec{r},E'),
+   \nu\Sigma_f(\vec{r},E')\,\Phi(\vec{r},E'),
   \label{mg:eq:transport}
 \end{align}
 %
@@ -80,11 +87,12 @@ double-differential scattering cross section, $\nu\Sigma_f$ the production
 cross section, $\chi$ the fission spectrum, and
 %
 \begin{equation}
-  \phi(\vec{r},E) = \int_{4\pi}\psi(\vec{r},E,\vec{\Omega})\,\mathrm{d}\vec{\Omega}
-  \label{mg:eq:scalarflux}
+  \Phi(\vec{r},E) = \int_{4\pi}\phi(\vec{r},E,\vec{\Omega})\,\mathrm{d}\vec{\Omega}
+  \label{mg:eq:totalflux}
 \end{equation}
 %
-the scalar flux. The two terms on the left describe the neutrons that leave a
+the total flux, that is the angular flux integrated over the whole
+solid angle. The two terms on the left describe the neutrons that leave a
 point of the phase space, by streaming out of the volume element and by
 interacting; the two on the right describe those that enter it, by scattering
 from another energy and another direction and by fission. The multiplication
@@ -105,23 +113,23 @@ the discretization of the energy variable is what this Part is concerned with.
 
 The energy interval of interest is partitioned into $G$ intervals, conventionally
 numbered from the highest energy downwards, group $g$ covering
-$E_{g}<E<E_{g-1}$. The group flux is the integral of the scalar flux over the
+$E_{g}<E<E_{g-1}$. The group flux is the integral of the total flux over the
 interval,
 %
 \begin{equation}
-  \phi_g(\vec{r}) = \int_{E_g}^{E_{g-1}}\phi(\vec{r},E)\,\mathrm{d}E .
+  \Phi_g(\vec{r}) = \int_{E_g}^{E_{g-1}}\Phi(\vec{r},E)\,\mathrm{d}E .
   \label{mg:eq:groupflux}
 \end{equation}
 %
 Integrating Eq.~(\ref{mg:eq:transport}) over the same interval returns an
-equation of identical structure, written in terms of $\phi_g$ and of a set of
+equation of identical structure, written in terms of $\Phi_g$ and of a set of
 constants, provided that each constant is defined as the average of the
 continuous cross section weighted by the flux,
 %
 \begin{equation}
   \Sigma_{x,g}(\vec{r}) =
-  \frac{\displaystyle\int_{E_g}^{E_{g-1}}\Sigma_x(\vec{r},E)\,\phi(\vec{r},E)\,\mathrm{d}E}
-       {\displaystyle\int_{E_g}^{E_{g-1}}\phi(\vec{r},E)\,\mathrm{d}E} ,
+  \frac{\displaystyle\int_{E_g}^{E_{g-1}}\Sigma_x(\vec{r},E)\,\Phi(\vec{r},E)\,\mathrm{d}E}
+       {\displaystyle\int_{E_g}^{E_{g-1}}\Phi(\vec{r},E)\,\mathrm{d}E} ,
   \label{mg:eq:condensation}
 \end{equation}
 %
@@ -132,14 +140,14 @@ by the corresponding double integral,
   \Sigma_{s,g'\to g}(\vec{r}) =
   \frac{\displaystyle\int_{E_g}^{E_{g-1}}\!\!\mathrm{d}E
         \int_{E_{g'}}^{E_{g'-1}}\!\!\mathrm{d}E'\,
-        \Sigma_s(\vec{r},E'\!\to\!E)\,\phi(\vec{r},E')}
-       {\displaystyle\int_{E_{g'}}^{E_{g'-1}}\phi(\vec{r},E')\,\mathrm{d}E'} .
+        \Sigma_s(\vec{r},E'\!\to\!E)\,\Phi(\vec{r},E')}
+       {\displaystyle\int_{E_{g'}}^{E_{g'-1}}\Phi(\vec{r},E')\,\mathrm{d}E'} .
   \label{mg:eq:scattering}
 \end{equation}
 %
 The logic of Eq.~(\ref{mg:eq:condensation}) is contained in what happens when it
-is multiplied by the group flux. The product $\Sigma_{x,g}\phi_g$ is by
-construction equal to $\int_g \Sigma_x(E)\phi(E)\,\mathrm{d}E$, that is, to the
+is multiplied by the group flux. The product $\Sigma_{x,g}\Phi_g$ is by
+construction equal to $\int_g \Sigma_x(E)\Phi(E)\,\mathrm{d}E$, that is, to the
 reaction rate of the continuous problem inside the interval. A group constant is
 not an average cross section in any other sense: it is the number which, used
 with the group flux, reproduces a reaction rate. The same reading applies to
@@ -157,8 +165,8 @@ region instead of over the energy interval,
 %
 \begin{equation}
   \Sigma_{x,g,i} =
-  \frac{\displaystyle\int_{V_i}\Sigma_{x,g}(\vec{r})\,\phi_g(\vec{r})\,\mathrm{d}\vec{r}}
-       {\displaystyle\int_{V_i}\phi_g(\vec{r})\,\mathrm{d}\vec{r}} ,
+  \frac{\displaystyle\int_{V_i}\Sigma_{x,g}(\vec{r})\,\Phi_g(\vec{r})\,\mathrm{d}\vec{r}}
+       {\displaystyle\int_{V_i}\Phi_g(\vec{r})\,\mathrm{d}\vec{r}} ,
   \label{mg:eq:homogenization}
 \end{equation}
 %
@@ -200,7 +208,7 @@ or moves a control rod, or reaches a different point of the cycle, the spectrum
 inside the region changes and the constants are no longer the correct averages.
 The error is concentrated where the spectrum varies most sharply in space, which
 is at the interfaces between dissimilar regions and around the absorbers.
-
+% CV: io vorrei che qua dici appunto che si possono usare software deterministici per la generazione di MGND (MUlti group nuclear data) (e ne citi alcuni, ad esempio ECCO,MC^2-3, dragon, ecc..) oppure con Monte Carlo. Ma che ad esempio si possono provare ad usare definizioni alternative delle weighting function (richiama al lavoro fatto dal mio supervisor su definizioni altenrative weighting function, Anche il mio lavoro con lui per M&C2023 e il suo proseguimento physor 2026 con valeria e martin con l'uso di SCONE). Non devi necessariametnte metterle qua queste cose ma voglio che dai, in breve una view generale del panorama, mi raccomando le fonti!
 The second is the energy mesh. Inside a group the shape of the flux is lost, and
 only its integral survives. A finer structure reduces the influence of the
 assumed shape, since in the limit of an infinite number of groups
@@ -226,7 +234,7 @@ path is long compared with the pitch of an assembly, so that the flux inside a
 region is determined by a wide neighbourhood, and the environment in which the
 constants were generated matters more than in a thermal system.
 
-\section{The two approaches of this Part}
+\section{The two approaches of this Part} % CV: ma che brutto titolo, non va per niente bene un tittolo del genere per una tesi di dottorato!
 
 Neither of the works that follow modifies Eq.~(\ref{mg:eq:transport}) or the
 definitions of Sec.~\ref{mg:sec:multigroup}. Both act on the data that the
