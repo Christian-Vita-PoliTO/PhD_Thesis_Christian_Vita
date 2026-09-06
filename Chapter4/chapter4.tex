@@ -236,7 +236,9 @@ Fig.~\tref{eg:fig:core} together with the radial layout of the core: rods fully
 withdrawn, with the absorber entirely below the active fuel; rods partially
 inserted, with the absorber facing the fuel over a length of $28$~cm; and rods
 fully inserted, with the absorber covering the whole active height. The multiplication factor of the reference calculation falls from $1.096$ to
-$1.072$ and then to $1.019$ across the three. For a candidate structure $I$, the agreement with
+$1.072$ and then to $1.019$ across the three, and the three are denoted in
+what follows by the subscripts $\mathrm{out}$, $\mathrm{partial}$
+and $\mathrm{in}$ respectively. For a candidate structure $I$, the agreement with
 the Monte Carlo reference is measured by five fitness functions per
 configuration~\cite{prevMulti}. Three of them concern integral quantities,
 %
@@ -466,7 +468,6 @@ Architecture & Parameters & $R^2$ & Rel.\ err.\ [\%] \\ \midrule
     \emph{Spread over five random initialisations} & & $\pm$0.0013 & $\pm$0.11 \\ \bottomrule
 \end{tabular}
 \end{table}
-% CV: NOTA GENERALE: vorrei che le notazioni tipo "codice" beta_CRout o cose del genere vengano sostituite da simboli matematici e pedici per le configurazioni (ad esempio conf A,B,C o cose del genere, scegli tu cosa sembra meglio e più intuitiva)
 Twelve of the fifteen outputs span several orders of magnitude and are learned 
 as $\log_{10}(y+10^{-6})$, while the three power fitness functions are learned
 directly. Predictions are averaged over an ensemble of five networks trained
@@ -536,14 +537,14 @@ in physical units.}
 \begin{tabular}{lcc@{\hspace{4mm}}lcc}
 \toprule
 Output & $R^2$ & Rel.\ err.\ [\%] & Output & $R^2$ & Rel.\ err.\ [\%] \\ \midrule
-    beta\_CRin0 & 0.99575 & 0.189 & beta\_CRin55 & 0.99949 & 0.402 \\
-    beta\_CRout & 0.99565 & 0.174 & flux\_CRin0 & 0.99953 & 1.979 \\
-    flux\_CRin55 & 0.99953 & 2.291 & flux\_CRout & 0.99943 & 2.196 \\
-    keff\_CRin0 & 0.99713 & 0.484 & keff\_CRin55 & 0.97445 & 0.215 \\
-    keff\_CRout & 0.99926 & 0.816 & life\_CRin0 & 0.99718 & 0.849 \\
-    life\_CRin55 & 0.99385 & 0.903 & life\_CRout & 0.99399 & 0.860 \\
-    powr\_CRin0 & 0.99996 & 0.082 & powr\_CRin55 & 0.99996 & 0.059 \\
-    powr\_CRout & 0.99995 & 0.167 & & & \\ \midrule
+    $f_{k,\mathrm{out}}$ & 0.99926 & 0.816 & $f_{k,\mathrm{partial}}$ & 0.99713 & 0.484 \\
+    $f_{k,\mathrm{in}}$ & 0.97445 & 0.215 & $f_{\beta,\mathrm{out}}$ & 0.99565 & 0.174 \\
+    $f_{\beta,\mathrm{partial}}$ & 0.99575 & 0.189 & $f_{\beta,\mathrm{in}}$ & 0.99949 & 0.402 \\
+    $f_{\ell,\mathrm{out}}$ & 0.99399 & 0.860 & $f_{\ell,\mathrm{partial}}$ & 0.99718 & 0.849 \\
+    $f_{\ell,\mathrm{in}}$ & 0.99385 & 0.903 & $f_{P,\mathrm{out}}$ & 0.99995 & 0.167 \\
+    $f_{P,\mathrm{partial}}$ & 0.99996 & 0.082 & $f_{P,\mathrm{in}}$ & 0.99996 & 0.059 \\
+    $f_{\Phi,\mathrm{out}}$ & 0.99943 & 2.196 & $f_{\Phi,\mathrm{partial}}$ & 0.99953 & 1.979 \\
+    $f_{\Phi,\mathrm{in}}$ & 0.99953 & 2.291 & & & \\ \midrule
     \textbf{Ensemble} & \textbf{0.99634} & \textbf{0.403} & & & \\ \bottomrule
 \end{tabular}
 \end{table}
@@ -1292,21 +1293,21 @@ unity for all four structures, a saturation discussed in Sec.~\ref{eg:sec:active
 Figure of merit & Optimized & Equal & Uniform & Finest \\
      &  & lethargy & index & admissible \\
     $G$ & 18 & 13 & 19 & 29 \\ \midrule
-    beta\_CRin0 & 1.0 & 19.1 & 51.6 & 57.6 \\
-    beta\_CRin55 & 24.9 & 1.0 & 1.0 & 1.0 \\
-    beta\_CRout & 1.0 & 52.7 & 83.6 & 89.5 \\
-    flux\_CRin0 & 1.0 & 1.0 & 1.0 & 1.0 \\
-    flux\_CRin55 & 1.0 & 1.0 & 1.0 & 1.0 \\
-    flux\_CRout & 1.0 & 1.0 & 1.0 & 1.0 \\
-    keff\_CRin0 & 1.0 & 7.2 & 9.6 & 11.3 \\
-    keff\_CRin55 & 53.0 & 70.4 & 72.2 & 75.7 \\
-    keff\_CRout & 6.4 & 1.0 & 3.2 & 4.6 \\
-    life\_CRin0 & 1.0 & 1.0 & 1.0 & 1.0 \\
-    life\_CRin55 & 1.0 & 1.0 & 1.0 & 1.0 \\
-    life\_CRout & 1.0 & 1.0 & 1.0 & 1.0 \\
-    powr\_CRin0 & 6.9 & 15.3 & 17.6 & 17.4 \\
-    powr\_CRin55 & 32.4 & 38.2 & 39.8 & 39.3 \\
-    powr\_CRout & 4.5 & 14.6 & 15.8 & 14.2 \\
+    $f_{k,\mathrm{out}}$ & 6.4 & 1.0 & 3.2 & 4.6 \\
+    $f_{k,\mathrm{partial}}$ & 1.0 & 7.2 & 9.6 & 11.3 \\
+    $f_{k,\mathrm{in}}$ & 53.0 & 70.4 & 72.2 & 75.7 \\
+    $f_{\beta,\mathrm{out}}$ & 1.0 & 52.7 & 83.6 & 89.5 \\
+    $f_{\beta,\mathrm{partial}}$ & 1.0 & 19.1 & 51.6 & 57.6 \\
+    $f_{\beta,\mathrm{in}}$ & 24.9 & 1.0 & 1.0 & 1.0 \\
+    $f_{\ell,\mathrm{out}}$ & 1.0 & 1.0 & 1.0 & 1.0 \\
+    $f_{\ell,\mathrm{partial}}$ & 1.0 & 1.0 & 1.0 & 1.0 \\
+    $f_{\ell,\mathrm{in}}$ & 1.0 & 1.0 & 1.0 & 1.0 \\
+    $f_{P,\mathrm{out}}$ & 4.5 & 14.6 & 15.8 & 14.2 \\
+    $f_{P,\mathrm{partial}}$ & 6.9 & 15.3 & 17.6 & 17.4 \\
+    $f_{P,\mathrm{in}}$ & 32.4 & 38.2 & 39.8 & 39.3 \\
+    $f_{\Phi,\mathrm{out}}$ & 1.0 & 1.0 & 1.0 & 1.0 \\
+    $f_{\Phi,\mathrm{partial}}$ & 1.0 & 1.0 & 1.0 & 1.0 \\
+    $f_{\Phi,\mathrm{in}}$ & 1.0 & 1.0 & 1.0 & 1.0 \\
 \midrule
     Joint fitness & $8.558\times10^{6}$ & $4.389\times10^{9}$ & $1.063\times10^{11}$ & $1.988\times10^{11}$ \\ \bottomrule
 \end{tabular}
@@ -1456,21 +1457,21 @@ true fitness is 0.963 and the median disagreement is 1.43\%.}
 \begin{tabular}{rrccrl}
 \toprule
 Rank & $G$ & True fitness & Predicted & Disagr.\ [\%] & Worst output \\ \midrule
-    1 & 18 & $8.558\times10^{6}$ & $8.318\times10^{6}$ & 2.8 & flux\_CRin55 (10\%) \\
-    2 & 19 & $8.606\times10^{6}$ & $8.674\times10^{6}$ & 0.8 & flux\_CRin55 (18\%) \\
-    3 & 17 & $8.664\times10^{6}$ & $8.605\times10^{6}$ & 0.7 & flux\_CRin55 (12\%) \\
-    4 & 17 & $8.705\times10^{6}$ & $8.725\times10^{6}$ & 0.2 & flux\_CRin55 (7\%) \\
-    5 & 19 & $8.854\times10^{6}$ & $8.727\times10^{6}$ & 1.4 & keff\_CRin0 (12\%) \\
-    6 & 15 & $8.926\times10^{6}$ & $8.739\times10^{6}$ & 2.1 & flux\_CRin55 (6\%) \\
-    7 & 17 & $8.996\times10^{6}$ & $8.437\times10^{6}$ & 6.2 & keff\_CRin0 (6\%) \\
-    8 & 18 & $9.006\times10^{6}$ & $8.513\times10^{6}$ & 5.5 & flux\_CRin55 (13\%) \\
-    9 & 20 & $9.031\times10^{6}$ & $8.914\times10^{6}$ & 1.3 & keff\_CRin0 (27\%) \\
-    10 & 17 & $9.049\times10^{6}$ & $8.564\times10^{6}$ & 5.4 & keff\_CRin0 (7\%) \\
-    11 & 18 & $9.056\times10^{6}$ & $8.488\times10^{6}$ & 6.3 & keff\_CRin0 (13\%) \\
-    12 & 17 & $9.070\times10^{6}$ & $9.252\times10^{6}$ & 2.0 & flux\_CRin55 (9\%) \\
-    13 & 15 & $9.084\times10^{6}$ & $9.022\times10^{6}$ & 0.7 & flux\_CRin55 (5\%) \\
-    14 & 20 & $9.098\times10^{6}$ & $8.949\times10^{6}$ & 1.6 & keff\_CRin0 (28\%) \\
-    15 & 16 & $9.130\times10^{6}$ & $8.852\times10^{6}$ & 3.0 & beta\_CRin0 (64\%) \\
+    1 & 18 & $8.558\times10^{6}$ & $8.318\times10^{6}$ & 2.8 & $f_{\Phi,\mathrm{in}}$ (10\%) \\
+    2 & 19 & $8.606\times10^{6}$ & $8.674\times10^{6}$ & 0.8 & $f_{\Phi,\mathrm{in}}$ (18\%) \\
+    3 & 17 & $8.664\times10^{6}$ & $8.605\times10^{6}$ & 0.7 & $f_{\Phi,\mathrm{in}}$ (12\%) \\
+    4 & 17 & $8.705\times10^{6}$ & $8.725\times10^{6}$ & 0.2 & $f_{\Phi,\mathrm{in}}$ (7\%) \\
+    5 & 19 & $8.854\times10^{6}$ & $8.727\times10^{6}$ & 1.4 & $f_{k,\mathrm{partial}}$ (12\%) \\
+    6 & 15 & $8.926\times10^{6}$ & $8.739\times10^{6}$ & 2.1 & $f_{\Phi,\mathrm{in}}$ (6\%) \\
+    7 & 17 & $8.996\times10^{6}$ & $8.437\times10^{6}$ & 6.2 & $f_{k,\mathrm{partial}}$ (6\%) \\
+    8 & 18 & $9.006\times10^{6}$ & $8.513\times10^{6}$ & 5.5 & $f_{\Phi,\mathrm{in}}$ (13\%) \\
+    9 & 20 & $9.031\times10^{6}$ & $8.914\times10^{6}$ & 1.3 & $f_{k,\mathrm{partial}}$ (27\%) \\
+    10 & 17 & $9.049\times10^{6}$ & $8.564\times10^{6}$ & 5.4 & $f_{k,\mathrm{partial}}$ (7\%) \\
+    11 & 18 & $9.056\times10^{6}$ & $8.488\times10^{6}$ & 6.3 & $f_{k,\mathrm{partial}}$ (13\%) \\
+    12 & 17 & $9.070\times10^{6}$ & $9.252\times10^{6}$ & 2.0 & $f_{\Phi,\mathrm{in}}$ (9\%) \\
+    13 & 15 & $9.084\times10^{6}$ & $9.022\times10^{6}$ & 0.7 & $f_{\Phi,\mathrm{in}}$ (5\%) \\
+    14 & 20 & $9.098\times10^{6}$ & $8.949\times10^{6}$ & 1.6 & $f_{k,\mathrm{partial}}$ (28\%) \\
+    15 & 16 & $9.130\times10^{6}$ & $8.852\times10^{6}$ & 3.0 & $f_{\beta,\mathrm{partial}}$ (64\%) \\
 \bottomrule
 \end{tabular}
 \end{table}
