@@ -848,12 +848,16 @@ property of the structures themselves and not of a criterion applied to them.
 
 The third question is the one the sample does not answer, and the right panel
 shows it plainly: the number of distinct structures is still growing at the
-hundredth search, at about one every two searches. Of the 67 structures obtained,
-54 were produced by exactly one search and only five by two, a signature that places the reachable population at about three hundred
-structures and the present campaign at roughly one fifth of it. That figure is
-a lower bound, and Sec.~\ref{eg:sec:thousand} shows how severe a one: on a
-thousand searches the same estimator returns 883. A complete census is
-therefore out of reach, and no claim of that kind is made here.
+hundredth search, at about one every two searches. Of the 67 structures obtained, 54 were produced by exactly one search and only
+five by two. Four structures out of five have therefore been seen once, which
+is what a sample far from complete looks like: a structure that appears once
+is one the search reaches rarely, and the abundance of such structures
+measures how much of the set has still to appear. Extrapolating from them
+places the reachable population at a few hundred structures, several times the
+number obtained here, but an extrapolation of this kind counts only what is
+rare enough to have been seen once and is therefore a lower bound:
+Sec.~\ref{eg:sec:thousand} shows that it grows with the campaign. A complete
+census is out of reach, and no claim of that kind is made here.
 
 What is missing, however, is missing for a reason that limits the damage. A
 structure absent from the sample is one the algorithm reaches rarely, and the
@@ -1112,13 +1116,18 @@ the \SI{3}{\percent} of the smaller sample; the estimate of Sec.~\ref{eg:sec:how
 was pessimistic, but the conclusion drawn from it stands, since three tribes
 still have only one chance in six of finding the best structure.
 
-The census itself changes considerably. The estimator applied to the hundred
-searches placed the reachable population at about three hundred structures;
-applied to the thousand it returns 883, and the fraction of the population
-actually sampled, read from the structures seen only once, rises from
-\SI{46}{\percent} to \SI{80}{\percent}. The estimate obtained from a small
-sample is therefore not merely uncertain but biased low, by a factor of about
-three in this case, which is the reason no census claim was made.
+The census is the part that changes most. New structures were still appearing
+at the thousandth search, so this campaign does not exhaust the set either,
+but they appear more rarely: 54 of the hundred searches produced a structure
+that no other search produced, against 198 of the thousand, so that the
+probability that one more search returns something already seen rises from
+about one half to four out of five. Extrapolating from those structures, as
+was done above, gives a few hundred reachable structures on the hundred
+searches and about nine hundred on the thousand. The factor of three between
+the two figures is the measure of what such an extrapolation is worth: it
+counts only what has been seen at least once, so it can only grow as the
+campaign grows, and no single value of it should be read as the size of the
+set.
 
 Three of the regularities become more pronounced. The two families are still
 two, of 145 and 164 structures, and the difference in true fitness between them
@@ -1156,11 +1165,11 @@ explore further from the region where the training set is dense.
 \begin{table}[htbp]
   \centering
   \caption[The hundred searches against the thousand]{The campaign of one
-  hundred searches against the campaign of one thousand, which contains it. The
-  reachable population is estimated with the bias-corrected Chao1 estimator from
-  the structures produced by exactly one and by exactly two searches; the
-  fraction sampled is the Good--Turing coverage. Every structure of both
-  campaigns was recomputed with FRENETIC.}
+hundred searches against the campaign of one thousand, which contains it. The
+probability that one more search returns a structure already obtained is
+estimated as the complement of the fraction of searches that produced a
+structure seen only once. Every structure of both campaigns was recomputed
+with FRENETIC.}
   \label{eg:tab:thousand}
   \begin{tabular}{lcc}
     \toprule
@@ -1168,8 +1177,8 @@ explore further from the region where the training set is dense.
     Distinct structures obtained            & 67    & 309 \\
     Best joint fitness                      & \multicolumn{2}{c}{$8.56\times10^{6}$, eighteen groups} \\
     Searches reaching the optimum           & \SI{3.0}{\percent} & \SI{5.9}{\percent} \\
-    Estimated reachable population          & 306   & 883 \\
-    Fraction of the population sampled      & \SI{46}{\percent} & \SI{80}{\percent} \\
+    Structures produced by one search only  & 54    & 198 \\
+    A further search repeats a known structure & \SI{46}{\percent} & \SI{80}{\percent} \\
     Separation between the two families     & \SI{22}{\percent} & \SI{27}{\percent} \\
     Recurrence against importance, $r_s$    & $+0.53$ & $+0.56$ \\
     Boundaries retained by more than $90\%$ & 7     & 6 \\
