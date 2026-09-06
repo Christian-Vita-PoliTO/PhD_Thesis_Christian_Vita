@@ -47,8 +47,14 @@ supplied. A deterministic solver does not read the continuous-energy cross
 sections: it reads a condensed and homogenized version of them, the multi-group
 constants, that is a set of cross sections defined over a finite number of
 energy intervals and over regions of the core within which the material is
-treated as uniform. Producing those constants is a calculation in its own right,
-and the accuracy of everything computed afterwards is bounded by their quality. % CV: mi sto rendendo conto che lo stile è molto lavativo, assicurati che non sia cosi su tutto il resto della tesi. Voglio che lo stile di scrittura sia ispirato a quello che trovi dentro la nuova cartella che ti ho generato: phd_tesis_sampel_nicolo (tesi del mio supervisor).
+treated as uniform. The generation of that set is a calculation in its own
+right, and it has been organized for decades as a sequence of steps of
+decreasing detail: for light water reactors the established route proceeds from
+the point-wise libraries to a self-shielded set at the pin level, then to a
+fine-group set at the assembly level, and finally to the few-group data with
+which the full core is solved~\cite{cacuci2010handbook}. Whatever the route, the
+accuracy of everything computed afterwards is bounded by the quality of its
+outcome, and that bound cannot be recovered by refining the solver.
 
 This Part examines two of the degrees of freedom that decide that quality, for
 Lead-cooled Fast Reactors (LFRs). Chapter~\ref{ch:sph-lfr} concerns the
@@ -58,11 +64,10 @@ compares the routes by which the constants can be generated, a single full-core
 Monte Carlo calculation against a set of mini-core models representative of the
 different regions of the system, and weighs the accuracy each route delivers
 against the computational time it costs when several configurations of the core
-have to be analyzed.
-Chapter~\ref{ch:energy-grid}
-concerns the energy mesh on which the condensation is performed, whose
-boundaries are treated as the unknown of an optimization. The two works share
-the same scheme, in which the Monte Carlo code Serpent~2
+have to be analyzed. Chapter~\ref{ch:energy-grid} concerns the energy mesh on
+which the condensation is performed, whose boundaries are treated as the unknown
+of an optimization rather than as a convention inherited from practice. The two
+works share the same scheme, in which the Monte Carlo code Serpent~2
 \cite{Serpent_code_description,Serpent_homog_technique} generates both the
 multi-group constants and the reference solution against which the deterministic
 result is judged. Since the same continuous-energy nuclear data serve both
@@ -71,8 +76,8 @@ library.
 
 The present chapter provides the common ground: the transport equation from
 which the multi-group description descends, the definition of the group
-constants, the reason why that definition cannot be applied exactly, and the
-error that follows from it.
+constants, the assumptions under which that definition can be applied, and the
+error that follows from them.
 
 \section{The neutron transport equation}
 
@@ -104,21 +109,24 @@ cross section, $\chi$ the fission spectrum, and
   \label{mg:eq:totalflux}
 \end{equation}
 %
-the total flux, that is the angular flux integrated over the whole
-solid angle. The two terms on the left describe the neutrons that leave a
-point of the phase space, by streaming out of the volume element and by
-interacting; the two on the right describe those that enter it, by scattering
-from another energy and another direction and by fission. The multiplication
-factor $k_{\mathrm{eff}}$ is the eigenvalue that makes the balance stationary,
-and the fission source is written as isotropic, which the emission of fission
-neutrons is to a very good approximation.
+the total flux, that is the angular flux integrated over the whole solid angle.
+The two terms on the left describe the neutrons that leave a point of the phase
+space, by streaming out of the volume element and by interacting; the two on the
+right describe those that enter it, by scattering from another energy and
+another direction and by fission. The multiplication factor $k_{\mathrm{eff}}$
+is the eigenvalue that makes the balance stationary, and the fission source is
+written as isotropic, which the emission of fission neutrons is to a very good
+approximation.
 
 Equation~(\ref{mg:eq:transport}) has seven independent variables, three of
 space, two of angle, one of energy and, in the time-dependent case, one of time.
 A Monte Carlo code does not discretize any of them: it samples neutron histories
 governed by the same cross sections and estimates the quantities of interest as
-averages over the histories. A deterministic code discretizes all of them, and
-the discretization of the energy variable is what this Part is concerned with.
+averages over the histories, so that its error is statistical and can be reduced,
+at a known cost, by simulating more of them. A deterministic code discretizes all
+of them, and its error is systematic: it is decided by the discretization and it
+does not disappear with computational effort. The discretization of the energy
+variable is what this Part is concerned with.
 
 \section{The multi-group form}\label{mg:sec:multigroup}
 
@@ -126,18 +134,28 @@ the discretization of the energy variable is what this Part is concerned with.
 
 The energy interval of interest is partitioned into $G$ intervals, conventionally
 numbered from the highest energy downwards, group $g$ covering
-$E_{g}<E<E_{g-1}$. The group flux is the integral of the total flux over the
-interval,
+$E_{g}<E<E_{g-1}$. Integrating Eq.~(\ref{mg:eq:transport}) over one such interval
+returns an equation of identical structure, written in terms of the integrals of
+the flux over the interval and of a set of constants, provided that every
+constant is defined so as to preserve the corresponding rate. For a generic
+reaction $x$ the definition that does so is
 %
 \begin{equation}
-  \Phi_g(\vec{r}) = \int_{E_g}^{E_{g-1}}\Phi(\vec{r},E)\,\mathrm{d}E .
-  \label{mg:eq:groupflux}
+  \Sigma_{x,g}(\vec{r},\vec{\Omega}) =
+  \frac{\displaystyle\int_{E_g}^{E_{g-1}}\Sigma_x(\vec{r},E)\,
+        \phi(\vec{r},E,\vec{\Omega})\,\mathrm{d}E}
+       {\displaystyle\int_{E_g}^{E_{g-1}}\phi(\vec{r},E,\vec{\Omega})\,\mathrm{d}E} ,
+  \label{mg:eq:condensation-angle}
 \end{equation}
 %
-Integrating Eq.~(\ref{mg:eq:transport}) over the same interval returns an
-equation of identical structure, written in terms of $\Phi_g$ and of a set of
-constants, provided that each constant is defined as the average of the
-continuous cross section weighted by the flux,
+and it already exhibits the first consequence of the condensation: the weight is
+the angular flux, so that the exact group cross section acquires a dependence on
+the direction which the continuous one does not have~\cite{SPH_book_Bell_Glasstone}.
+Retaining that dependence would defeat the purpose of the operation, which is to
+reduce the number of degrees of freedom of the problem, and it is therefore
+removed by assuming that the energy and the angular dependences of the flux
+separate. The weight then becomes a function of energy alone, and
+Eq.~(\ref{mg:eq:condensation-angle}) reduces to
 %
 \begin{equation}
   \Sigma_{x,g}(\vec{r}) =
@@ -146,8 +164,15 @@ continuous cross section weighted by the flux,
   \label{mg:eq:condensation}
 \end{equation}
 %
-for a generic reaction $x$, and that the transfer between two groups is defined
-by the corresponding double integral,
+which is the form used throughout this Part, together with the group flux
+%
+\begin{equation}
+  \Phi_g(\vec{r}) = \int_{E_g}^{E_{g-1}}\Phi(\vec{r},E)\,\mathrm{d}E
+  \label{mg:eq:groupflux}
+\end{equation}
+%
+and with the transfer between two groups, defined by the corresponding double
+integral,
 %
 \begin{equation}
   \Sigma_{s,g'\to g}(\vec{r}) =
@@ -158,14 +183,14 @@ by the corresponding double integral,
   \label{mg:eq:scattering}
 \end{equation}
 %
-The logic of Eq.~(\ref{mg:eq:condensation}) is contained in what happens when it
-is multiplied by the group flux. The product $\Sigma_{x,g}\Phi_g$ is by
+The meaning of Eq.~(\ref{mg:eq:condensation}) is contained in what happens when
+it is multiplied by the group flux. The product $\Sigma_{x,g}\Phi_g$ is by
 construction equal to $\int_g \Sigma_x(E)\Phi(E)\,\mathrm{d}E$, that is, to the
 reaction rate of the continuous problem inside the interval. A group constant is
-not an average cross section in any other sense: it is the number which, used
-with the group flux, reproduces a reaction rate. The same reading applies to
-Eq.~(\ref{mg:eq:scattering}) for the rate at which neutrons are transferred from
-one group to another.
+therefore not an average cross section in the ordinary sense: it is the number
+which, used with the group flux, reproduces a reaction rate, and the same
+reading applies to Eq.~(\ref{mg:eq:scattering}) for the rate at which neutrons
+are transferred from one group to another.
 
 \subsection{Homogenization in space}
 
@@ -188,24 +213,24 @@ region. Condensation and homogenization are two instances of one operation, a
 flux-weighted average of the cross section over a domain that the deterministic
 model will not resolve, and in practice they are performed together in a single
 Monte Carlo calculation which tallies the numerator and the denominator of
-Eqs.~(\ref{mg:eq:condensation}) to (\ref{mg:eq:homogenization}) directly.
+Eqs.~(\ref{mg:eq:condensation}) to (\ref{mg:eq:homogenization}) directly
+\cite{Serpent_homog_technique}.
 
 \subsection{The weighting flux}
 
-The three definitions share a structure and, with it, a difficulty. The weight
-is the flux, which is the unknown of the very problem the constants are meant to
+The definitions above share a structure and, with it, a difficulty. The weight is
+the flux, which is the unknown of the very problem the constants are meant to
 solve. Were the true flux available, the multi-group equations would reproduce
 the reaction rates of the continuous problem exactly, and there would be no
 reason to solve them. What is available in its place is the flux of a model
 which resembles the target: an infinite lattice of identical assemblies, an
 assembly with a prescribed leakage, or, as in this Part, a full-core Monte Carlo
-calculation of the system in one of its configurations.
-
-The consequence is that the group constants are exact for the state in which
-they were generated and approximate everywhere else. This is not a defect of the
-procedure but its definition, and the practical question is not how to avoid the
-approximation but how far the state of generation may differ from the state of
-use before the error becomes unacceptable.
+calculation of the system in one of its configurations. The group constants are
+consequently exact for the state in which they were generated and approximate
+everywhere else. This is not a defect of the procedure but a property of its
+definition, and the practical question is not how to avoid the approximation but
+how far the state of generation may differ from the state of use before the
+error becomes unacceptable.
 
 Two routes lead to that flux. The first is a dedicated deterministic code, which
 solves the transport equation over a lattice cell or an assembly on a fine energy
@@ -236,16 +261,44 @@ lifetime~\cite{collapsing}.
 % Valeria e Martin che usa SCONE. Mandami autori, titolo esatto, conferenza,
 % luogo e anno e le inserisco al posto di questa nota. La voce bib di SCONE
 % (chiave "scone") e' gia' pronta in Chapter2/refs_mg.bib.
-This Part does not act on the definition of the weighting
-function: it takes the standard one and works on the two other degrees of
-freedom, the correction of the constants that it produces and the placement of
-the group boundaries over which the average is taken.
+This Part does not act on the definition of the weighting function: it takes the
+standard one and works on the two other degrees of freedom, the correction of the
+constants that it produces and the placement of the group boundaries over which
+the average is taken.
 
 \section{Sources of error in the multi-group model}\label{mg:sec:errors}
 
-A discrepancy between a deterministic result and a Monte Carlo reference
-contains three contributions of different origin, and attributing it requires
-that they be kept apart.
+Behind the compact form of Eqs.~(\ref{mg:eq:condensation}) to
+(\ref{mg:eq:homogenization}) lies a set of decisions that the definitions
+themselves do not settle, and on which the quality of the resulting library
+depends:
+%
+\begin{itemize}
+  \item the number of groups $G$, bounded from above by the cost of every
+        calculation that will use the library and from below by the accuracy
+        required of it;
+  \item the position of the $G-1$ internal boundaries within the energy range;
+  \item the partition of the core into the regions $V_i$ over which the data are
+        homogenized;
+  \item the state in which the weighting flux is computed, and the operating
+        parameters, control rod position, burnup level and thermodynamic
+        conditions, at which the library has to be regenerated;
+  \item the definition of the weighting function itself, discussed in the
+        previous section;
+  \item the separability of the energy and angular dependences of the flux,
+        under which Eq.~(\ref{mg:eq:condensation-angle}) was reduced to
+        Eq.~(\ref{mg:eq:condensation}).
+\end{itemize}
+%
+No general rule fixes these decisions for an arbitrary reactor concept, which is
+why the generation of a multi-group library remains a case-dependent operation
+and why it is examined here for one specific design. This Part addresses the
+second of them in Chapter~\ref{ch:energy-grid}, and in Chapter~\ref{ch:sph-lfr}
+it repairs, after the fact, the error that the third and the fourth introduce.
+
+A discrepancy between a deterministic result and a Monte Carlo reference is the
+sum of three contributions of different origin, and attributing it requires that
+they be kept apart.
 
 The first is the weighting spectrum and the environment in which it was
 computed. What Eqs.~(\ref{mg:eq:condensation}) and (\ref{mg:eq:homogenization})
@@ -255,6 +308,7 @@ or moves a control rod, or reaches a different point of the cycle, the spectrum
 inside the region changes and the constants are no longer the correct averages.
 The error is concentrated where the spectrum varies most sharply in space, which
 is at the interfaces between dissimilar regions and around the absorbers.
+
 The second is the energy mesh. Inside a group the shape of the flux is lost, and
 only its integral survives. A finer structure reduces the influence of the
 assumed shape, since in the limit of an infinite number of groups
@@ -272,13 +326,14 @@ comparisons reported in the following chapters contain it, and because a
 correction applied to the data can, and sometimes does, compensate an error that
 belongs to the solver.
 
-Two features of a fast system give these contributions a particular weight.
-The neutron spectrum extends over the whole energy range without the thermal
-peak that anchors the structure of a light-water lattice, so that the placement
-of the group boundaries has more freedom and less guidance. And the mean free
-path is long compared with the pitch of an assembly, so that the flux inside a
-region is determined by a wide neighbourhood, and the environment in which the
-constants were generated matters more than in a thermal system.
+Two features of a fast system give these contributions a particular weight. The
+neutron spectrum extends over the whole energy range without the thermal peak
+that anchors the structure of a light-water lattice, so that the placement of the
+group boundaries enjoys more freedom and receives less guidance from the physics
+of the problem. And the mean free path is long compared with the pitch of an
+assembly, so that the flux inside a region is determined by a wide neighbourhood
+and the environment in which the constants were generated matters more than it
+does in a thermal system.
 
 \section{Equivalence and energy structure}\label{mg:sec:approaches}
 
@@ -301,15 +356,14 @@ correction does to the multiplication factor, to the power distribution and to
 the kinetic parameters.
 
 The second approach acts on the energy mesh, treating the position of the group
-boundaries as a decision variable rather than as a convention inherited from
-practice. The structure is chosen from the internal boundaries of a fine mesh,
-which makes the problem combinatorial, and the quantity to be optimized is the
-agreement of a set of integral parameters with the Monte Carlo reference over
-several configurations of the control system at once. Chapter~\ref{ch:energy-grid}
-formulates that search, replaces the reference solver inside it with a neural
-metamodel so that the campaign can be repeated many times, and recomputes every
-structure it proposes with the solver, so that the conclusions rest on the
-solver and not on the metamodel.
+boundaries as a decision variable. The structure is chosen from the internal
+boundaries of a fine mesh, which makes the problem combinatorial, and the
+quantity to be optimized is the agreement of a set of integral parameters with
+the Monte Carlo reference over several configurations of the control system at
+once. Chapter~\ref{ch:energy-grid} formulates that search, replaces the reference
+solver inside it with a neural metamodel so that the campaign can be repeated
+many times, and recomputes every structure it proposes with the solver, so that
+the conclusions rest on the solver and not on the metamodel.
 
 The two act on different terms and are complementary rather than alternative:
 one repairs the constants of a region whose environment is not the one assumed,
