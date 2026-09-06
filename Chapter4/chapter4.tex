@@ -810,7 +810,7 @@ the solution after the joint fitness has apparently settled.
   \label{eg:fig:tribe}
 \end{figure}
 
-\subsection{How Many Searches Are Enough}
+\subsection{How Many Searches Are Enough}\label{eg:sec:howmany}
 
 The number of searches was not chosen a priori, and the same data allow it to be
 justified after the fact. The question has three different answers depending on
@@ -821,9 +821,13 @@ Re-drawing the hundred outcomes in random order many times gives the left panel:
 the best structure found is within one per cent of the final value after about
 twenty searches and has stopped moving well before the hundredth. The middle
 panel turns the same information into the statement that motivates this work.
-The optimum was produced by three of the hundred searches, so that a campaign of
-three tribes had roughly one chance in ten of finding it, one of ten tribes one
-chance in four, and only beyond fifty tribes does the odds become favourable.
+The optimum was produced by three of the hundred searches. The campaign of
+Sec.~\ref{eg:sec:thousand}, ten times as large, measures the same probability
+on a sample where it is better resolved and returns a higher value,
+\SI{5.9}{\percent} per search, so that three tribes have one chance in six of
+finding the best structure, ten tribes fewer than one in two, and fifty tribes
+\SI{95}{\percent}. The middle panel, drawn from the hundred outcomes alone, is
+the more pessimistic of the two readings.
 The best structure is therefore not something a small campaign misses by a
 little; it is something a small campaign is unlikely to see at all.
 
@@ -845,10 +849,11 @@ property of the structures themselves and not of a criterion applied to them.
 The third question is the one the sample does not answer, and the right panel
 shows it plainly: the number of distinct structures is still growing at the
 hundredth search, at about one every two searches. Of the 67 structures obtained,
-54 were produced by exactly one search and only five by two, a signature that
-places the reachable population at about three hundred structures and the
-present campaign at roughly one fifth of it. A complete census is therefore out
-of reach, and no claim of that kind is made here.
+54 were produced by exactly one search and only five by two, a signature that places the reachable population at about three hundred
+structures and the present campaign at roughly one fifth of it. That figure is
+a lower bound, and Sec.~\ref{eg:sec:thousand} shows how severe a one: on a
+thousand searches the same estimator returns 883. A complete census is
+therefore out of reach, and no claim of that kind is made here.
 
 What is missing, however, is missing for a reason that limits the damage. A
 structure absent from the sample is one the algorithm reaches rarely, and the
@@ -864,9 +869,10 @@ kept by more than nine structures out of ten, identified in
 Sec.~\ref{eg:sec:recurring} -- exactly in about
 seven replicas out of ten, and the set of never-selected boundaries in fewer than
 one in two, because both are defined by a threshold that a boundary lying close
-to it crosses in one direction or the other depending on the sample. The
-frequencies themselves are stable; their classification into three groups is a
-convenience of presentation.
+to it crosses in one direction or the other depending on the sample. The frequencies themselves are stable; their classification into three groups
+is a convenience of presentation. Sec.~\ref{eg:sec:thousand} repeats the test
+on a sample four times as large, where the set of never-selected boundaries
+becomes stable and the consensus skeleton less so.
 
 \begin{figure}[htbp]
   \centering
@@ -1084,6 +1090,93 @@ objective still discriminates, as Sec.~\ref{eg:sec:active} shows.
   \label{eg:fig:boundaries}
 \end{figure}
 
+\subsection{A Campaign of One Thousand Searches}\label{eg:sec:thousand}
+
+The census left open above can be settled by measurement rather than by
+extrapolation, because a search on the metamodel is cheap enough for the
+campaign to be repeated at a larger size. One thousand independent searches were
+run with the same operators, the same stopping rule and the same fitness, the
+first hundred with the seeds of Sec.~\ref{eg:sec:howmany}, so that the sample
+discussed so far is contained in this one. They produced 309 distinct
+structures, and all of them were recomputed with FRENETIC, four hours of
+wall-clock time. The comparison with the hundred searches is collected in
+Table~\tref{eg:tab:thousand}.
+
+The result that matters most is that nothing moves at the top. The best
+structure of the thousand searches is the best structure of the hundred, the
+same eighteen-group grid with the same joint fitness of $8.56\times10^{6}$, so
+that the additional nine hundred searches, and the 242 additional distinct
+structures they produced, contain nothing better. The optimum was reached by 59
+of the thousand searches, a probability of \SI{5.9}{\percent} per search against
+the \SI{3}{\percent} of the smaller sample; the estimate of Sec.~\ref{eg:sec:howmany}
+was pessimistic, but the conclusion drawn from it stands, since three tribes
+still have only one chance in six of finding the best structure.
+
+The census itself changes considerably. The estimator applied to the hundred
+searches placed the reachable population at about three hundred structures;
+applied to the thousand it returns 883, and the fraction of the population
+actually sampled, read from the structures seen only once, rises from
+\SI{46}{\percent} to \SI{80}{\percent}. The estimate obtained from a small
+sample is therefore not merely uncertain but biased low, by a factor of about
+three in this case, which is the reason no census claim was made.
+
+Three of the regularities become more pronounced. The two families are still
+two, of 145 and 164 structures, and the difference in true fitness between them
+widens from \SI{22}{\percent} to \SI{27}{\percent}. The observation that rarely
+reached structures are the poorer ones, supported on the hundred searches by a
+difference significant at the level of a few per cent, becomes unambiguous: the
+198 structures produced by a single search have a median true fitness of
+$1.13\times10^{7}$ against $1.03\times10^{7}$ for those produced by more than
+one, a difference of one part in ten with $p=1.8\times10^{-6}$. The correlation
+between the frequency with which a boundary is retained and the importance
+surrounding it rises from $r_s=+0.53$ to $+0.56$, while the correlation with the
+variation of the flux shape stays negative at $-0.49$; the reading of
+Sec.~\ref{eg:sec:recurring} is confirmed on a sample four times as large.
+
+One result is weakened, and in a way worth recording. The consensus skeleton was
+defined as the boundaries retained by more than nine structures out of ten, and
+on the 67 structures it had seven members. On the 309 it has six: one of the
+seven falls to \SI{87}{\percent} and crosses the threshold, while the other six
+remain between \SI{90}{\percent} and \SI{100}{\percent}. Resampling confirms
+that it is the threshold and not the recurrence that is fragile, since the
+membership of the skeleton is reproduced in about a third of the replicas
+against seven in ten before, whereas the set of never-selected boundaries, which
+was the less stable of the two on the smaller sample, is now reproduced in more
+than four replicas out of five. The boundaries that recur do recur, from
+\SI{87}{\percent} upwards; the division into three groups by a round threshold
+is what a larger sample does not support.
+
+The campaign also provides an independent check of the metamodel, on structures
+proposed by searches it never saw. Over the 309 verified structures the median
+agreement between predicted and true joint fitness is \SI{1.29}{\percent} and
+the rank correlation is $0.969$, against \SI{1.4}{\percent} on the 67 structures
+of Sec.~\ref{eg:sec:accuracy}. The accuracy does not degrade as the searches
+explore further from the region where the training set is dense.
+
+\begin{table}[htbp]
+  \centering
+  \caption[The hundred searches against the thousand]{The campaign of one
+  hundred searches against the campaign of one thousand, which contains it. The
+  reachable population is estimated with the bias-corrected Chao1 estimator from
+  the structures produced by exactly one and by exactly two searches; the
+  fraction sampled is the Good--Turing coverage. Every structure of both
+  campaigns was recomputed with FRENETIC.}
+  \label{eg:tab:thousand}
+  \begin{tabular}{lcc}
+    \toprule
+    & 100 searches & 1000 searches \\ \midrule
+    Distinct structures obtained            & 67    & 309 \\
+    Best joint fitness                      & \multicolumn{2}{c}{$8.56\times10^{6}$, eighteen groups} \\
+    Searches reaching the optimum           & \SI{3.0}{\percent} & \SI{5.9}{\percent} \\
+    Estimated reachable population          & 306   & 883 \\
+    Fraction of the population sampled      & \SI{46}{\percent} & \SI{80}{\percent} \\
+    Separation between the two families     & \SI{22}{\percent} & \SI{27}{\percent} \\
+    Recurrence against importance, $r_s$    & $+0.53$ & $+0.56$ \\
+    Boundaries retained by more than $90\%$ & 7     & 6 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
 \subsection{Number of Groups}
 
 Repeating the searches with the number of groups constrained gives the fitness
@@ -1278,7 +1371,7 @@ the search operates, while the terms that do decide the ranking are predicted to
 better than $1\%$. The accuracy of the metamodel is therefore concentrated where
 the optimization needs it, which was not designed but is worth recording.
 
-\subsection{Accuracy of the Metamodel on the Proposed Structures}
+\subsection{Accuracy of the Metamodel on the Proposed Structures}\label{eg:sec:accuracy}
 
 All 67 distinct structures were recomputed with FRENETIC, which allows the
 metamodel to be judged on exactly the population it proposed rather than on a
@@ -1407,10 +1500,13 @@ conclusions rest on FRENETIC and not on the metamodel.
 The landscape turns out to be organised rather than merely rugged. The searches
 converge to 67 distinct structures which separate into two families, defined by
 a block of mutually exclusive boundary choices in the fast region, between which
-no single mutation can pass and which differ by $22\%$ in true fitness. Within
-that organisation the structures share a skeleton of seven boundaries present in
-more than nine cases out of ten, all located in the epithermal region, while
-five boundaries are never selected. The placement of the recurring boundaries
+no single mutation can pass and which differ by $22\%$ in true fitness. Within that organisation the structures share a skeleton of seven boundaries
+retained by almost every solution, all located in the epithermal region, while
+five boundaries are never selected; a campaign of one thousand searches, run
+afterwards in the same way and verified in the same way, produced 309 distinct
+structures without displacing the optimum and confirmed the recurrence, while
+showing that the exact membership of the skeleton depends on where the
+threshold is placed. The placement of the recurring boundaries
 follows the neutron importance with which the objective function weights the
 flux error, and not the sharpness of the spectral variation nor the flux itself,
 and the optimized structures distribute that importance among their groups one
