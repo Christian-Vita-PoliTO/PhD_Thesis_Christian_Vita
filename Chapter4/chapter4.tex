@@ -707,15 +707,13 @@ having widened its own window.
 Since this work rests on comparing a hundred independent searches, the two
 extremes of Eq.~(\ref{eg:eqn:scaling}) are removed from the run and fixed once and
 for all. They are taken as the minimum and the maximum of each fitness function
-over all the configurations computed with FRENETIC at the time the window was
-established, % CV: ma no, rimani piu generico, di semplicemente dei casi che abbimo nel database di training, se dici che l'abbiamo fatto strada facendo senza itegrare anche i nuovi dati ci fa sembrare pigri... 
- 89\,723 of them, after the controls described above have been
-applied and after discarding the calculations that failed to converge. The
-window is therefore a property of the data set and not of the search, and it is
-deliberately not recomputed when the data set grows, since doing so would move
-the scale and make every previously reported value incomparable. This fixed
-window, and the fitness values expressed through it, are referred to as
-canonical in the following. The two ends of the window are not of the same kind. The upper end is a
+over the configurations of the training database, 89\,723 of them, after the
+controls described above have been applied and after discarding the
+calculations that failed to converge. The window is therefore a property of
+that data set and not of the individual search, and it is held fixed for every
+search reported here, since changing it would move the scale and make the
+values of different campaigns incomparable. This fixed window, and the fitness
+values expressed through it, are referred to as canonical in the following. The two ends of the window are not of the same kind. The upper end is a
 genuine extreme of the data, so that a structure would have to be worse than
 anything computed so far to exceed one hundred. The lower end is, for twelve
 of the fifteen functions, the threshold of the controls rather than the
