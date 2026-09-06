@@ -35,9 +35,12 @@ the reference against which every approximate model is measured. Their cost per
 configuration is what confines them to a limited number of reference states.
 
 Deterministic solvers return the same quantities in a time smaller by orders of
-magnitude, and they are therefore the tools with which parametric studies and
-transients are actually performed. % CV: E' vero, ma si puo' usare anche Monte Carlo, non essere cosi perentorio
- What they consume, however, is not the
+magnitude, and it is with them that parametric studies and transient analyses
+are usually carried out. The separation is one of cost rather than of principle,
+since time-dependent Monte Carlo modes have been developed as well, in Serpent~2
+among other codes~\cite{serpentDynamic}; but a study that must repeat the same
+calculation over hundreds of configurations still turns to a deterministic
+solver. What they consume, however, is not the
 continuous nuclear data. %CV: che brutta formulazione.
  It is a condensed and homogenized version of them, the
 multi-group constants: a set of cross sections defined over a finite number of
