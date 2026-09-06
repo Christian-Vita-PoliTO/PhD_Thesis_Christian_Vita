@@ -53,8 +53,13 @@ and the accuracy of everything computed afterwards is bounded by their quality. 
 This Part examines two of the degrees of freedom that decide that quality, for
 Lead-cooled Fast Reactors (LFRs). Chapter~\ref{ch:sph-lfr} concerns the
 equivalence between the heterogeneous system and its homogenized representation,
-restored by correcting the constants themselves. % CV: C'è anche uno studio su quale combinazione di modelli (full core, lattice core ecc..) sono più accurati o in generale come si possono combinare per alta accuratezza e risparmio di tempo computazionale.
- Chapter~\ref{ch:energy-grid}
+restored by correcting the constants themselves. Alongside the correction, it
+compares the routes by which the constants can be generated, a single full-core
+Monte Carlo calculation against a set of mini-core models representative of the
+different regions of the system, and weighs the accuracy each route delivers
+against the computational time it costs when several configurations of the core
+have to be analyzed.
+Chapter~\ref{ch:energy-grid}
 concerns the energy mesh on which the condensation is performed, whose
 boundaries are treated as the unknown of an optimization. The two works share
 the same scheme, in which the Monte Carlo code Serpent~2
