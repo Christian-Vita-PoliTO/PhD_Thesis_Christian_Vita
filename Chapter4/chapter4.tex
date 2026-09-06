@@ -334,8 +334,18 @@ fixed, so that a candidate structure corresponds to a subset of the remaining
 $H-1=29$ internal boundaries and the design space contains
 $2^{29}\approx5.4\times10^{8}$ elements.
 
-The representation adopted here is the polyploid encoding of  %CV: se non sbaglio in un paper di abrate (o di aimetta) spiega perchè siamo passati dalla rappresentazione alpha (vettore con gene binario 0 1) a gamma aggiunig brevemente questo contesto e perchè siamo passati a gamma.
-\citet{prevMulti}, reproduced in full because it determines both the
+The earlier formulations of this problem fixed the number of groups before the
+search and left the genetic algorithm to place the boundaries alone, with one
+binary gene per internal boundary of the fine mesh stating whether it is
+retained. Prescribing $G$ restricts the space that can be reached and excludes
+the structures that a different number of groups would make available. Several
+chromosome definitions were therefore compared in the line of work that precedes
+this one, and the one retained combines the features of the others and carries
+the number of groups as a gene of its own, so that $G$ is searched over rather
+than imposed~\cite{prevGA}.
+
+The representation adopted here is that polyploid encoding, in the form used in
+the multi-configuration formulation of \citet{prevMulti}, reproduced in full because it determines both the
 behaviour of the genetic operators and the input of the metamodel. A chromosome
 consists of two sets. The first, $\gamma_0$, is a single gene holding the number
 of groups $G$ of the structure, constrained to $4\le G\le20$. The second,
