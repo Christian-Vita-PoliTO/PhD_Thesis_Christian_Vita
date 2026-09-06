@@ -207,6 +207,40 @@ procedure but its definition, and the practical question is not how to avoid the
 approximation but how far the state of generation may differ from the state of
 use before the error becomes unacceptable.
 
+Two routes lead to that flux. The first is a dedicated deterministic code, which
+solves the transport equation over a lattice cell or an assembly on a fine energy
+mesh, with an explicit treatment of the resonance self-shielding: ECCO, the cell
+code of the ERANOS system~\cite{eranos}, and MC$^2$-3~\cite{mc23} belong to the
+fast-reactor tradition, DRAGON~\cite{dragon} to the thermal one. The second, the
+one followed in this Part, is a Monte Carlo calculation of the system itself,
+which tallies the numerator and the denominator of
+Eqs.~(\ref{mg:eq:condensation}) to (\ref{mg:eq:homogenization}) with no
+approximation on the geometry and none on the energy dependence, at the price of
+a statistical uncertainty on every constant and of a cost that grows with the
+number of states the library has to cover. The two routes are not alternatives in
+principle, and which of them is preferable is decided by that number, as
+Chapter~\ref{ch:sph-lfr} shows for the design studied here.
+
+Whichever route produces it, the weighting flux need not be the one of a static
+criticality calculation. That is the standard choice, and the one adopted in this
+Part, but it remains a choice, and alternatives have been investigated.
+\citet{Dugan2016,Dugan2018} weight with the eigenfunctions of the time-dependent
+problem, so that the constants carry information on the free evolution of the
+system, and report an improvement in the accuracy of transient calculations; the
+same line has been followed at Politecnico di Torino, both on the spectral
+formulations of the transport equation as weighting functions~\cite{abrateThesis}
+and on the effect that the collapsing has on the effective neutron
+lifetime~\cite{collapsing}.
+% CV: qui vanno le due citazioni che mi mancano e che solo tu puoi darmi: il
+% lavoro M&C 2023 fatto con Abrate, e il suo proseguimento a PHYSOR 2026 con
+% Valeria e Martin che usa SCONE. Mandami autori, titolo esatto, conferenza,
+% luogo e anno e le inserisco al posto di questa nota. La voce bib di SCONE
+% (chiave "scone") e' gia' pronta in Chapter2/refs_mg.bib.
+This Part does not act on the definition of the weighting
+function: it takes the standard one and works on the two other degrees of
+freedom, the correction of the constants that it produces and the placement of
+the group boundaries over which the average is taken.
+
 \section{Sources of error in the multi-group model}\label{mg:sec:errors}
 
 A discrepancy between a deterministic result and a Monte Carlo reference
@@ -221,7 +255,6 @@ or moves a control rod, or reaches a different point of the cycle, the spectrum
 inside the region changes and the constants are no longer the correct averages.
 The error is concentrated where the spectrum varies most sharply in space, which
 is at the interfaces between dissimilar regions and around the absorbers.
-% CV: io vorrei che qua dici appunto che si possono usare software deterministici per la generazione di MGND (MUlti group nuclear data) (e ne citi alcuni, ad esempio ECCO,MC^2-3, dragon, ecc..) oppure con Monte Carlo. Ma che ad esempio si possono provare ad usare definizioni alternative delle weighting function (richiama al lavoro fatto dal mio supervisor su definizioni altenrative weighting function, Anche il mio lavoro con lui per M&C2023 e il suo proseguimento physor 2026 con valeria e martin con l'uso di SCONE). Non devi necessariametnte metterle qua queste cose ma voglio che dai, in breve una view generale del panorama, mi raccomando le fonti!
 The second is the energy mesh. Inside a group the shape of the flux is lost, and
 only its integral survives. A finer structure reduces the influence of the
 assumed shape, since in the limit of an infinite number of groups
