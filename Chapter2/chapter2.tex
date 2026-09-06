@@ -28,8 +28,11 @@ along the cycle, and, in the transient analyses for which those calculations are
 ultimately intended, for many instants in time. A Monte Carlo (MC) calculation
 answers each of those questions with the fewest approximations, since it treats
 energy and angle as continuous variables and represents the geometry of the
-system in full detail. Its cost per configuration is what confines it to a
-limited number of reference states. % CV: riporta come esempi i software Serpent, openMC e MCNP
+system in full detail. The general-purpose codes that implement it, among which
+MCNP~\cite{mcnp63}, Serpent~2~\cite{Serpent_code_description} and
+OpenMC~\cite{openmc} are the most widely used in reactor physics, are therefore
+the reference against which every approximate model is measured. Their cost per
+configuration is what confines them to a limited number of reference states.
 
 Deterministic solvers return the same quantities in a time smaller by orders of
 magnitude, and they are therefore the tools with which parametric studies and
