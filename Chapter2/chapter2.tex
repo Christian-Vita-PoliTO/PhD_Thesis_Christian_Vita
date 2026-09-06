@@ -40,10 +40,12 @@ are usually carried out. The separation is one of cost rather than of principle,
 since time-dependent Monte Carlo modes have been developed as well, in Serpent~2
 among other codes~\cite{serpentDynamic}; but a study that must repeat the same
 calculation over hundreds of configurations still turns to a deterministic
-solver. What they consume, however, is not the
-continuous nuclear data. %CV: che brutta formulazione.
- It is a condensed and homogenized version of them, the
-multi-group constants: a set of cross sections defined over a finite number of
+solver.
+
+The price of that speed is paid in the form in which the nuclear data have to be
+supplied. A deterministic solver does not read the continuous-energy cross
+sections: it reads a condensed and homogenized version of them, the multi-group
+constants, that is a set of cross sections defined over a finite number of
 energy intervals and over regions of the core within which the material is
 treated as uniform. Producing those constants is a calculation in its own right,
 and the accuracy of everything computed afterwards is bounded by their quality. % CV: mi sto rendendo conto che lo stile è molto lavativo, assicurati che non sia cosi su tutto il resto della tesi. Voglio che lo stile di scrittura sia ispirato a quello che trovi dentro la nuova cartella che ti ho generato: phd_tesis_sampel_nicolo (tesi del mio supervisor).
