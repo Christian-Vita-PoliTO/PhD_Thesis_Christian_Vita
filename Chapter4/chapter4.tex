@@ -1313,6 +1313,21 @@ search driven by predictions arrives in the same region of the design space as a
 search driven by the solver would. The fifteen best structures are listed in
 Table~\tref{eg:tab:ranking}.
 
+The disagreement on the joint fitness is a property of the objective more than
+of the metamodel, and the distinction is worth making because the two are easily
+confused. The joint fitness is a product, so the relative errors of the terms
+that enter it compound, and how many terms enter it depends on the controls: a
+structure whose fifteen quantities are each predicted to half a per cent carries
+a larger error on a product of nine factors than on a product of six. The effect
+can be separated from any property of the metamodel by scoring the same
+structures with both sets of controls. Judged with the thresholds of
+\citet{prevMulti}, under which six terms discriminate, these 720 structures show
+a median disagreement of $1.2\%$; judged with the thresholds adopted here, under
+which nine do, the same predictions give $2.2\%$. The accuracy on the fifteen
+quantities themselves does not change and is $0.39\%$, against $0.40\%$ on the
+external validation set. The ordering, which is what the search uses, improves
+rather than degrades.
+
 \begin{table}[htbp]
 \centering
 \caption[The fifteen best of the 720 distinct structures]{The fifteen best of
@@ -1333,13 +1348,22 @@ Rank & $G$ & True fitness & Predicted & Disagr.\ [\%] \\ \midrule
 
 The distribution of the error over the fifteen quantities, in the right panel of
 Fig.~\tref{eg:fig:bias}, shows that thirteen of them are predicted to better than
-$1.4\%$ on these structures. The two exceptions are the lifetime with the rods
-withdrawn, for the reason given above, and the multiplication factor with the
-rods partially inserted, at $2.1\%$: the second is the regime of reduced
-accuracy characterised above, appearing here in operation rather than in
-diagnosis, since the structures proposed by the searches are precisely those
-whose multiplication factor lies closest to the reference, which is where the
-target is steepest.
+$1.4\%$ on these structures. The two exceptions deserve separate treatment. The
+first is the multiplication factor with the rods partially inserted, at $2.1\%$:
+this is the regime of reduced accuracy characterised above, appearing in
+operation rather than in diagnosis, since the structures proposed by the
+searches are precisely those whose multiplication factor lies closest to the
+reference, which is where the target is steepest. The second is the lifetime
+with the rods withdrawn, whose median relative error is $32\%$, and the figure
+is misleading if read as a relative error alone. The optimized structures
+reproduce that quantity to a median of $0.019\%$, so that the median error of
+the metamodel on it amounts to $0.007$ percentage points on $\ell_\mathrm{eff}$,
+against a statistical uncertainty of $0.048$ percentage points on the reference
+itself. Four structures out of 720 have an absolute error larger than that
+uncertainty: the metamodel predicts the lifetime of the withdrawn configuration
+several times more precisely than the reference calculation knows it, and the
+large relative error is the arithmetic of dividing a small number by a smaller
+one.
 
 The left panel shows a systematic feature of surrogate-driven optimization which
 is worth recording. Of the 720 predictions, 394 underestimate the true fitness.
@@ -1404,9 +1428,12 @@ the multi-configuration study which precedes this work, has been investigated by
 performing one thousand independent searches instead of three. The number was
 made accessible by a neural metamodel of the fifteen fitness functions, trained
 on 91\,723 full-core evaluations and accurate to a median relative error of
-$0.403\%$ on configurations never seen during training, while every structure
-produced by the searches was recomputed with the reference solver, so that the
-conclusions rest on FRENETIC and not on the metamodel.
+$0.403\%$ on configurations never seen during training and of $0.39\%$ on the
+720 structures the searches went on to propose, which is the population on which
+its accuracy actually matters. Every one of those structures was recomputed with
+the reference solver, so that the conclusions rest on FRENETIC and not on the
+metamodel, and the ordering the metamodel produces reproduces the ordering of
+the solver with a rank correlation of $0.989$.
 
 The dependence on the seed is severe, and measuring it is the first result. A
 single search returns a structure whose joint fitness is typically forty per
