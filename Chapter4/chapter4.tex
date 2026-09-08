@@ -1120,10 +1120,13 @@ solver.
   \caption[Best attainable joint fitness against the number of groups]{Best attainable joint fitness as a function of the number of energy
   groups, obtained by repeating the searches with the group count constrained.
   Each point of the solid curve was verified with the reference solver, while
-  the dashed curve is the corresponding prediction of the metamodel. The stars
-  mark the reference constructions discussed in the text, and the triangles the
-  structures obtained by the three tribes of \citet{prevMulti}, recomputed
-  here on the same canonical scale.}
+  the dashed curve is the corresponding prediction of the metamodel. The faded
+  blue points are the 747 distinct structures returned by the thousand
+  unconstrained searches, placed at their own group count with a small
+  horizontal jitter, and mark the region the campaign actually visited. The
+  stars mark the reference constructions discussed in the text, and the
+  triangles the structures obtained by the three tribes of \citet{prevMulti},
+  recomputed here on the same canonical scale.}
   \label{eg:fig:tradeoff}
 \end{figure}
 
@@ -1148,9 +1151,16 @@ fitness, and they lie above it: at $G=14$ the best of the three reaches
 $7.37\times10^{7}$ against $4.55\times10^{7}$ attainable, at $G=20$
 $1.45\times10^{8}$ against $4.53\times10^{7}$, and at $G=13$ $3.60\times10^{8}$
 against $4.92\times10^{7}$. The gap, between $1.6$ and $7.3$ times at equal
-group count, is a question of how many searches were affordable: with the
-reference solver inside the loop, three tribes were what a reasonable budget
-allowed, and the same three tribes are the reason this chapter exists, since it
+group count, is a question of how many searches were affordable, and the
+outcomes of the thousand searches, shown as the faded cloud in the same figure,
+say so directly: the three structures fall inside the region the campaign
+visits, not outside it. At $G=14$ the structure of \citet{prevMulti} is a
+typical outcome of one of our searches, worse than 24 of the 57 structures the
+campaign returned at that group count and better than the other 33; at $G=20$ it
+lies in the upper tail, worse than 95 of 101; at $G=13$ it is worse than all 37.
+None of them is unreachable by a single search, and none is what a single search
+is likely to return. With the reference solver inside the loop, three tribes
+were what a reasonable budget allowed, and the same three tribes are the reason this chapter exists, since it
 was their disagreement that first showed the outcome to depend on the seed. The
 objective is the same in the two cases, so the comparison measures the size of
 the campaign and nothing else.
