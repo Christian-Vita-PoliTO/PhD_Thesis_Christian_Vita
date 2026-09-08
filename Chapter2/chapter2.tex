@@ -258,12 +258,14 @@ and on the effect that the collapsing has on the effective neutron
 lifetime~\cite{collapsing}. \citet{altWeighting} compare, for the
 time-dependent analysis of a lead fast reactor, weighting functions built from
 the eigenfunctions of different formulations of the transport problem against
-the standard criticality spectrum.
-% NOTE for Christian (Claude): la citazione M&C 2023 e' inserita (chiave
-% altWeighting, voce verificata su IRIS del Politecnico). Manca ancora il
-% proseguimento a PHYSOR 2026 con SCONE: non e' depositato su IRIS ne' sotto
-% il tuo nome ne' sotto quello di Abrate, quindi non riesco a ricostruirne
-% titolo e autori. Se me li mandi lo aggiungo qui, la voce "scone" e' pronta.
+the standard criticality spectrum. \citet{eigenSpectra} carry the comparison
+further, generating the group constants directly with the continuous-energy
+Monte Carlo code SCONE~\cite{scone} from the spectra of the $k$-, $lpha$- and
+$c$-eigenvalue formulations and judging them on a time-dependent Monte Carlo
+reference: for a transient that returns the system to criticality the
+$c$-spectrum reproduces the reference kinetics most closely, and the difference
+with respect to the criticality spectrum narrows as the group structure is
+refined.
 This Part does not act on the definition of the weighting function: it takes the
 standard one and works on the two other degrees of freedom, the correction of the
 constants that it produces and the placement of the group boundaries over which
