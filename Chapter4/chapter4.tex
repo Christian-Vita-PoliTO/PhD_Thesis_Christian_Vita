@@ -1321,34 +1321,21 @@ the statistical uncertainty of the reference.
 \subsection{Accuracy of the Metamodel on the Proposed Structures}\label{eg:sec:accuracy}
 
 All 747 distinct structures were recomputed with FRENETIC, which allows the
-metamodel to be judged on exactly the population it proposed rather than on a
-short list of its own favourites, and on the quantity the search actually uses,
-the joint fitness. Figure~\tref{eg:fig:bias} sets the predicted joint fitness
-against the one obtained from the solver. The median difference between the
-two over the 747 structures is $2.0\%$ and the rank correlation between them is
-$0.990$. The structure that the metamodel ranks first is the second according
-to the solver, $2.3\%$ behind the first, and the first according to the solver
-is the second of the metamodel, so that verifying the three best candidates of
-the metamodel is enough to recover the best structure. What the comparison
-establishes is the property the workflow needs: the ordering produced by the
-metamodel reproduces the ordering of the solver closely enough that a search
-driven by predictions arrives in the same region of the design space as a
-search driven by the solver would. The fifteen best structures are listed in
+metamodel to be judged on exactly the population it proposed and on the
+quantity the search actually uses, the joint fitness. The median difference
+between the predicted and the true joint fitness over the 747 structures is
+$2.0\%$ and the rank correlation between the two is $0.990$, while the accuracy
+on the fifteen quantities themselves is $0.39\%$, the same as on the external
+validation set. The structure that the metamodel ranks first is the second
+according to the solver, $2.3\%$ behind the first, and the first according to
+the solver is the second of the metamodel, so that verifying the three best
+candidates of the metamodel is enough to recover the best structure. This is
+the property the workflow needs: the ordering produced by the metamodel
+reproduces the ordering of the solver closely enough that a search driven by
+predictions arrives in the same region of the design space as a search driven
+by the solver would, and the verification of every structure the searches
+produce settles the rest. The fifteen best structures are listed in
 Table~\tref{eg:tab:ranking}.
-
-The disagreement on the joint fitness is larger than the accuracy on the
-fifteen quantities themselves, which over these structures is $0.39\%$, the
-same as on the external validation set, and the difference is the arithmetic of
-the objective rather than a property of the metamodel: the joint fitness is a
-product, so the errors of the terms that enter it compound. No systematic bias
-accompanies the disagreement. Of the 747 predictions, 420 fall below the true
-value and 327 above it, and the median ratio between predicted and true fitness
-is $0.995$ over the whole set and $1.004$ over the fifty best structures. A
-search that minimises a predicted quantity is nevertheless attracted both to
-genuinely good structures and to structures whose quality the metamodel happens
-to overestimate, and cannot distinguish between the two, which is why the
-verification stage is retained for every structure the searches produce and not
-only for a short list.
 
 \begin{table}[htbp]
 \centering
@@ -1380,17 +1367,6 @@ Rank & $G$ & True fitness & Predicted & Disagr.\ [\%] \\ \midrule
 \bottomrule
 \end{tabular}
 \end{table}
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=0.66\textwidth]{Chapter4/Figs/fig_bias.pdf}
-  \caption[Predicted against true joint fitness for the 747 structures]{Joint
-  fitness predicted by the metamodel against the value obtained from the
-  reference solver, for each of the 747 distinct structures produced by the
-  searches, on the canonical scale. The shaded region indicates underestimation
-  and the colour the number of energy groups.}
-  \label{eg:fig:bias}
-\end{figure}
 
 \subsection{Computational Cost}
 
