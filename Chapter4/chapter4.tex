@@ -600,56 +600,13 @@ in the following, for the reason set out when the workflow is described.
 The residual error is not distributed uniformly over the design space. It
 concentrates at small values of the reactivity and kinetics fitness functions
 and, for the flux, at large values. Since small fitness values identify the best
-structures, the behaviour deserves a quantitative explanation.
-
-Three candidate causes were examined and each was excluded by direct
-measurement, as summarised in Table~\tref{eg:tab:hypotheses}. The labels carry no
-statistical noise, since of the configurations present in more than one data
-file, 21\,440 in total, the spread is $0.0000\%$ on every output, and an
-independent re-run of the solver reproduces stored values to all digits. The
-regime is not under-sampled: dividing the range of the reference value into
-bands and comparing the two extreme ones, which the validation set samples with
-the same number of points, the band where the error is largest contains
-$13\,205$ training configurations while the band at the opposite end, where the
-error is one third as large, contains $5\,317$. The input representation is not
-deficient either, since augmenting the description with 65 physics-informed
-descriptors, namely the lethargy widths of the condensed groups, the variation
-of the reference flux shape within each of them weighted by the importance, and
-the widths of the groups containing the sharpest spectral features, makes the
-model worse rather than better on fourteen of the fifteen outputs, and worse
-overall, $0.460\%$ against $0.403\%$ on the same data and with the same training
-recipe. What the measurement establishes is the exclusion; the natural reading
-is that a network of this capacity constructs such features internally where
-they are useful, so that supplying them explicitly only costs it parameters. % Forse questo paragrafo potrebbe meritare una lista(?), sull'ultimo punto siamo sicuri che abbiamo fatto tutti gli studi possbili? Puoi controllare da
-
-\begin{table}[htbp]
-\centering
-\caption[Three candidate explanations for the residual error]{Three candidate explanations for the residual error at small values of
-the reactivity and kinetics fitness functions, and the measurement that rules
-each of them out.}
-\label{eg:tab:hypotheses}
-\begin{tabular}{p{2.9cm}p{4.55cm}p{4.55cm}}
-\toprule
-Hypothesis & Measurement & Outcome \\ \midrule
-Noise in the labels & 21\,440 configurations simulated more than once &
-Spread of $0.0000\%$ on all fifteen outputs; an independent re-run reproduces
-stored reference values to all digits \\ \midrule
-Sparse data in that regime & Training points in the two extreme bands of the
-reference value, sampled by the same number of validation points &
-$13\,205$ points where the error is largest, $2.02\%$, against $5\,317$ where it is
-$0.62\%$ \\ \midrule
-Input representation & 65 physics-informed descriptors appended to the
-30 inputs & The model becomes \emph{worse}: $0.460\%$ against $0.403\%$
-\\ \bottomrule
-\end{tabular}
-\end{table}
-
-The explanation lies in the target function itself. Searching the data set for
-pairs of structures differing by exactly one boundary yields 55\,058 such pairs.
-The median change of the base-ten logarithm of the fitness function across a
-pair amounts to $0.414$ decades in the lowest band of multiplication-factor
-deviations, against $0.024$ decades in the highest, a factor of seventeen, and
-to $0.395$ against $0.044$ decades for the lifetime.
+structures, the behaviour deserves a quantitative explanation, and the
+explanation lies in the target function itself. Searching the data set for
+pairs of structures differing by exactly one boundary yields 55\,058 such
+pairs. The median change of the base-ten logarithm of the fitness function
+across a pair amounts to $0.414$ decades in the lowest band of
+multiplication-factor deviations, against $0.024$ decades in the highest, a
+factor of seventeen, and to $0.395$ against $0.044$ decades for the lifetime.
 The correspondence with the accuracy of the metamodel is direct.
 Figure~\tref{eg:fig:smallvalue} places the two quantities side by side, band by band
 and family by family: where the target changes most under a single boundary
@@ -1525,3 +1482,14 @@ is repaid after nine searches and then amortised over every subsequent analysis
 performed on the same reactor. The analyses presented here would have required
 of the order of $390\,000$ core-hours of the reference solver and were carried
 out for $29$.
+
+Two directions are left open. The accuracy of the metamodel is still limited by
+the amount of reference data, as the learning curve shows, and the data that
+would help most are those in the region where the target is steepest, around
+the optimized structures and their one-boundary neighbours, which a targeted
+campaign of the reference solver could supply. The description of the structure
+given to the network could also be enriched with physics-informed quantities,
+such as the lethargy widths of the condensed groups or the variation of the
+reference spectrum within them weighted by the importance; a preliminary attempt
+in this direction did not lower the error, but the possibilities were far from
+exhausted and the question deserves a study of its own.
