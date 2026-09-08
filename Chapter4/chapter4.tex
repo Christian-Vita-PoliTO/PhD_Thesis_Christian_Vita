@@ -307,10 +307,13 @@ Eq.~(\ref{eg:eqn:integral}) does not express the three functions in the same
 units it takes a different numerical value in each. For $f_k$ and $f_{\beta}$,
 defined as absolute deviations multiplied by $10^{5}$, ten pcm is the value
 ten; for $f_{\Lambda}$, defined as a relative deviation multiplied by $10^{2}$,
-the same ten pcm is the value $0.01$. In all three cases the threshold is a few
-times the statistical uncertainty of the reference, which stays below two pcm
-on the multiplication factor, below one pcm on the delayed neutron fraction and
-at about five hundredths of a per cent on the lifetime. Its purpose is to mark
+the same ten pcm is the value $0.01$. For $f_k$ and $f_{\beta}$ the threshold
+stands a few times above the statistical uncertainty of the reference, which
+is below two pcm on the multiplication factor and below one pcm on the delayed
+neutron fraction; for $f_{\Lambda}$ it stands below it, since the reference
+lifetime carries an uncertainty of about five hundredths of a per cent, so that
+a structure has to reproduce the lifetime more finely than the reference
+resolves it before the control takes effect. Its purpose is to mark
 the level below which a difference between two structures is not treated as an
 improvement: a quantity reproduced to within the threshold is clipped and stops
 contributing to the ranking, so that the search is directed towards what is
@@ -1254,8 +1257,8 @@ approximation together with the assembly-wise homogenization: it would not
 offset the error of a transport solver, nor that of a different homogenization.
 It is specific to the reference against which the agreement is measured, and to
 the precision of that reference, which enters the objective directly through the
-clipping of the three integral fitness functions, whose thresholds are set a few
-times above the statistical uncertainty of that reference. It is specific to the
+clipping of the three integral fitness functions, whose thresholds are fixed in
+relation to the statistical uncertainty of that reference. It is specific to the
 objective itself, in the five quantities chosen and equally in the way they are
 combined by Eq.~(\ref{eg:eqn:joint}), since the clipping and the logarithm decide
 which deviations the search is still allowed to see. And it is confined to the
