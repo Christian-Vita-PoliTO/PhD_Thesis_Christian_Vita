@@ -1,16 +1,229 @@
 %!TEX root = ../Polito PhD thesis template.tex
 % ******************************* Chapter 1 ************************************
+% NOTA: general introduction to the whole thesis, in three sections: overview
+% (the two reactor families and the problem they share), motivations (the
+% reference and the representation that stands between it and the many
+% evaluations design and operation require), aim and outline. The theory of
+% each Part stays in its opening chapter (Chapters 2 and 6). Every statement on
+% a chapter is drawn from that chapter; every context statement is cited from
+% the bibliographies of the Parts (refs_mg, refs_sph, refs_eg, refs_fm).
+% ==============================================================================
 
 \chapter{Introduction}\label{ch:introduction}
 
-% =============================================================================
-% GENERAL INTRODUCTION -- one introduction for the whole thesis (PLACEHOLDER).
-%
-% Common thread: computational neutronics for advanced reactors --
-%  (i) improving the quality of multi-group data for deterministic LFR
-%      analysis (Part I);
-%  (ii) fission-matrix-based reduced-order models for online core monitoring
-%      of heat-pipe micro reactors (Part II).
-%
-% To be written near the end, once the body chapters are settled.
-% =============================================================================
+\section{Overview}
+
+The reactors studied in this thesis belong to two families that have, at first
+sight, little in common. Lead-cooled fast reactors (LFRs) are one of the
+concepts of the fourth generation: liquid lead allows the plant to operate at
+low pressure and at temperatures higher than those of light-water reactors, and
+the fast spectrum fissions plutonium and the minor actinides, so that the same
+core produces energy and reduces the long-lived waste. Part~\ref{part:lfr}
+considers two of them, the ALFRED core, the European demonstrator of the
+technology, in the specification of the benchmark coordinated by the Nuclear
+Energy Agency~\cite{neaBench}, and the Westinghouse LFR. Heat-pipe micro
+reactors (HPMRs), the subject of Part~\ref{part:hpmr}, are cores of a few
+megawatts in which heat pipes take the place of the circulating coolant and the
+reactivity is governed by drums rotating in the radial reflector. The design
+considered is the micro reactor developed at Argonne National Laboratory as a
+modelling exercise meant to collect in one core the features that
+characterize the class, heat pipes, TRISO fuel, yttrium-hydride moderator pins
+and control drums~\cite{Stauff2024}, whose models are distributed on the
+Virtual Test Bed~\cite{moose_vtb_mrad_description}.
+
+What the two families share is a problem. The computational chain that decades
+of light-water reactor practice have consolidated proceeds from the point-wise
+nuclear data to a few-group set of homogenized constants~\cite{cacuci2010handbook}
+and from there to a coarse-mesh nodal solution of the whole
+core~\cite{Lawrence1986,Smith1986}. On it rest the core simulators with which
+those plants are designed and the online monitoring systems with which they are
+operated~\cite{BoydMiller1996}, and its accuracy rests on an equivalence between
+the heterogeneous assembly and its homogenized representation that was
+established for light-water lattices~\cite{Smith1986}. Neither family inherits
+that chain as it stands. For a fast system the constants are generated with a
+Monte Carlo code on the design itself, and the choices that light-water
+practice settled long ago, the environment in which the weighting flux is
+computed and the mesh over which the energy is condensed, are open again. For a
+micro reactor the developers of the reactor physics tools of the NEAMS program
+observe that heat pipes, hydride moderators, TRISO fuel and control drums call
+for a geometrical generality that the traditional nodal methods do not
+possess~\cite{Wang2025griffin,Stauff2024}, that the homogenized solution departs
+from the heterogeneous one more than it does in light-water
+reactors~\cite{Pandya2022}, and that the cross sections have to be tabulated
+against the angle of the drums~\cite{Roskoff2022physor}. The designs considered
+here are, moreover, still on the drawing board, so that no operating experience
+stands behind their models, and for both families the reference against which a
+model is judged is the explicit Monte Carlo solution of the full core.
+
+\section{Motivations}
+
+Neutronics has, in the Monte Carlo method, a reference model. The method
+follows the neutrons one by one through the actual geometry of the system with
+the continuous-energy nuclear data, and its general-purpose
+implementations~\cite{mcnp63,Serpent_code_description,openmc} are the standard
+against which every approximate description of a core is measured; time-dependent
+modes exist as well~\cite{serpentDynamic}. That the accuracy of these codes is
+paid in computing time is well known, but the form the cost takes for the
+problems of this thesis is worth stating. Neither the design nor the operation
+of a reactor asks for one state of the core. A design space is explored over
+the positions of the control system, the temperatures and the states of the
+fuel; a fuel cycle is a sequence of states; the monitoring of an operating core
+requires its critical configuration to be predicted continually as the core
+evolves. For the micro reactor of Part~\ref{part:hpmr} the Monte Carlo critical
+state of one configuration costs several tens of CPU hours, an expense that a
+study of a few states absorbs and a study of thousands does not, and where the
+answer is needed within the time of operation the size of the machine is not
+the limiting factor.
+
+Every practical scheme therefore interposes, between the reference and the many
+evaluations, a representation of the reactor that is built once from a few
+reference calculations and consulted many times. In Part~\ref{part:lfr} it is
+the set of multi-group constants: the cross sections condensed over a few
+energy groups and homogenized over the regions of the core, on which a
+deterministic solver runs in a fraction of the time. In Part~\ref{part:hpmr} it
+is a database of fission matrices: a Monte Carlo calculation tallies, at each
+of a set of reference states, the matrix that couples every fissile region of
+the core to every other, and any intermediate state is then recovered by
+interpolating the matrices and solving an eigenvalue problem of modest
+size~\cite{CarneyANE2014,WaltersNSE2018}. The two representations have nothing
+in common in what they store or in the solver that uses them, but they share
+what decides their usefulness. Each is obtained from the reference by an
+operation, a weighting over energy and space in one case, a tally at fixed
+conditions in the other, that discards information the reference possessed,
+and the calculations downstream cannot restore it: what is lost in building
+the representation is lost for every evaluation that follows, and no accuracy
+of the solver recovers it.
+
+The thesis works on the representation itself, along two lines that recur in
+both Parts. The first is the choice of how it is built. Part~\ref{part:lfr}
+asks by which route the constants should be generated, from one full-core
+model or from a set of mini-core models, and on which energy mesh they should
+be condensed; Part~\ref{part:hpmr} asks which parameters the database should
+span, how dense it has to be and how its matrices should be interpolated. The
+second line is the correction: a quantity computed from a small number of
+reference calculations and applied to the representation so that it reproduces,
+at the conditions of the reference, what the reference reproduces. In
+Part~\ref{part:lfr} these are the superhomogenization factors~\cite{Hbert_1980},
+which rescale the constants of a region until the homogenized calculation
+returns the reaction rates of the heterogeneous one. In Part~\ref{part:hpmr}
+they are the correction ratios, ratios taken element by element between two
+matrices tallied at reference conditions that differ in a single effect, by
+which the interpolated matrix is multiplied to account for the burnup, for the
+temperature of the reflector and for the temperature gradients inside the core.
+Both act on the data and not on the solver, which receives corrected input and
+requires no modification, and this is what makes them applicable to a code that
+cannot be modified, because it is qualified or because its source is not
+available.
+
+Two rules govern the use of the representation throughout. The first is that
+the reference keeps the last word. No result of this thesis is a prediction of
+the intermediate model alone: every energy structure, every critical state and
+every corrected matrix is set against a Monte Carlo calculation made for that
+purpose, and the rule holds also where a further layer of approximation is
+introduced for the sake of speed. In Chapter~\ref{ch:energy-grid} a neural
+network trained on the outputs of the deterministic solver takes the place of
+the solver inside an optimization loop; the network is allowed to explore, and
+the solver alone decides, since every structure the search proposes is
+recomputed with it. The second rule is that the reference is a statistical
+estimate and is treated as one. In Chapter~\ref{ch:energy-grid} the difference
+between two energy structures is read against the statistical uncertainty of
+the reference values, and Part~\ref{part:hpmr} builds for the interpolated
+matrix an estimate of the uncertainty it inherits from the tallies, derives it
+from the correlations among the tallied coefficients and validates it against
+independent replicas of the whole database.
+
+\section{Aim of the work and outline of the thesis}
+
+The aim of this thesis is to improve the accuracy, and to contain the cost, of
+the neutronic analysis of two advanced reactor concepts by acting on the
+representation that stands between the Monte Carlo reference and the
+calculations that their design and operation require. For the lead-cooled fast
+reactor that representation is the multi-group data of a deterministic solver,
+and the work concerns the route by which the constants are generated, their
+correction and the energy mesh on which they are condensed. For the heat-pipe
+micro reactor it is a database of fission matrices, and the work concerns the
+construction of the database, its use for the search of the critical state and
+the corrections that extend it to the conditions of an operating core. The
+thesis is organized in two Parts, each opened by a chapter that provides the
+theory common to the works it contains, and closed by a chapter of conclusions
+common to both.
+
+Chapter~\ref{ch:part1-opener} opens Part~\ref{part:lfr} and lays the common
+ground of its two works: the passage from the transport equation to its
+multi-group form, the definition of the group constants as flux-weighted
+averages over an energy interval and over a region of the core, the assumptions
+that this definition requires and the errors it introduces. Two of the degrees
+of freedom that the definition leaves open, the environment in which the
+weighting flux is computed and the mesh over which the energy is condensed, are
+the subjects of the two chapters that follow. In both, the multi-group
+constants and the reference solution come from the same Serpent~2 calculations,
+so that what is measured is the multi-group approximation and not the nuclear
+data.
+
+Chapter~\ref{ch:sph-lfr} addresses the Westinghouse LFR. Its constants are
+generated along two routes, from a single full-core model and from a set of
+mini-core models each representing one region of the system, and they feed a
+diffusion solver written in FreeFEM++ on a finite-element mesh.
+Superhomogenization factors are then computed for the regions responsible for
+the largest discrepancies in the power distribution, and the two routes, with
+and without correction, are compared on the multiplication factor, the power
+distribution and the kinetic parameters, and on the computational time each
+requires when several configurations of the control rods have to be analyzed.
+
+Chapter~\ref{ch:energy-grid} addresses the ALFRED core and the energy mesh
+itself. The boundaries of the few-group structure become the unknowns of an
+optimization: a genetic algorithm searches the subsets of the boundaries of a
+thirty-group fine mesh for the structure whose deterministic solution
+reproduces, in three configurations of the control rods at once, the
+multiplication factor, the delayed neutron fraction, the neutron lifetime, the
+power distribution and the flux distribution of the reference. The work that
+formulated the problem had run three searches from three random seeds and
+obtained three different structures; this chapter runs one thousand. That
+number is within reach because a neural network trained on $91\,723$ full-core
+evaluations of the deterministic code FRENETIC~\cite{frenetic,freneticBench}
+stands in for the code inside the search, while every structure the searches
+return is recomputed with the code. The chapter measures how strongly the
+outcome depends on the seed and how many searches are needed, identifies the
+boundaries that the optimized structures have in common, compares the best of
+them with the structures obtained with the solver inside the loop and with
+structures built by standard spacing rules, and states the limits within which
+the result holds.
+
+Chapter~\ref{ch:fm-theory} opens Part~\ref{part:hpmr}. It derives the fission
+matrix from the transport equation, reviews the strategies by which the matrix
+can be generated, describes the reactor model and sets up the framework that the
+two following chapters share: the parametrization of the database over the
+operating state, the treatment of the statistical uncertainty of the
+interpolated results and the metrics by which the errors are measured.
+
+Chapter~\ref{ch:crit-search} applies that framework to the criticality search:
+finding, at a given power and at a given point of the fuel cycle, the angle of
+the control drums that makes the core critical, together with the fission
+source and the temperature field that correspond to it. A database of fission
+matrices is built over the fuel temperature and the drum angle, its density is
+fixed by a convergence study, and a correlation between power and fuel
+temperature stands in for the thermal solver, so that the search runs on the
+fission matrix alone. The algorithm is verified against reference Monte Carlo
+calculations at beginning of life and then carried along the fuel cycle by
+means of the Burnup Correction Ratio; the assumptions on which that extension
+rests are examined one by one, together with the density of the snapshot grid
+and the computational cost of the whole procedure.
+
+Chapter~\ref{ch:correction-ratios} removes the restriction to isothermal
+states. The database of Chapter~\ref{ch:crit-search} has every material at one
+temperature, and two effects of an operating core lie outside its reach, a
+reflector colder than the core and a temperature that varies sharply from one
+cell to the next. Each receives a correction ratio built on the scheme of the
+burnup correction, with a weight that scales the ratio by the fraction of the
+reference effect present at the target state: the Reflector Correction Ratio,
+developed on the three-dimensional model of the criticality search, and the
+Core Temperature Correction Ratio, developed on a two-dimensional variant of
+the same design. The chapter also carries out the analysis of the statistical
+uncertainty of the interpolated matrix announced in Chapter~\ref{ch:fm-theory}:
+the correlation among the tallied coefficients is modelled, its invariance with
+temperature is examined and the resulting estimate is validated against
+independent replicas of the database, before the results of the core
+temperature correction are read against the combined uncertainty.
+
+Chapter~\ref{ch:conclusions} gathers the conclusions of the two Parts and the
+developments that the work leaves open.
