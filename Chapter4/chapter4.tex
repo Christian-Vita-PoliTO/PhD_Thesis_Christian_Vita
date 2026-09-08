@@ -808,15 +808,17 @@ them among themselves.
 
 \subsection{Behaviour of the Searches}
 
-The thousand searches produced 720 distinct structures, with a number of groups
-between 9 and 20. Figure~\tref{eg:fig:search} summarises their behaviour. Each
-search settles quickly: measured against its own final value, the median search
-is within $10\%$ of it by generation 25 and within $1\%$ by generation 35, and
-87 searches out of a thousand are still improving after generation 90.
-Where they settle is another matter. Three searches out of a hundred end within
-$5\%$ of the best structure and the median search ends $41\%$ above it, so that
-a single search returns a structure of the right order but not the best one, and
-which structure it returns is not determined by the problem alone. The outcomes
+The thousand searches produced 747 distinct structures, with a number of groups
+between 9 and 20. Figure~\tref{eg:fig:search} summarises their behaviour, with
+the progress of every search re-expressed on the canonical scale. Each search
+settles quickly: measured against its own final value, the median search is
+within $10\%$ of it by generation 24 and within $1\%$ by generation 36, and 85
+searches out of a thousand are still improving after generation 90. Where they
+settle is another matter. Two searches out of a hundred end within $5\%$ of the
+best structure, a single one out of the thousand reaches it, and the median
+search ends $45\%$ above it, so that a single search returns a structure of the
+right order but not the best one, and which structure it returns is not
+determined by the problem alone. The outcomes
 spread over twelve different group counts. This confirms the observation of
 \citet{prevMulti} on a sample larger by more than two orders of magnitude, and
 the next subsection makes it quantitative.
@@ -825,7 +827,8 @@ the next subsection makes it quantitative.
   \centering
   \includegraphics[width=\textwidth]{Chapter4/Figs/fig_search.pdf}
   \caption[Behaviour of the thousand independent searches]{Behaviour of the thousand independent searches. Left, distance of each
-  search from its own final value, generation by generation, as one faint line
+  search from its own final value, generation by generation, the best structure
+  found so far being re-expressed on the canonical scale, as one faint line
   every twentieth search with the median and the band between the tenth and
   ninetieth percentiles. Centre, fraction of the searches whose outcome lies
   within a given excess over the best structure found, with the values at five
@@ -867,12 +870,14 @@ and Fig.~\tref{eg:fig:howmany} separates them.
 
 The first concerns the optimum, and it is the result that motivates this work.
 Table~\tref{eg:tab:howmany} reports how close the best of $n$ searches comes to
-the best of the thousand. A single search lands $40\%$ above it, and three
+the best of the thousand. A single search lands $45\%$ above it, and three
 searches, which is what a campaign with the reference solver inside the loop can
-afford, land $20\%$ above; ten searches reach $6\%$, thirty reach $3\%$ and a
-hundred reach $1\%$. Read the other way, the probability of landing within $5\%$
-of the best structure is $2\%$ for one search, $8\%$ for three and $96\%$ for a
-hundred. The gain from repeating the search is therefore neither marginal nor
+afford, land $20\%$ above; ten searches reach $9\%$, thirty reach $5\%$ and a
+hundred reach $2\%$, which is the distance of the second-best structure: the
+best one was returned by a single search out of the thousand, so that even a
+hundred searches typically stop at the second. Read the other way, the
+probability of landing within $5\%$ of the best structure is $2\%$ for one
+search, $7\%$ for three and $92\%$ for a hundred. The gain from repeating the search is therefore neither marginal nor
 unbounded: it is concentrated between one search and a few tens of them, and it
 is precisely the range that the reference solver cannot reach and the metamodel
 can.
@@ -887,11 +892,11 @@ against the best structure of the whole campaign.}
 \begin{tabular}{rcc}
 \toprule
 Searches & Median excess over the best & Within $5\%$ of the best \\ \midrule
-    1    & \SI{40}{\percent} & \SI{2}{\percent} \\
-    3    & \SI{20}{\percent} & \SI{8}{\percent} \\
-    10   & \SI{6}{\percent}  & \SI{24}{\percent} \\
-    30   & \SI{3}{\percent}  & \SI{62}{\percent} \\
-    100  & \SI{1}{\percent}  & \SI{96}{\percent} \\
+    1    & \SI{45}{\percent} & \SI{2}{\percent} \\
+    3    & \SI{20}{\percent} & \SI{7}{\percent} \\
+    10   & \SI{9}{\percent}  & \SI{20}{\percent} \\
+    30   & \SI{5}{\percent}  & \SI{50}{\percent} \\
+    100  & \SI{2}{\percent}  & \SI{92}{\percent} \\
     1000 & \SI{0}{\percent}  & \SI{100}{\percent} \\
 \bottomrule
 \end{tabular}
@@ -903,23 +908,25 @@ rank correlation between the selection frequency of a boundary and the
 surrounding importance is computed over the 29 internal boundaries of the fine
 mesh, and that number does not grow with the number of searches: more searches
 stabilise the frequency attached to each boundary, but only a finer parent mesh
-would add degrees of freedom to the test. Resampling confirms that the estimate
-stops moving well before the thousandth search and that further searches narrow
-its confidence interval without displacing it.
+would add degrees of freedom to the test. Resampling confirms it: drawn from a hundred
+searches the estimate is $+0.20$, from three hundred $+0.21$ and from the
+thousand $+0.22$, while the interval between the tenth and ninetieth percentiles
+of the resampled value narrows from $0.05$ to $0.03$, so that further searches
+narrow the confidence interval without displacing the estimate.
 
 The third question is the one the sample does not answer, and the right panel of
 Fig.~\tref{eg:fig:howmany} shows it plainly: the number of distinct structures is
-still growing at the thousandth search. Of the 720 structures obtained, 589 were
-produced by exactly one search, so that four structures out of five have been
+still growing at the thousandth search. Of the 747 structures obtained, 619 were
+produced by exactly one search, so that five structures out of six have been
 seen once, which is what a sample far from complete looks like. A further search
-returns a structure already obtained in about six cases out of ten. A complete
+returns a structure already obtained in about four cases out of ten. A complete
 census of the reachable structures is out of reach, and no claim of that kind is
 made here.
 
 What is missing, however, is missing for a reason that limits the damage. A
 structure absent from the sample is one the algorithm reaches rarely, and the
-rate at which it is reached is related to its quality: the 589 structures
-produced by a single search have a median true fitness $32\%$ worse than the 131
+rate at which it is reached is related to its quality: the 619 structures
+produced by a single search have a median true fitness $25\%$ worse than the 128
 produced by more than one. The unseen part of the population is expected to
 consist mostly of the poorer attractors, which is the part that matters least
 for the conclusions drawn here.
@@ -940,37 +947,37 @@ for the conclusions drawn here.
 
 \subsection{The Choice in the Fast Region}\label{eg:sec:families}
 
-The 720 structures are not distributed freely over the pool of boundaries: one
+The 747 structures are not distributed freely over the pool of boundaries: one
 choice in the fast region is taken by almost all of them, and it excludes
-another. No structure among the 720 retains both the boundary at $2.231$ and the
+another. No structure among the 747 retains both the boundary at $2.231$ and the
 one at $0.302$~MeV. The exclusion is complete, and it is not the consequence of
-a preference for one of the two, since 13 structures retain neither: the two
+a preference for one of the two, since 14 structures retain neither: the two
 boundaries are alternative, and the alternative is decided in favour of the
-first in $90\%$ of the cases against $9\%$ for the second.
+first in $89\%$ of the cases against $9\%$ for the second.
 
 That choice carries others with it. Among the structures that adopt
-$2.231$~MeV, $89\%$ also adopt the boundary at $4\times10^{-6}$~MeV, which
-appears in none of those that adopt $0.302$~MeV; conversely, $89\%$ of the
+$2.231$~MeV, $90\%$ also adopt the boundary at $4\times10^{-6}$~MeV, which
+appears in $2\%$ of those that adopt $0.302$~MeV; conversely, $83\%$ of the
 latter adopt $3.679$~MeV and the thermal cut at $5.4\times10^{-7}$~MeV, against
-$19$ and $20\%$ of the former. The two blocks are therefore coherent well beyond
+$20$ and $21\%$ of the former. The two blocks are therefore coherent well beyond
 the boundaries that define them, and Table~\tref{eg:tab:families} reports the
 frequencies.
 
 The exclusion has a direct reading. The boundaries at $3.679$ and $2.231$~MeV
 are adjacent in the fine mesh, so that retaining both would subdivide a region
-which carries $2.2\%$ of the flux and less than $0.5\%$ of the importance, and
+which carries $1.6\%$ of the flux and $0.3\%$ of the importance, and
 once one of the two is adopted the placement of the remaining boundaries adapts
 to it. Crossing from one block to the other means removing one boundary and
 adding another, and no single mutation performs the passage, which is why a
 search remains within the block in which its initial population happens to fall.
 
 The two blocks are not equivalent, and the imbalance in their populations is
-matched by a difference in quality. The 645 structures that adopt $2.231$~MeV
-have a median true fitness of $6.13\times10^{7}$ against $8.24\times10^{7}$ for
-the 62 that adopt $0.302$~MeV, and the best structure of the first block is
-better than the best of the second by more than forty per cent. The thirteen
-structures that adopt neither boundary are worse than either block by a factor
-between two and three, which confirms that one of the two is needed and that the
+matched by a difference in quality. The 668 structures that adopt $2.231$~MeV
+have a median true fitness of $6.70\times10^{7}$ against $9.96\times10^{7}$ for
+the 65 that adopt $0.302$~MeV, and the best structure of the first block is
+better than the best of the second by more than forty per cent. The fourteen
+structures that adopt neither boundary are worse than the first block by a
+factor of $2.7$ in median fitness and than the second by $1.8$, which confirms that one of the two is needed and that the
 search is choosing between two ways of covering the same region rather than
 deciding whether to cover it.
 
@@ -980,10 +987,10 @@ would be the natural expectation. For each structure the variation of the
 reference flux shape within its groups was computed and weighted by the total
 importance $\phi\phi^{\ddagger}/v$ of the group, which is the weight with which
 the flux fitness function of Eq.~(\ref{eg:eqn:distributed}) counts an error. The
-quantity is $0.280$ for the block that prevails against $0.156$ for the one that
+quantity is $0.278$ for the block that prevails against $0.172$ for the one that
 does not, so that the block following the shape of the spectrum more closely,
 where the objective says it matters, is the one that loses; weighted by the bare
-flux the two are indistinguishable, at $0.237$ against $0.237$. The separation
+flux the two are close, at $0.237$ against $0.252$. The separation
 into two blocks is a property of the solutions, and the difference in quality
 between them is measured here; what decides it is not identified by these data.
 
@@ -998,7 +1005,7 @@ mean number of boundaries on which two structures of the same block disagree,
 and the variation of the reference flux shape within the groups, weighted by the
 total importance that appears in the flux fitness function and, for comparison,
 by the bare flux. Two structures belonging to different blocks disagree on
-$12.4$ boundaries on average.}
+$12.5$ boundaries on average.}
 \label{eg:tab:families}
 \small
 \begin{tabular}{lcc}
@@ -1006,41 +1013,42 @@ $12.4$ boundaries on average.}
 Boundary [MeV] & $2.231$~MeV block [\%] & $0.302$~MeV block [\%] \\ \midrule
     $2.231$ & 100 & 0 \\
     $3.020\times10^{-1}$ & 0 & 100 \\
-    $4.000\times10^{-6}$ & 89 & 0 \\
-    $3.679$ & 19 & 89 \\
-    $5.400\times10^{-7}$ & 20 & 89 \\
-    $9.166\times10^{-5}$ & 53 & 2 \\
+    $4.000\times10^{-6}$ & 90 & 2 \\
+    $3.679$ & 20 & 83 \\
+    $5.400\times10^{-7}$ & 21 & 83 \\
+    $9.166\times10^{-5}$ & 57 & 3 \\
 \midrule
     Property & $2.231$~MeV block & $0.302$~MeV block \\ \midrule
-    Distinct structures & 645 & 62 \\
-    Median joint fitness & $6.131\times10^{7}$ & $8.243\times10^{7}$ \\
-    Mean internal disagreement [boundaries] & 9.2 & 6.7 \\
-    Shape variation, importance weighted & 0.280 & 0.156 \\
-    Shape variation, flux weighted & 0.237 & 0.237 \\ \bottomrule
+    Distinct structures & 668 & 65 \\
+    Median joint fitness & $6.700\times10^{7}$ & $9.956\times10^{7}$ \\
+    Mean internal disagreement [boundaries] & 9.1 & 7.3 \\
+    Shape variation, importance weighted & 0.278 & 0.172 \\
+    Shape variation, flux weighted & 0.237 & 0.252 \\ \bottomrule
 \end{tabular}
 \end{table}
 
 \subsection{Recurring Features of the Optimized Structures}\label{eg:sec:recurring}
 
-Beyond the choice just described, the 720 structures display regularities which
+Beyond the choice just described, the 747 structures display regularities which
 can be examined collectively, and which constitute the general information that
 a single search cannot provide.
 
 Table~\tref{eg:tab:boundaries} reports, for each of the 29 internal boundaries of
 the fine mesh, how often it is retained. The distribution is broad, and no
 boundary is common to the solutions: the most frequent, at $0.183$~MeV, appears
-in $96\%$ of the structures and the next, at $2.231$~MeV, in $90\%$, while no
-other exceeds $87\%$. At the other end four boundaries are used by fewer than
-one structure in ten, three of them in the fast region above $0.30$~MeV. The
-optimized structures therefore agree on very little, and two of them taken at
-random disagree on $9.8$ of the 29 boundaries. The left panel of
+in $96\%$ of the structures, the next two, at $8.3\times10^{-6}$ and
+$2.231$~MeV, in $91$ and $89\%$, while no other exceeds $87\%$. At the other
+end four boundaries are used by fewer than one structure in ten, all of them in
+the fast region between $0.30$ and $1.35$~MeV. The optimized structures
+therefore agree on very little, and two of them taken at random disagree on
+$9.7$ of the 29 boundaries. The left panel of
 Fig.~\tref{eg:fig:structure} reports the same frequencies separately for the
 better searches, taken as the best forty per cent, and for the remaining ones.
 
 \begin{table}[htbp]
 \centering
 \caption[The 29 internal boundaries of the fine mesh]{The 29 internal boundaries
-of the fine mesh. For each one: the fraction of the 720 distinct optimized
+of the fine mesh. For each one: the fraction of the 747 distinct optimized
 structures that retains it, the total importance $\phi\phi^{\ddagger}/v$ of the
 two groups it separates, and whether it belongs to the best structure found.}
 \label{eg:tab:boundaries}
@@ -1050,7 +1058,21 @@ two groups it separates, and whether it belongs to the best structure found.}
 \toprule
 $E$ [MeV] & Occ.\ [\%] & Imp.\ [\%] & Best &
 $E$ [MeV] & Occ.\ [\%] & Imp.\ [\%] & Best \\ \midrule
-
+    $3.68$ & 25 & 0.2 &  & $2.03\times10^{-3}$ & 78 & 5.0 & $\bullet$ \\
+    $2.23$ & 89 & 0.4 & $\bullet$ & $1.23\times10^{-3}$ & 69 & 4.7 & $\bullet$ \\
+    $1.35$ & 0 & 0.7 &  & $7.49\times10^{-4}$ & 76 & 3.9 &  \\
+    $8.21\times10^{-1}$ & 2 & 1.6 &  & $4.54\times10^{-4}$ & 45 & 2.9 & $\bullet$ \\
+    $4.98\times10^{-1}$ & 0 & 2.3 &  & $3.04\times10^{-4}$ & 87 & 2.9 & $\bullet$ \\
+    $3.02\times10^{-1}$ & 9 & 2.9 &  & $1.49\times10^{-4}$ & 21 & 3.1 &  \\
+    $1.83\times10^{-1}$ & 96 & 4.0 & $\bullet$ & $9.17\times10^{-5}$ & 51 & 1.9 &  \\
+    $1.11\times10^{-1}$ & 66 & 4.4 & $\bullet$ & $6.79\times10^{-5}$ & 45 & 1.7 &  \\
+    $6.74\times10^{-2}$ & 70 & 4.7 &  & $4.02\times10^{-5}$ & 37 & 2.1 &  \\
+    $4.09\times10^{-2}$ & 58 & 4.7 &  & $2.26\times10^{-5}$ & 48 & 2.0 & $\bullet$ \\
+    $2.48\times10^{-2}$ & 66 & 4.8 & $\bullet$ & $1.37\times10^{-5}$ & 77 & 1.8 & $\bullet$ \\
+    $1.50\times10^{-2}$ & 59 & 5.1 &  & $8.32\times10^{-6}$ & 91 & 1.8 &  \\
+    $9.12\times10^{-3}$ & 62 & 4.6 & $\bullet$ & $4.00\times10^{-6}$ & 82 & 2.4 & $\bullet$ \\
+    $5.53\times10^{-3}$ & 69 & 4.6 & $\bullet$ & $5.40\times10^{-7}$ & 26 & 7.6 &  \\
+    $3.35\times10^{-3}$ & 74 & 4.9 & $\bullet$ &  & & &  \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1065,10 +1087,11 @@ most abruptly, since a single group cannot represent a rapidly varying flux, and
 that they should follow the flux itself, since a group carrying little flux
 contributes little to the reaction rates. Neither expectation is confirmed. The
 selection frequency runs against the variation of the flux shape
-($r_s = -0.28$) and against the flux surrounding the boundary
-($r_s = -0.11$). The three boundaries of the fast region where the spectrum
+($r_s = -0.30$) and against the flux surrounding the boundary
+($r_s = -0.12$). The three boundaries of the fast region where the spectrum
 bends most sharply, at $1.35$, $0.821$ and $0.498$~MeV, are used by at most one
-structure in fifty, although $18\%$ of the flux lies there.
+structure in fifty, although the region they subdivide, between $2.231$ and
+$0.302$~MeV, carries $23\%$ of the flux.
 
 The quantity that does predict the placement is the one that the objective
 function itself uses as a weight. The flux fitness function of
@@ -1087,11 +1110,11 @@ according to the second quantity and not the first.
 
 The tendency can be stated more directly, and in this form it separates the two
 readings without ambiguity. Computing for each structure the coefficient of
-variation of the importance contained in its groups gives $0.641$ for the ten
+variation of the importance contained in its groups gives $0.645$ for the ten
 best structures against $0.832$ for random structures with the same number of
 groups, so that the optimized structures distribute the importance $1.3$ times
-more evenly. The same measure applied to the bare flux gives $1.382$ against
-$1.222$: on that quantity the optimized structures are not more even than random
+more evenly. The same measure applied to the bare flux gives $1.387$ against
+$1.218$: on that quantity the optimized structures are not more even than random
 ones but less. The optimization therefore moves towards an equipartition of the
 importance among the groups, and away from an equipartition of the flux, a
 criterion which was never imposed explicitly and which follows from the
@@ -1101,7 +1124,7 @@ weighting of Eq.~(\ref{eg:eqn:distributed}).
   \centering
   \includegraphics[width=\textwidth]{Chapter4/Figs/fig_boundaries.pdf}
   \caption[Recurring features of the optimized structures]{Recurring features of the optimized structures. Above, frequency with
-  which each internal boundary is selected among the 720 distinct structures, in
+  which each internal boundary is selected among the 747 distinct structures, in
   green, and total importance surrounding each boundary on the same energy axis,
   in blue. Below, the same frequency plotted against the surrounding importance
   and against the variation of the flux shape across the boundary, the colour
@@ -1116,7 +1139,7 @@ weighting of Eq.~(\ref{eg:eqn:distributed}).
   appears among the better searches, taken as the best forty per cent and
   plotted upward, and among the remaining ones, plotted downward, the dotted
   vertical lines marking the boundaries of the best structure found. Right, the
-  720 distinct structures placed on a plane by multidimensional scaling of the
+  747 distinct structures placed on a plane by multidimensional scaling of the
   number of boundaries on which they disagree, coloured by joint fitness, the
   circled point being the best structure. The two axes carry no meaning
   individually, since the method only arranges the points so that their
@@ -1127,20 +1150,20 @@ weighting of Eq.~(\ref{eg:eqn:distributed}).
 
 \subsection{Number of Groups}
 
-Repeating the searches with the number of groups constrained gives the fitness
-attainable as a function of $G$, shown in Fig.~\tref{eg:fig:tradeoff} with every
-point verified by FRENETIC. The attainable fitness improves by a factor of $4.4$
-between $G=8$ and the minimum, which falls at $G=15$ and coincides with the best
-structure of the unconstrained campaign, and it is essentially flat over a wide
-range: seven of the group counts between $G=12$ and $G=20$ lie within $10\%$ of
-that minimum. Twelve groups are therefore sufficient for this core and this set
+Repeating the optimization with the number of groups constrained, on the
+canonical scale, gives the fitness attainable as a function of $G$, shown in
+Fig.~\tref{eg:fig:tradeoff} with every point verified by FRENETIC. The attainable
+fitness improves by a factor of $4.2$ between $G=8$ and the minimum, which falls
+at $G=15$ and coincides with the best structure of the unconstrained campaign,
+and it is essentially flat over a wide range: six of the group counts between
+$G=12$ and $G=20$ lie within $10\%$ of that minimum. Twelve groups are therefore sufficient for this core and this set
 of fitness functions, and the additional groups used by the best structures
 bring little further benefit. The curve is not monotone inside the basin,
-reaching $5.0\times10^{7}$ at $G=16$ against $4.1\times10^{7}$ at $G=15$: each
+reaching $5.5\times10^{7}$ at $G=16$ against $4.4\times10^{7}$ at $G=15$: each
 point is the best structure a constrained search found at that group count, so
 the curve is an upper bound on the attainable fitness and the residual roughness
 measures how hard the search is at fixed $G$, not a feature of the landscape.
-Seventeen constrained optimizations of this kind require five minutes on the
+Seventeen constrained optimizations of this kind require two minutes on the
 metamodel and would require of the order of six thousand core-hours on the
 solver.
 
@@ -1160,10 +1183,12 @@ solver.
 \subsection{Comparison with Reference Structures}
 
 The best verified structure uses $G=15$ groups and reaches a canonical fitness
-of $4.1103\times10^{7}$. Its fourteen internal boundaries are marked in the last
+of $4.4319\times10^{7}$. Its fourteen internal boundaries are marked in the last
 column of Table~\tref{eg:tab:boundaries}: it adopts the boundary at $2.231$~MeV
-and therefore belongs to the block that prevails, and it uses none of the four
-boundaries that the searches almost never select. It outperforms every one of
+and therefore belongs to the block that prevails, it uses none of the four
+boundaries that the searches almost never select, and it does not contain the
+boundary at $8.3\times10^{-6}$~MeV that nine structures out of ten retain, so
+that not even the most frequent boundaries are indispensable. It outperforms every one of
 the $124\,693$ configurations computed to date, by $28\%$ with respect to the
 best among them, and none of those configurations reaches its fitness.
 
@@ -1173,9 +1198,9 @@ solved with the reference solver inside the loop, and which were recomputed here
 on the canonical scale from the boundaries reported in that work. They are shown
 in Fig.~\tref{eg:fig:tradeoff} together with the curve of the best attainable
 fitness, and they lie above it: at $G=14$ the best of the three reaches
-$6.88\times10^{7}$ against $4.22\times10^{7}$ attainable, at $G=20$
-$1.34\times10^{8}$ against $4.16\times10^{7}$, and at $G=13$ $3.39\times10^{8}$
-against $4.37\times10^{7}$. The gap, between $1.7$ and $7.8$ times at equal
+$7.37\times10^{7}$ against $4.55\times10^{7}$ attainable, at $G=20$
+$1.45\times10^{8}$ against $4.53\times10^{7}$, and at $G=13$ $3.60\times10^{8}$
+against $4.92\times10^{7}$. The gap, between $1.6$ and $7.3$ times at equal
 group count, is a question of how many searches were affordable: with the
 reference solver inside the loop, three tribes were what a reasonable budget
 allowed, and the same three tribes are the reason this chapter exists, since it
@@ -1185,7 +1210,7 @@ the campaign and nothing else.
 
 Table~\tref{eg:tab:standard} compares the optimized structure with three further
 reference constructions. A structure with uniformly spaced boundary indices and
-nineteen groups is worse by a factor of $5.2\times10^{4}$, and one with uniform
+nineteen groups is worse by a factor of $5.0\times10^{4}$, and one with uniform
 lethargy spacing by a factor of $1.4\times10^{3}$. It is worth noting that a
 uniform-lethargy structure cannot be built with 19 boundaries on this fine mesh,
 since the 30 fine groups are not themselves equally spaced in lethargy, so that
@@ -1207,7 +1232,24 @@ the upper end.}
 \toprule
 Figure of merit & Optimized & Equal & Uniform & Finest \\
      &  & lethargy & index & admissible \\
-
+    $G$ & 15 & 13 & 19 & 29 \\ \midrule
+    $f_{k,\mathrm{out}}$ & 6.7 & 1.0 & 3.2 & 7.2 \\
+    $f_{k,\mathrm{partial}}$ & 1.0 & 7.2 & 9.6 & 14.2 \\
+    $f_{k,\mathrm{in}}$ & 61.6 & 72.6 & 74.5 & 86.5 \\
+    $f_{\beta,\mathrm{out}}$ & 1.0 & 52.3 & 82.9 & 98.9 \\
+    $f_{\beta,\mathrm{partial}}$ & 1.0 & 19.0 & 51.3 & 68.0 \\
+    $f_{\beta,\mathrm{in}}$ & 21.4 & 1.0 & 1.0 & 1.0 \\
+    $f_{\ell,\mathrm{out}}$ & 1.0 & 2.1 & 2.3 & 1.3 \\
+    $f_{\ell,\mathrm{partial}}$ & 2.2 & 1.5 & 2.4 & 1.0 \\
+    $f_{\ell,\mathrm{in}}$ & 1.0 & 4.3 & 3.6 & 4.6 \\
+    $f_{P,\mathrm{out}}$ & 6.1 & 14.8 & 16.0 & 15.6 \\
+    $f_{P,\mathrm{partial}}$ & 10.7 & 15.6 & 17.9 & 18.7 \\
+    $f_{P,\mathrm{in}}$ & 34.0 & 38.2 & 39.8 & 40.8 \\
+    $f_{\Phi,\mathrm{out}}$ & 1.0 & 1.0 & 1.0 & 1.0 \\
+    $f_{\Phi,\mathrm{partial}}$ & 1.0 & 1.0 & 1.0 & 1.0 \\
+    $f_{\Phi,\mathrm{in}}$ & 1.0 & 1.0 & 1.0 & 1.0 \\
+\midrule
+    Joint fitness & $4.432\times10^{7}$ & $6.042\times10^{10}$ & $2.211\times10^{12}$ & $4.205\times10^{12}$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1218,8 +1260,8 @@ routine requires the condensed structure to contain fewer groups than the fine
 one, so that $G=30$ is not a legitimate option and the limit is $G=29$, obtained
 by suppressing a single boundary. All twenty-nine such structures were
 evaluated. The best of them, obtained by suppressing the boundary at
-$8.3\times10^{-6}$~MeV, reaches a canonical fitness of $4.06\times10^{12}$, the
-median is $6.65\times10^{13}$ and the worst is $7.07\times10^{16}$.
+$8.3\times10^{-6}$~MeV, reaches a canonical fitness of $4.20\times10^{12}$, the
+median is $6.81\times10^{13}$ and the worst is $7.25\times10^{16}$.
 
 The optimized 15-group structure is therefore better than the best 29-group
 structure by five orders of magnitude on the joint fitness. Since that fitness
@@ -1283,13 +1325,13 @@ pair of errors it was tuned to annul.
 \subsection{Which Terms of the Fitness Are Active}\label{eg:sec:active}
 
 Not every term of Eq.~(\ref{eg:eqn:joint}) takes part in the ranking of the
-optimized structures. Evaluating the fifteen scaled terms for each of the 720
+optimized structures. Evaluating the fifteen scaled terms for each of the 747
 verified structures shows that three of them sit at the minimum of the canonical
 window for every one: the flux with the rods withdrawn and partially inserted,
 and the delayed neutron fraction with the rods partially inserted. Two more are
 there for almost every structure, the delayed neutron fraction with the rods
-withdrawn in 707 cases out of 720 and the flux with the rods fully inserted in
-718.
+withdrawn in 732 cases out of 747 and the flux with the rods fully inserted in
+745.
 
 The two groups do not share a cause. The delayed neutron fraction is held at the
 minimum by the clipping applied before the scaling, in the sense for which the
@@ -1297,7 +1339,8 @@ control was introduced: the quantity is reproduced to within ten pcm, is
 clipped, and stops contributing to the ranking, so that the search is directed
 towards what is still worth improving. The three flux terms are held there by
 the logarithmic floor, which corresponds to a weighted relative error of ten
-and which no optimized structure approaches, the best reaching $1.4$. That floor
+and which no optimized structure approaches, the best reaching values between
+$1.0$ and $1.3$. That floor
 is inherited with the formulation of \citet{prevMulti} and it is retained here
 unchanged, so that the flux takes no part in the ranking among the optimized
 structures. It bounds what the optimization can be said to have achieved on that
@@ -1410,8 +1453,8 @@ metamodel therefore becomes advantageous beyond approximately nine searches, and
 the analysis presented here, which comprises one thousand searches together with
 seventeen constrained optimizations, would have required of the order of
 $390\,000$ core-hours without it. The verification, which is the only part of
-the procedure that still calls the solver during the analysis, cost $28$
-core-hours for the 720 structures.
+the procedure that still calls the solver during the analysis, cost $29$
+core-hours for the 747 structures.
 
 \begin{table}[htbp]
 \centering
@@ -1425,7 +1468,7 @@ Item & Core-hours \\ \midrule
 Building the metamodel ($91\,723$ configurations, once) & 3516 \\
 One tribe evaluated directly with FRENETIC & 383 \\
 Break-even & 9 tribes \\ \midrule
-This work: 1000 tribes on the metamodel, all outcomes verified & 28 \\
+This work: 1000 tribes on the metamodel, all outcomes verified & 29 \\
 Equivalent cost avoided & 389\,485 \\ \bottomrule
 \end{tabular}
 \end{table}
@@ -1444,27 +1487,27 @@ performing one thousand independent searches instead of three. The number was
 made accessible by a neural metamodel of the fifteen fitness functions, trained
 on 91\,723 full-core evaluations and accurate to a median relative error of
 $0.403\%$ on configurations never seen during training and of $0.39\%$ on the
-720 structures the searches went on to propose, which is the population on which
+747 structures the searches went on to propose, which is the population on which
 its accuracy actually matters. Every one of those structures was recomputed with
 the reference solver, so that the conclusions rest on FRENETIC and not on the
 metamodel, and the ordering the metamodel produces reproduces the ordering of
-the solver with a rank correlation of $0.989$.
+the solver with a rank correlation of $0.990$.
 
 The dependence on the seed is severe, and measuring it is the first result. A
-single search returns a structure whose joint fitness is typically forty per
-cent above the best, and three searches, which is what a campaign with the
+single search returns a structure whose joint fitness is typically forty-five
+per cent above the best, and three searches, which is what a campaign with the
 solver inside the loop can afford, reach twenty per cent; a hundred searches
-reach one per cent and find a structure within five per cent of the best in
-ninety-six cases out of a hundred. The gain from repeating the search is
+reach two per cent and find a structure within five per cent of the best in nine
+cases out of ten. The gain from repeating the search is
 concentrated in a range of campaign sizes that the reference solver cannot
 reach, which is the argument for replacing it inside the loop.
 
 The landscape that the thousand searches map is rugged and only partly
-organised. They converge to 720 distinct structures, four out of five of which
+organised. They converge to 747 distinct structures, five out of six of which
 were produced by a single search, and two structures taken at random disagree on
-ten of the twenty-nine available boundaries. Only one boundary is retained by
-more than nine structures out of ten, so that the solutions share no common
-skeleton. What they do share is a single exclusive choice in the fast region:
+ten of the twenty-nine available boundaries. Only two boundaries are retained by
+more than nine structures out of ten, and the best structure lacks one of them,
+so that the solutions share no common skeleton. What they do share is a single exclusive choice in the fast region:
 no structure retains both the boundary at $2.231$ and the one at $0.302$~MeV,
 the first is adopted by nine solutions out of ten, and each of the two carries
 its own block of accompanying boundaries. The structures that adopt the first
@@ -1486,7 +1529,7 @@ The best structure identified employs fifteen groups. It improves by $28\%$ on
 the best of the $124\,693$ configurations computed to date, none of which
 reaches it, on structures built by uniform spacing rules by three to five orders
 of magnitude, and on the three structures obtained with the solver inside the
-loop by factors between $1.7$ and $8.3$. The last comparison is the one that
+loop by factors between $1.7$ and $8.1$. The last comparison is the one that
 measures what this work adds, and the gap is a question of how many searches
 were affordable rather than of how the objective was posed.
 
@@ -1496,4 +1539,4 @@ search, the solver retains the last word, and the cost of building the metamodel
 is repaid after nine searches and then amortised over every subsequent analysis
 performed on the same reactor. The analyses presented here would have required
 of the order of $390\,000$ core-hours of the reference solver and were carried
-out for $28$.
+out for $29$.
