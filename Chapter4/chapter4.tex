@@ -610,23 +610,13 @@ factor of seventeen, and to $0.395$ against $0.044$ decades for the lifetime.
 The correspondence with the accuracy of the metamodel is direct.
 Figure~\tref{eg:fig:smallvalue} places the two quantities side by side, band by band
 and family by family: where the target changes most under a single boundary
-displacement, the metamodel errs most. The agreement between the two is measured over the thirty pairs by
-Spearman's rank correlation $r_s$. Each pair is given its rank on the two scales,
-first by steepness and then by error, and $r_s$ measures how far the two
-rankings agree: $+1$ if the bands with the steepest target are exactly the ones
-where the metamodel errs most, $-1$ if exactly the ones where it errs least,
-$0$ if the two orderings have nothing to do with each other. Ranks are used
-rather than the values themselves because both quantities span decades, so
-that a correlation of the values would depend on the scale chosen and be
-dominated by the few extreme points. Here $r_s = +0.70$. The probability that
-a correlation at least this strong arises by chance between two unrelated
-quantities is $2\times10^{-5}$; in what follows that probability is quoted as
-$p$, and a $p$ below one per cent is read as evidence that the association is
-not accidental. Excluding the flux leaves the result unchanged, $r_s = +0.68$. The flux is worth keeping in view because it
-is the control case: its steepness grows with the value of the fitness function
-instead of falling, and its accuracy degrades in the same direction, opposite to
-the other four families. What the error tracks is therefore the local steepness
-of the target and not the magnitude of the quantity.
+displacement, the metamodel errs most, and the two orderings agree over the
+thirty points with a rank correlation of $+0.70$, or $+0.68$ if the flux is
+left out. The flux is worth keeping in view because it is the control case: its
+steepness grows with the value of the fitness function instead of falling, and
+its accuracy degrades in the same direction, opposite to the other four
+families. What the error tracks is therefore the local steepness of the target
+and not the magnitude of the quantity.
 
 The physical interpretation is direct. A small fitness value means that the
 condensed calculation reproduces the Monte Carlo reference almost exactly, and
@@ -861,16 +851,13 @@ Searches & Median excess over the best & Within $5\%$ of the best \\ \midrule
 \end{table}
 
 The second concerns the regularities of the optimized structures, and here the
-sample is sufficient for a reason worth stating because it is not obvious. The
-rank correlation between the selection frequency of a boundary and the
-surrounding importance is computed over the 29 internal boundaries of the fine
-mesh, and that number does not grow with the number of searches: more searches
-stabilise the frequency attached to each boundary, but only a finer parent mesh
-would add degrees of freedom to the test. Resampling confirms it: drawn from a hundred
-searches the estimate is $+0.20$, from three hundred $+0.21$ and from the
-thousand $+0.22$, while the interval between the tenth and ninetieth percentiles
-of the resampled value narrows from $0.05$ to $0.03$, so that further searches
-narrow the confidence interval without displacing the estimate.
+sample is more than sufficient. What those regularities rest on is the
+frequency with which each of the 29 boundaries is selected, and a hundred
+searches already fix every one of those frequencies to within ten points of the
+value obtained from the thousand, and to within three points for the typical
+boundary; three hundred searches bring the worst case to six points. More
+searches narrow those margins, but they cannot add boundaries to the parent
+mesh, which is what would add anything new to the comparison.
 
 The third question is the one the sample does not answer, and the right panel of
 Fig.~\tref{eg:fig:howmany} shows it plainly: the number of distinct structures is
@@ -1040,34 +1027,32 @@ $E$ [MeV] & Occ.\ [\%] & Imp.\ [\%] & Best \\ \midrule
 
 
 The placement of the recurring boundaries admits a physical reading which is not
-the one that intuition suggests. Figure~\tref{eg:fig:boundaries} sets the
-selection frequency against the two candidate explanations, the importance
-surrounding a boundary and the variation of the flux shape across it. A natural
-expectation is that boundaries should be placed where the spectrum changes shape
-most abruptly, since a single group cannot represent a rapidly varying flux, and
-that they should follow the flux itself, since a group carrying little flux
-contributes little to the reaction rates. Neither expectation is confirmed. The
-selection frequency runs against the variation of the flux shape
-($r_s = -0.30$) and against the flux surrounding the boundary
-($r_s = -0.12$). The three boundaries of the fast region where the spectrum
-bends most sharply, at $1.35$, $0.821$ and $0.498$~MeV, are used by at most one
-structure in fifty, although the region they subdivide, between $2.231$ and
-$0.302$~MeV, carries $23\%$ of the flux.
-
-The quantity that does predict the placement is the one that the objective
-function itself uses as a weight. The flux fitness function of
-Eq.~(\ref{eg:eqn:distributed}) measures the flux error of every group weighted by
-the total importance $\phi\phi^{\ddagger}/v$, so that the relevant measure of
-how much a group matters is not how much flux it carries but how much importance
-it carries. The selection frequency follows it, weakly but with the opposite
-sign to the other two readings ($r_s = +0.22$). The two readings part company
-precisely in the fast region, and for a physical reason. The adjoint flux of
-this core varies by less than a factor of two over the whole energy range, so
-the importance follows essentially the ratio $\phi/v$: the fast groups carry a
-substantial part of the flux but, at those speeds, only a small part of the
-importance, the ratio between the two fractions rising from $0.10$ in the
-highest group to unity around $10$~keV. The optimizer places its boundaries
-according to the second quantity and not the first.
+the one that intuition suggests. A natural expectation is that boundaries should
+be placed where the spectrum changes shape most abruptly, since a single group
+cannot represent a rapidly varying flux, and that they should follow the flux
+itself, since a group carrying little flux contributes little to the reaction
+rates. The structures say otherwise. The three boundaries of the fast region
+where the spectrum bends most sharply, at $1.35$, $0.821$ and $0.498$~MeV, are
+used by at most one structure in fifty, although the region they subdivide,
+between $2.231$ and $0.302$~MeV, carries $23\%$ of the flux; and
+Fig.~\tref{eg:fig:boundaries}, which sets the selection frequency against the
+importance surrounding the boundary and against the variation of the flux shape
+across it, shows nothing that twenty-nine points would allow to call a trend
+with either quantity. What the figure does show is where the two readings part
+company, which is the fast region, and the reason is physical. The flux fitness
+function of Eq.~(\ref{eg:eqn:distributed}) measures the flux error of every
+group weighted by the total importance $\phi\phi^{\ddagger}/v$, so that the
+relevant measure of how much a group matters is not how much flux it carries
+but how much importance it carries. The adjoint flux of this core varies by less
+than a factor of two over the whole energy range, so the importance follows
+essentially the ratio $\phi/v$: the fast groups carry a substantial part of the
+flux but, at those speeds, only a small part of the importance, the ratio
+between the two fractions rising from $0.10$ in the highest group to unity
+around $10$~keV. The optimizer places its boundaries according to the second
+quantity and not the first: above $0.3$~MeV, where the groups carry the least
+importance, the structures keep a single boundary and drop the other four,
+while in the intermediate region, where the importance is spread evenly across
+the groups, nearly every boundary is retained by more than half of them.
 
 The tendency can be stated more directly, and in this form it separates the two
 readings without ambiguity. Computing for each structure the coefficient of
@@ -1432,10 +1417,11 @@ are also the better ones, by a third in median fitness, although what decides
 between the two blocks is not identified by the quantity that measures how
 faithfully each represents the spectrum.
 
-Where the boundaries go is predicted, weakly but with the right sign, by the
-neutron importance with which the objective function weights the flux error, and
-not by the sharpness of the spectral variation nor by the flux itself, both of
-which correlate negatively with the selection frequency. The optimized
+Where the boundaries go is not where the spectrum bends most nor where the flux
+is: the three boundaries of the fast region where the spectrum changes most
+abruptly are almost never selected, although the region they subdivide carries
+a quarter of the flux, and what decides is the neutron importance with which the
+objective function weights the flux error. The optimized
 structures distribute that importance among their groups $1.3$ times more evenly
 than random structures with the same number of groups, while on the bare flux
 they are less even than random ones: the optimization moves towards an
