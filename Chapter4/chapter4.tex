@@ -1069,7 +1069,8 @@ $1.218$: on that quantity the optimized structures are not more even than random
 ones but less. The optimization therefore moves towards an equipartition of the
 importance among the groups, and away from an equipartition of the flux, a
 criterion which was never imposed explicitly and which follows from the
-weighting of Eq.~(\ref{eg:eqn:distributed}).
+weighting of Eq.~(\ref{eg:eqn:distributed}); Sec.~\ref{eg:sec:active} reports at
+which stage of the search that weighting acts.
 
 \begin{figure}[htbp]
   \centering
@@ -1285,13 +1286,29 @@ minimum by the clipping applied before the scaling, in the sense for which the
 control was introduced: the quantity is reproduced to within ten pcm, is
 clipped, and stops contributing to the ranking, so that the search is directed
 towards what is still worth improving. The three flux terms are held there by
-the logarithmic floor, which corresponds to a weighted relative error of ten
-and which no optimized structure approaches, the best reaching values between
-$1.0$ and $1.3$. That floor
-is inherited with the formulation of \citet{prevMulti} and it is retained here
-unchanged, so that the flux takes no part in the ranking among the optimized
-structures. It bounds what the optimization can be said to have achieved on that
-quantity, and it is stated for that reason.
+the logarithmic floor, which corresponds to a weighted relative error of ten.
+The optimized structures lie below it, at a median of $3.9$ and between $1.4$
+and $3.9$ for the ten best, and only two of the 747 exceed it, by less than one
+per cent and with the rods fully inserted, so that the flux takes no part in the
+ranking among the optimized structures. That floor is inherited with the
+formulation of \citet{prevMulti} and it is retained here unchanged; it bounds
+what the optimization can be said to have achieved on that quantity beyond that
+level, and it is stated for that reason.
+
+It does not follow that the flux term is inactive, and the point matters for the
+reading of Sec.~\ref{eg:sec:recurring}. Among the reference evaluations
+available for structures of between nine and twenty groups, about half lie above
+the floor, $53$, $49$ and $51\%$ in the three configurations, with values that
+extend over several orders of magnitude, and every one of the thousand searches
+met structures of that kind. In the search of Fig.~\tref{eg:fig:tribe}, $73\%$
+of the initial population lies above the floor in at least one configuration;
+the fraction falls to $50\%$ after one generation and to $8\%$ after six, and
+after the tenth generation no individual is left above it. The flux term is
+therefore what first separates the acceptable structures from the rest, and it
+falls silent once the population has been confined to structures that reproduce
+the importance-weighted flux to within the floor. The tendency towards an even
+distribution of the importance reported in Sec.~\ref{eg:sec:recurring} is
+consistent with a selection exerted in those early generations.
 
 Ten terms therefore discriminate, against the five that do not, and the joint
 fitness of a good structure is effectively a product of ten factors. The
