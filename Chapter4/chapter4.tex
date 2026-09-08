@@ -152,7 +152,7 @@ produce, and of the features those structures have in common.
 % ── ciclo genetico ──────────────────────────────────────────────────────
 \node[old, round, right=30mm of fine] (gen) {generate $N$ individuals};
 \node[netN, below=of gen] (eval) {\textbf{evaluate the whole\\population at once}};
-\node[new, round, fill=ga!55, below=of eval] (ff) {joint FF with\\fixed scaling};
+\node[old, round, below=of eval] (ff) {joint FF with\\running scaling};
 \node[old, round, below=of ff] (sel) {selection};
 \node[old, round, below=of sel] (cross) {crossover};
 \node[old, round, below=of cross] (mut) {mutation};
@@ -181,14 +181,16 @@ produce, and of the features those structures have in common.
 
 % ── multi-start e giudizio finale (nuovi) ───────────────────────────────
 \node[old, round, below=6mm of term] (tribe) {tribe completed};
-\node[new, round, fill=ga!55, below=of tribe] (many) {$100$ independent\\tribes};
-\node[new, round, fill=ga!55, below=of many] (rank) {distinct candidates,\\ranked by fitness};
+\node[new, round, fill=ga!55, below=of tribe] (many) {$1000$ independent\\tribes};
+\node[new, round, fill=ga!55, below=of many] (scale) {outcomes on one\\common scale};
+\node[new, round, fill=ga!55, below=of scale] (rank) {distinct candidates,\\ranked by fitness};
 \node[frenN, below=of rank] (verify) {\textbf{FRENETIC (NE module)}\\verification of the\\best candidates};
 \node[greyN, below=of verify] (out) {final ranking\\optimized structure};
 
 \draw[arO] (term) -- node[lbl, right] {yes} (tribe);
 \draw[arN] (tribe) -- (many);
-\draw[arN] (many) -- (rank);
+\draw[arN] (many) -- (scale);
+\draw[arN] (scale) -- (rank);
 \draw[arN] (rank) -- (verify);
 \draw[arN] (verify) -- (out);
 \draw[arN] (many.west) -- ++(-7mm,0) |- node[lbl, left, pos=.25] {new seed} (gen.west);
@@ -698,56 +700,69 @@ for its conclusions.
 
 \section{Workflow}
 
-\subsection{A Fitness on a Fixed Scale}
+\subsection{The Scale of the Joint Fitness}
 
 The scaling of Eq.~(\ref{eg:eqn:scaling}) maps each fitness function onto $[1,100]$
 using the smallest and the largest value encountered so far in the run. The
 choice makes the comparison internally consistent within a generation, since the
 population is ranked against its own extremes, but it ties the scale to how much
-that particular run has explored. Two consequences follow. Within a run the
-scale moves as new extremes appear, so the joint fitness of an individual is not
-the same number at generation ten and at generation ninety, and the original
-formulation compensates by re-evaluating the whole population at every
-generation. Between runs the scales are simply different, so the final values
-are not comparable at all: a search of 500 generations reports a final fitness
+that particular run has explored. Within a run the scale moves as new extremes
+appear, so the joint fitness of an individual is not the same number at
+generation ten and at generation ninety, and the formulation compensates by
+re-evaluating the whole population at every generation before the survivors are
+selected. Between runs the scales are simply different, so the final values are
+not comparable at all: a search of 500 generations reports a final fitness
 worse than one of 300 generations on the same problem, for no other reason than
 having widened its own window.
 
-Since this work rests on comparing a thousand independent searches, the two
-extremes of Eq.~(\ref{eg:eqn:scaling}) are removed from the run and fixed once and
-for all. They are taken as the minimum and the maximum of each fitness function
-over 89\,723 configurations of the training database, after the
-controls described above have been applied and after discarding the
-calculations that failed to converge. The window is therefore a property of
-that data set and not of the individual search, and it is held fixed for every
-search reported here, since changing it would move the scale and make the
-values of different campaigns incomparable. This fixed window, and the fitness
-values expressed through it, are referred to as canonical in the following. The
-two ends of the window are not of the same kind. The upper end is a genuine
-extreme of the data, so that a structure would have to be worse than anything
-computed so far to exceed one hundred. The lower end is, for twelve of the
-fifteen functions, the threshold of the controls rather than the smallest value
-observed: only the three power functions, to which no control is applied, begin
-at a value read from the data. Reaching unity therefore does not require a
-structure better than every other computed so far, but only one better than the
+The search itself is left as it stands. The moving scale, with the
+re-evaluation of the population at every generation, is the formulation of
+\citet{prevMulti}, and the genetic algorithm optimizes exactly that objective.
+What this work adds is a second step, taken after the searches have ended. The
+comparison of a thousand independent searches requires a single axis, and it is
+obtained by replacing the two extremes of Eq.~(\ref{eg:eqn:scaling}) with the
+smallest and the largest value that each fitness function has taken over
+everything the thousand searches evaluated, and by re-expressing every outcome
+on that window. The window is a property of the campaign as a whole, and since
+the searches are mutually independent and already complete when it is built, it
+cannot have influenced what any of them found. This common scale, and the
+fitness values expressed through it, are referred to as canonical in the
+following; the ranking of the candidates, the curve at constrained group count
+and every comparison reported below are made on it.
+
+The two ends of the window are not of the same kind. The upper end is a genuine
+extreme of what the searches explored, so that a structure would have to be
+worse than anything they evaluated to exceed one hundred. The lower end is, for
+twelve of the fifteen functions, the threshold of the controls rather than the
+smallest value observed, since the searches evaluate structures that reach every
+threshold: only the three power functions, to which no control is applied,
+begin at a value read from the data. Reaching unity therefore does not require
+a structure better than every other evaluated, but only one better than the
 threshold, and Sec.~\ref{eg:sec:active} reports which of the fifteen terms end
 there. Strictly below unity a controlled term cannot fall, since the control
 raises to the threshold every value that would go there; only the three power
-functions could, and that would take a structure better than any computed so
-far.
+functions could, and that would take a structure better than any evaluated by
+the campaign.
 
-Whether a fixed window changes the behaviour of the algorithm was verified
-rather than assumed, by repeating thirty searches with each formulation from
-identical seeds and comparing the outcomes on the same scale. The fixed
-formulation is the better of the two: it reaches a best value of
-$4.33\times10^{7}$ against $4.65\times10^{7}$ and a median $3\%$ lower, on 27
-distinct structures against 30, which is consistent with a stationary objective
-being easier to optimize than a moving one. The fixed scale also removes the
-reason for re-evaluating the whole population at every generation, and the
-searches run a third faster as a result. The value of the change, however, is
-not the speed but the comparability: without it, the thousand outcomes could not
-be placed on a single axis, and neither the ranking of the candidates nor the
-curve at constrained group count would mean anything.
+Whether the window built in this way is an arbitrary choice was measured rather
+than assumed, in two ways. The same window computed over the $89\,723$
+configurations of the training database, a set the searches never see, assigns
+to each of the fifteen functions a width that differs from the one built from
+the searches by at most $3\%$; ranked with the two windows, the 747 structures
+analysed in the following give a rank correlation of $0.9999$, the same best
+structure and the same fifty best. The range that the searches explore on their
+own is therefore the range of the problem. Secondly, the whole campaign was
+repeated with that fixed window placed inside the search, so that the algorithm
+optimizes the canonical fitness directly instead of its own moving scale. The
+thousand searches so driven converge to the same best structure, and the
+frequencies with which the two campaigns select the 29 boundaries have a rank
+correlation of $0.995$; the fixed scale gives a slightly narrower spread of
+outcomes, the median search ending $41\%$ above the best against $45\%$, which
+is consistent with a stationary objective being marginally easier to optimize
+than a moving one, and it runs faster, since the re-evaluation of the population
+becomes unnecessary. The formulation of the search was nevertheless kept as
+inherited: nothing in the results depends on the choice, and the comparison with
+\citet{prevMulti} is then made at equal objective.
 
 \subsection{Multiple Independent Searches}
 
@@ -758,9 +773,9 @@ implementation is built on the pymoo library~\cite{pymoo} and reproduces the
 scheme of \citet{prevMulti} in its representation, operators and fitness
 functions. The population and generation counts were established by
 measurement: a population of 40 individuals yields a median final fitness $1.7$
-times worse and a population of 200 improves it by $15\%$ at twice the cost per
+times worse and a population of 200 improves it by $17\%$ at twice the cost per
 search, while the median search reaches within $1\%$ of its own final value by
-generation 35 and 87 searches out of a thousand are still improving after
+generation 36 and 85 searches out of a thousand are still improving after
 generation 90. The population was kept at 100 and the budget spent on the number
 of independent searches instead, a choice the following section quantifies.
 
@@ -772,15 +787,15 @@ Seeding the global generator explicitly before each tribe restores bit-level
 reproducibility, and all results presented here can be regenerated exactly.
 
 The searches are mutually independent and are executed in parallel. One thousand
-of them require $517$~s on twelve processes, so that the cost of exploring the
-design space a thousand times over is smaller than the cost of two evaluations
-of the reference solver.
+of them require $841$~s on fourteen processes, about three core-hours, so that
+the cost of exploring the design space a thousand times over is smaller than the
+cost of a hundred evaluations of the reference solver.
 
 \subsection{Verification with the Reference Solver}
 
 Every distinct structure produced by the searches is submitted to FRENETIC, and
 the ranking reported in the following is the one obtained from the recomputed
-values. No quantity discussed in the following is a prediction of the metamodel.
+values, expressed on the canonical scale. No quantity discussed in the following is a prediction of the metamodel.
 This arrangement is deliberate and follows from the limit just characterised:
 the metamodel is accurate
 enough to order the candidates and thus to identify a short list worth a
