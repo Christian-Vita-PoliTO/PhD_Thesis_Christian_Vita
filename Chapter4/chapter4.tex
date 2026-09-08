@@ -270,9 +270,10 @@ distributions over the $J$ core assemblies,
 \end{equation}
 %
 the flux being weighted by the total importance $\phi\phi^{\ddagger}/v$, the
-product of the flux and of the adjoint flux divided by the neutron speed, which
-measures how much the neutrons of a group contribute to the chain reaction and
-is examined in Sec.~\ref{eg:sec:recurring}. All
+product of the flux and of the adjoint flux divided by the neutron speed of the
+group as tabulated in the reference library, which measures how much the
+neutrons of a group contribute to the chain reaction and is examined in
+Sec.~\ref{eg:sec:recurring}. All
 five are deviations from the reference, so that smaller values indicate a better
 structure.
 
@@ -937,12 +938,11 @@ would be the natural expectation. For each structure the variation of the
 reference flux shape within its groups was computed and weighted by the total
 importance $\phi\phi^{\ddagger}/v$ of the group, which is the weight with which
 the flux fitness function of Eq.~(\ref{eg:eqn:distributed}) counts an error. The
-quantity is $0.278$ for the block that prevails against $0.172$ for the one that
-does not, so that the block following the shape of the spectrum more closely,
-where the objective says it matters, is the one that loses; weighted by the bare
-flux the two are close, at $0.237$ against $0.252$. The separation
-into two blocks is a property of the solutions, and the difference in quality
-between them is measured here; what decides it is not identified by these data.
+two blocks are indistinguishable on that measure, $0.171$ against $0.159$, and
+they remain so when the weight is the bare flux, $0.237$ against $0.252$. The
+separation into two blocks is a property of the solutions, and the difference in
+quality between them is measured here; what decides it is not identified by
+these data.
 
 \begin{table}[htbp]
 \centering
@@ -972,7 +972,7 @@ Boundary [MeV] & $2.231$~MeV block [\%] & $0.302$~MeV block [\%] \\ \midrule
     Distinct structures & 668 & 65 \\
     Median joint fitness & $6.700\times10^{7}$ & $9.956\times10^{7}$ \\
     Mean internal disagreement [boundaries] & 9.1 & 7.3 \\
-    Shape variation, importance weighted & 0.278 & 0.172 \\
+    Shape variation, importance weighted & 0.171 & 0.159 \\
     Shape variation, flux weighted & 0.237 & 0.252 \\ \bottomrule
 \end{tabular}
 \end{table}
@@ -997,8 +997,10 @@ $9.7$ of the 29 boundaries.
 \centering
 \caption[The 29 internal boundaries of the fine mesh]{The 29 internal boundaries
 of the fine mesh. For each one: the fraction of the 747 distinct optimized
-structures that retains it, the total importance $\phi\phi^{\ddagger}/v$ of the
-two groups it separates, and whether it belongs to the best structure found.}
+structures that retains it, the mean share of the total importance
+$\phi\phi^{\ddagger}/v$ carried by the two groups it separates, evaluated on the
+reference calculation with the rods partially inserted, and whether it belongs
+to the best structure found.}
 \label{eg:tab:boundaries}
 \small
 \setlength{\tabcolsep}{4pt}
@@ -1006,21 +1008,21 @@ two groups it separates, and whether it belongs to the best structure found.}
 \toprule
 $E$ [MeV] & Occ.\ [\%] & Imp.\ [\%] & Best &
 $E$ [MeV] & Occ.\ [\%] & Imp.\ [\%] & Best \\ \midrule
-    $3.68$ & 25 & 0.2 &  & $2.03\times10^{-3}$ & 78 & 5.0 & $\bullet$ \\
-    $2.23$ & 89 & 0.4 & $\bullet$ & $1.23\times10^{-3}$ & 69 & 4.7 & $\bullet$ \\
-    $1.35$ & 0 & 0.7 &  & $7.49\times10^{-4}$ & 76 & 3.9 &  \\
-    $8.21\times10^{-1}$ & 2 & 1.6 &  & $4.54\times10^{-4}$ & 45 & 2.9 & $\bullet$ \\
-    $4.98\times10^{-1}$ & 0 & 2.3 &  & $3.04\times10^{-4}$ & 87 & 2.9 & $\bullet$ \\
-    $3.02\times10^{-1}$ & 9 & 2.9 &  & $1.49\times10^{-4}$ & 21 & 3.1 &  \\
-    $1.83\times10^{-1}$ & 96 & 4.0 & $\bullet$ & $9.17\times10^{-5}$ & 51 & 1.9 &  \\
-    $1.11\times10^{-1}$ & 66 & 4.4 & $\bullet$ & $6.79\times10^{-5}$ & 45 & 1.7 &  \\
-    $6.74\times10^{-2}$ & 70 & 4.7 &  & $4.02\times10^{-5}$ & 37 & 2.1 &  \\
-    $4.09\times10^{-2}$ & 58 & 4.7 &  & $2.26\times10^{-5}$ & 48 & 2.0 & $\bullet$ \\
-    $2.48\times10^{-2}$ & 66 & 4.8 & $\bullet$ & $1.37\times10^{-5}$ & 77 & 1.8 & $\bullet$ \\
-    $1.50\times10^{-2}$ & 59 & 5.1 &  & $8.32\times10^{-6}$ & 91 & 1.8 &  \\
-    $9.12\times10^{-3}$ & 62 & 4.6 & $\bullet$ & $4.00\times10^{-6}$ & 82 & 2.4 & $\bullet$ \\
-    $5.53\times10^{-3}$ & 69 & 4.6 & $\bullet$ & $5.40\times10^{-7}$ & 26 & 7.6 &  \\
-    $3.35\times10^{-3}$ & 74 & 4.9 & $\bullet$ &  & & &  \\
+    $3.68$ & 25 & 0.2 &  & $2.03\times10^{-3}$ & 78 & 5.7 & $\bullet$ \\
+    $2.23$ & 89 & 0.4 & $\bullet$ & $1.23\times10^{-3}$ & 69 & 5.3 & $\bullet$ \\
+    $1.35$ & 0 & 0.8 &  & $7.49\times10^{-4}$ & 76 & 4.4 &  \\
+    $8.21\times10^{-1}$ & 2 & 1.8 &  & $4.54\times10^{-4}$ & 45 & 3.2 & $\bullet$ \\
+    $4.98\times10^{-1}$ & 0 & 2.7 &  & $3.04\times10^{-4}$ & 87 & 3.3 & $\bullet$ \\
+    $3.02\times10^{-1}$ & 9 & 3.4 &  & $1.49\times10^{-4}$ & 21 & 3.5 &  \\
+    $1.83\times10^{-1}$ & 96 & 4.5 & $\bullet$ & $9.17\times10^{-5}$ & 51 & 2.1 &  \\
+    $1.11\times10^{-1}$ & 66 & 5.1 & $\bullet$ & $6.79\times10^{-5}$ & 45 & 2.0 &  \\
+    $6.74\times10^{-2}$ & 70 & 5.3 &  & $4.02\times10^{-5}$ & 37 & 2.4 &  \\
+    $4.09\times10^{-2}$ & 58 & 5.3 &  & $2.26\times10^{-5}$ & 48 & 2.3 & $\bullet$ \\
+    $2.48\times10^{-2}$ & 66 & 5.4 & $\bullet$ & $1.37\times10^{-5}$ & 77 & 2.1 & $\bullet$ \\
+    $1.50\times10^{-2}$ & 59 & 5.7 &  & $8.32\times10^{-6}$ & 91 & 2.1 &  \\
+    $9.12\times10^{-3}$ & 62 & 5.3 & $\bullet$ & $4.00\times10^{-6}$ & 82 & 2.4 & $\bullet$ \\
+    $5.53\times10^{-3}$ & 69 & 5.2 & $\bullet$ & $5.40\times10^{-7}$ & 26 & 1.9 &  \\
+    $3.35\times10^{-3}$ & 74 & 5.5 & $\bullet$ &  & & &  \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1047,18 +1049,20 @@ but how much importance it carries. The adjoint flux of this core varies by less
 than a factor of two over the whole energy range, so the importance follows
 essentially the ratio $\phi/v$: the fast groups carry a substantial part of the
 flux but, at those speeds, only a small part of the importance, the ratio
-between the two fractions rising from $0.10$ in the highest group to unity
+between the two fractions rising from $0.14$ in the highest group to unity
 around $10$~keV. The optimizer places its boundaries according to the second
-quantity and not the first: above $0.3$~MeV, where the groups carry the least
-importance, the structures keep a single boundary and drop the other four,
-while in the intermediate region, where the importance is spread evenly across
-the groups, nearly every boundary is retained by more than half of them.
+quantity and not the first, and the two regions of the spectrum show it. Above
+$0.3$~MeV the groups on either side of a boundary carry between $0.2$ and
+$2.7\%$ of the importance, and the structures keep a single boundary there and
+drop the other four; between $0.18$~MeV and $0.75$~keV they carry between $4.4$
+and $5.7\%$, an almost flat plateau, and there every boundary is retained by
+more than half of the structures.
 
 The tendency can be stated more directly, and in this form it separates the two
 readings without ambiguity. Computing for each structure the coefficient of
-variation of the importance contained in its groups gives $0.645$ for the ten
-best structures against $0.832$ for random structures with the same number of
-groups, so that the optimized structures distribute the importance $1.3$ times
+variation of the importance contained in its groups gives $0.573$ for the ten
+best structures against $0.856$ for random structures with the same number of
+groups, so that the optimized structures distribute the importance $1.5$ times
 more evenly. The same measure applied to the bare flux gives $1.387$ against
 $1.218$: on that quantity the optimized structures are not more even than random
 ones but less. The optimization therefore moves towards an equipartition of the
@@ -1422,7 +1426,7 @@ is: the three boundaries of the fast region where the spectrum changes most
 abruptly are almost never selected, although the region they subdivide carries
 a quarter of the flux, and what decides is the neutron importance with which the
 objective function weights the flux error. The optimized
-structures distribute that importance among their groups $1.3$ times more evenly
+structures distribute that importance among their groups $1.5$ times more evenly
 than random structures with the same number of groups, while on the bare flux
 they are less even than random ones: the optimization moves towards an
 equipartition of the importance, a criterion never imposed explicitly which
