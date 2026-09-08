@@ -138,7 +138,7 @@ produce, and of the features those structures have in common.
 \node[greyO] (fine) {fine-group homogenised\\constants (30 groups)};
 \node[serp, below=of fine] (serpent) {Serpent 2\\Monte Carlo};
 \node[greyO, below=of serpent] (ref) {reference output\\$k_\mathrm{eff}$, $P$, $\Phi$,
-  $\ell_\mathrm{eff}$, $\beta_\mathrm{eff}$};
+  $\Lambda_\mathrm{eff}$, $\beta_\mathrm{eff}$};
 
 % ── addestramento del metamodello (nuovo) ───────────────────────────────
 \node[frenN, below=8mm of ref] (train) {FRENETIC (NE module)\\$91\,723$ full-core\\evaluations};
@@ -249,15 +249,16 @@ configuration~\cite{prevMulti}. Three of them concern integral quantities,
   f_k^I = \left|k^I - k^\mathrm{MC}\right|\times10^5, \qquad
   f_{\beta}^I = \left|\beta_\mathrm{eff}^I - \beta_\mathrm{eff}^\mathrm{MC}\right|
   \times10^5, \qquad
-  f_{\ell}^I = \left|\frac{\ell_\mathrm{eff}^I -
-  \ell_\mathrm{eff}^\mathrm{MC}}{\ell_\mathrm{eff}^\mathrm{MC}}\right|\times10^2,
+  f_{\Lambda}^I = \left|\frac{\Lambda_\mathrm{eff}^I -
+  \Lambda_\mathrm{eff}^\mathrm{MC}}{\Lambda_\mathrm{eff}^\mathrm{MC}}\right|\times10^2,
   \label{eg:eqn:integral}
 \end{equation}
 %
 namely the multiplication factor, the effective delayed neutron fraction and
-the effective neutron lifetime, the last being the adjoint-weighted lifetime
-that the reference calculation tallies, and not the generation time, which
-differs from it by the multiplication factor. The remaining two concern the
+the effective neutron lifetime. The last is the adjoint-weighted mean lifetime
+that the reference calculation tallies, written here $\Lambda_\mathrm{eff}$
+following the works this chapter builds on; it is not the neutron generation
+time, from which it differs by the multiplication factor. The remaining two concern the
 distributions over the $J$ core assemblies,
 %
 \begin{equation}
@@ -294,7 +295,7 @@ three configurations,
 \begin{equation}
   FF^I = \prod_{c\in\{\mathrm{out},\,\mathrm{partial},\,\mathrm{in}\}}
   h_L\!\left(f_{k,c}^I\right) h_L\!\left(f_{P,c}^I\right)
-  h_L\!\left(f_{\Phi,c}^I\right) h_L\!\left(f_{\ell,c}^I\right)
+  h_L\!\left(f_{\Phi,c}^I\right) h_L\!\left(f_{\Lambda,c}^I\right)
   h_L\!\left(f_{\beta,c}^I\right).
   \label{eg:eqn:joint}
 \end{equation}
@@ -305,7 +306,7 @@ unity. The threshold of the clipping is ten pcm, and since
 Eq.~(\ref{eg:eqn:integral}) does not express the three functions in the same
 units it takes a different numerical value in each. For $f_k$ and $f_{\beta}$,
 defined as absolute deviations multiplied by $10^{5}$, ten pcm is the value
-ten; for $f_{\ell}$, defined as a relative deviation multiplied by $10^{2}$,
+ten; for $f_{\Lambda}$, defined as a relative deviation multiplied by $10^{2}$,
 the same ten pcm is the value $0.01$. In all three cases the threshold is a few
 times the statistical uncertainty of the reference, which stays below two pcm
 on the multiplication factor, below one pcm on the delayed neutron fraction and
@@ -339,7 +340,7 @@ fixed, so that a candidate structure corresponds to a subset of the remaining
 $H-1=29$ internal boundaries and the design space contains
 $2^{29}\approx5.4\times10^{8}$ elements.
 
-The earlier formulations of this problem fixed the number of groups before the
+The earlier formulations of this problem fixed the number of groups before the 
 search and left the genetic algorithm to place the boundaries alone, with one
 binary gene per internal boundary of the fine mesh stating whether it is
 retained. Prescribing $G$ restricts the space that can be reached and excludes
@@ -540,7 +541,7 @@ quantities: the power fitness functions are reproduced to better than $0.2\%$
 and the delayed neutron fraction to about $0.4\%$, while the flux functions,
 which are the least accurate, lie between $2.0$ and $2.3\%$.
 
-\begin{table}[htbp]
+\begin{table}[htbp] %CV: il parametro di vita è il famoso parametro cinetico Lambda_eff
 \centering
 \caption[Metamodel accuracy on the external validation set]{Metamodel accuracy on the external validation set, 1700 configurations
 never used in training nor for early stopping. The coefficient of determination
@@ -553,8 +554,8 @@ Output & $R^2$ & Rel.\ err.\ [\%] & Output & $R^2$ & Rel.\ err.\ [\%] \\ \midrul
     $f_{k,\mathrm{out}}$ & 0.99926 & 0.816 & $f_{k,\mathrm{partial}}$ & 0.99713 & 0.484 \\
     $f_{k,\mathrm{in}}$ & 0.97445 & 0.215 & $f_{\beta,\mathrm{out}}$ & 0.99565 & 0.174 \\
     $f_{\beta,\mathrm{partial}}$ & 0.99575 & 0.189 & $f_{\beta,\mathrm{in}}$ & 0.99949 & 0.402 \\
-    $f_{\ell,\mathrm{out}}$ & 0.99399 & 0.860 & $f_{\ell,\mathrm{partial}}$ & 0.99718 & 0.849 \\
-    $f_{\ell,\mathrm{in}}$ & 0.99385 & 0.903 & $f_{P,\mathrm{out}}$ & 0.99995 & 0.167 \\
+    $f_{\Lambda,\mathrm{out}}$ & 0.99399 & 0.860 & $f_{\Lambda,\mathrm{partial}}$ & 0.99718 & 0.849 \\
+    $f_{\Lambda,\mathrm{in}}$ & 0.99385 & 0.903 & $f_{P,\mathrm{out}}$ & 0.99995 & 0.167 \\
     $f_{P,\mathrm{partial}}$ & 0.99996 & 0.082 & $f_{P,\mathrm{in}}$ & 0.99996 & 0.059 \\
     $f_{\Phi,\mathrm{out}}$ & 0.99943 & 2.196 & $f_{\Phi,\mathrm{partial}}$ & 0.99953 & 1.979 \\
     $f_{\Phi,\mathrm{in}}$ & 0.99953 & 2.291 & & & \\ \midrule
@@ -1185,9 +1186,9 @@ Figure of merit & Optimized & Equal & Uniform & Finest \\
     $f_{\beta,\mathrm{out}}$ & 1.0 & 52.3 & 82.9 & 98.9 \\
     $f_{\beta,\mathrm{partial}}$ & 1.0 & 19.0 & 51.3 & 68.0 \\
     $f_{\beta,\mathrm{in}}$ & 21.4 & 1.0 & 1.0 & 1.0 \\
-    $f_{\ell,\mathrm{out}}$ & 1.0 & 2.1 & 2.3 & 1.3 \\
-    $f_{\ell,\mathrm{partial}}$ & 2.2 & 1.5 & 2.4 & 1.0 \\
-    $f_{\ell,\mathrm{in}}$ & 1.0 & 4.3 & 3.6 & 4.6 \\
+    $f_{\Lambda,\mathrm{out}}$ & 1.0 & 2.1 & 2.3 & 1.3 \\
+    $f_{\Lambda,\mathrm{partial}}$ & 2.2 & 1.5 & 2.4 & 1.0 \\
+    $f_{\Lambda,\mathrm{in}}$ & 1.0 & 4.3 & 3.6 & 4.6 \\
     $f_{P,\mathrm{out}}$ & 6.1 & 14.8 & 16.0 & 15.6 \\
     $f_{P,\mathrm{partial}}$ & 10.7 & 15.6 & 17.9 & 18.7 \\
     $f_{P,\mathrm{in}}$ & 34.0 & 38.2 & 39.8 & 40.8 \\
@@ -1268,7 +1269,7 @@ cancellation is precisely the reason why the opposite holds: the closer a
 structure comes to the reference, the more tightly it is tied to the particular
 pair of errors it was tuned to annul.
 
-\subsection{Which Terms of the Fitness Are Active}\label{eg:sec:active}
+\subsection{Which Terms of the Fitness Are Active}\label{eg:sec:active} 
 
 Not every term of Eq.~(\ref{eg:eqn:joint}) takes part in the ranking of the
 optimized structures. Evaluating the fifteen scaled terms for each of the 747
