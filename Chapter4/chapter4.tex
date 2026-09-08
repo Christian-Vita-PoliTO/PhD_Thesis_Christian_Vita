@@ -1348,99 +1348,83 @@ quantity, and it is stated for that reason.
 
 Ten terms therefore discriminate, against the five that do not, and the joint
 fitness of a good structure is effectively a product of ten factors. The
-consequence for the metamodel is favourable and worth recording, since it was
-not designed: the quantity on which the metamodel is least accurate is the
-lifetime with the rods withdrawn, whose median relative error over these
-structures is $32\%$, and it is least accurate there precisely because the
-optimized structures reproduce that quantity to a few thousandths of a per cent,
-so that a large relative error corresponds to a negligible absolute one. On the
-terms that decide the ranking the metamodel is accurate to about one per cent.
+quantity on which the metamodel is least accurate in relative terms, the
+lifetime with the rods withdrawn, is clipped for most of these structures, which
+reproduce it to a few thousandths of a per cent: its relative error is large
+because the quantity is small, and the corresponding absolute error lies below
+the statistical uncertainty of the reference.
 
 \subsection{Accuracy of the Metamodel on the Proposed Structures}\label{eg:sec:accuracy}
 
-All 720 distinct structures were recomputed with FRENETIC, which allows the
+All 747 distinct structures were recomputed with FRENETIC, which allows the
 metamodel to be judged on exactly the population it proposed rather than on a
-short list of its own favourites. The median difference between the predicted
-and the true joint fitness over the 720 structures is $2.2\%$, and the rank
-correlation between the two is $0.989$. The structure that the metamodel ranks
-first is the second according to the solver, which lies $1.1\%$ behind the
-first, a margin below the resolution of the metamodel. What the comparison
-establishes is the property the workflow actually needs: the ordering produced
-by the metamodel reproduces the ordering of the solver closely enough that a
-search driven by predictions arrives in the same region of the design space as a
+short list of its own favourites, and on the quantity the search actually uses,
+the joint fitness. Figure~\tref{eg:fig:bias} sets the predicted joint fitness
+against the one obtained from the solver. The median difference between the
+two over the 747 structures is $2.0\%$ and the rank correlation between them is
+$0.990$. The structure that the metamodel ranks first is the second according
+to the solver, $2.3\%$ behind the first, and the first according to the solver
+is the second of the metamodel, so that verifying the three best candidates of
+the metamodel is enough to recover the best structure. What the comparison
+establishes is the property the workflow needs: the ordering produced by the
+metamodel reproduces the ordering of the solver closely enough that a search
+driven by predictions arrives in the same region of the design space as a
 search driven by the solver would. The fifteen best structures are listed in
 Table~\tref{eg:tab:ranking}.
 
-The disagreement on the joint fitness is a property of the objective more than
-of the metamodel, and the distinction is worth making because the two are easily
-confused. The joint fitness is a product, so the relative errors of the terms
-that enter it compound, and how many terms enter it depends on the controls: a
-structure whose fifteen quantities are each predicted to half a per cent carries
-a larger error on a product of nine factors than on a product of six. The effect
-can be separated from any property of the metamodel by scoring the same
-structures with both sets of controls. Judged with the thresholds of
-\citet{prevMulti}, under which six terms discriminate, these 720 structures show
-a median disagreement of $1.2\%$; judged with the thresholds adopted here, under
-which nine do, the same predictions give $2.2\%$. The accuracy on the fifteen
-quantities themselves does not change and is $0.39\%$, against $0.40\%$ on the
-external validation set. The ordering, which is what the search uses, improves
-rather than degrades.
+The disagreement on the joint fitness is larger than the accuracy on the
+fifteen quantities themselves, which over these structures is $0.39\%$, the
+same as on the external validation set, and the difference is the arithmetic of
+the objective rather than a property of the metamodel: the joint fitness is a
+product, so the errors of the terms that enter it compound. No systematic bias
+accompanies the disagreement. Of the 747 predictions, 420 fall below the true
+value and 327 above it, and the median ratio between predicted and true fitness
+is $0.995$ over the whole set and $1.004$ over the fifty best structures. A
+search that minimises a predicted quantity is nevertheless attracted both to
+genuinely good structures and to structures whose quality the metamodel happens
+to overestimate, and cannot distinguish between the two, which is why the
+verification stage is retained for every structure the searches produce and not
+only for a short list.
 
 \begin{table}[htbp]
 \centering
-\caption[The fifteen best of the 720 distinct structures]{The fifteen best of
-the 720 distinct structures, all of which were recomputed with FRENETIC, ranked
+\caption[The fifteen best of the 747 distinct structures]{The fifteen best of
+the 747 distinct structures, all of which were recomputed with FRENETIC, ranked
 by their true canonical fitness. The disagreement is the relative difference
 between predicted and true joint fitness. Over the whole set the rank
-correlation between predicted and true fitness is $0.989$ and the median
-disagreement is \SI{2.2}{\percent}.}
+correlation between predicted and true fitness is $0.990$ and the median
+disagreement is \SI{2.0}{\percent}.}
 \label{eg:tab:ranking}
 \begin{tabular}{rrccr}
 \toprule
 Rank & $G$ & True fitness & Predicted & Disagr.\ [\%] \\ \midrule
- \\
+     1 & 15 & $4.432\times10^{7}$ & $4.614\times10^{7}$ & 4.1 \\
+     2 & 20 & $4.533\times10^{7}$ & $4.608\times10^{7}$ & 1.7 \\
+     3 & 20 & $4.638\times10^{7}$ & $4.659\times10^{7}$ & 0.5 \\
+     4 & 13 & $4.709\times10^{7}$ & $4.899\times10^{7}$ & 4.0 \\
+     5 & 16 & $4.716\times10^{7}$ & $4.985\times10^{7}$ & 5.7 \\
+     6 & 19 & $4.727\times10^{7}$ & $4.721\times10^{7}$ & 0.1 \\
+     7 & 19 & $4.727\times10^{7}$ & $4.825\times10^{7}$ & 2.1 \\
+     8 & 19 & $4.737\times10^{7}$ & $4.768\times10^{7}$ & 0.7 \\
+     9 & 14 & $4.755\times10^{7}$ & $4.817\times10^{7}$ & 1.3 \\
+    10 & 18 & $4.758\times10^{7}$ & $4.848\times10^{7}$ & 1.9 \\
+    11 & 13 & $4.800\times10^{7}$ & $4.976\times10^{7}$ & 3.7 \\
+    12 & 13 & $4.815\times10^{7}$ & $4.864\times10^{7}$ & 1.0 \\
+    13 & 14 & $4.819\times10^{7}$ & $5.007\times10^{7}$ & 3.9 \\
+    14 & 19 & $4.848\times10^{7}$ & $4.746\times10^{7}$ & 2.1 \\
+    15 & 20 & $4.892\times10^{7}$ & $4.896\times10^{7}$ & 0.1 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-
-The distribution of the error over the fifteen quantities, in the right panel of
-Fig.~\tref{eg:fig:bias}, shows that thirteen of them are predicted to better than
-$1.4\%$ on these structures. The two exceptions deserve separate treatment. The
-first is the multiplication factor with the rods partially inserted, at $2.1\%$:
-this is the regime of reduced accuracy characterised above, appearing in
-operation rather than in diagnosis, since the structures proposed by the
-searches are precisely those whose multiplication factor lies closest to the
-reference, which is where the target is steepest. The second is the lifetime
-with the rods withdrawn, whose median relative error is $32\%$, and the figure
-is misleading if read as a relative error alone. The optimized structures
-reproduce that quantity to a median of $0.019\%$, so that the median error of
-the metamodel on it amounts to $0.007$ percentage points on $\ell_\mathrm{eff}$,
-against a statistical uncertainty of $0.048$ percentage points on the reference
-itself. Four structures out of 720 have an absolute error larger than that
-uncertainty: the metamodel predicts the lifetime of the withdrawn configuration
-several times more precisely than the reference calculation knows it, and the
-large relative error is the arithmetic of dividing a small number by a smaller
-one.
-
-The left panel shows a systematic feature of surrogate-driven optimization which
-is worth recording. Of the 720 predictions, 394 underestimate the true fitness.
-A search that minimises a predicted quantity is attracted both to genuinely good
-structures and to structures whose quality the metamodel overestimates, and
-cannot distinguish between the two. The bias is modest in magnitude and it does
-not affect the conclusions, because every reported quantity comes from the
-solver, but it is the reason why the verification stage becomes more rather than
-less necessary as the number of searches grows.
-
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\textwidth]{Chapter4/Figs/fig_bias.pdf}
-  \caption[Predicted against true joint fitness for the 720 structures]{Left, joint fitness predicted by the metamodel against the value
-  obtained from the reference solver, for each of the 720 distinct structures
-  produced by the searches, the shaded region indicating underestimation and the
-  colour the number of energy groups. Right, distribution of the relative error
-  of the metamodel on the same structures, quantity by quantity, with boxes
-  spanning the interquartile range and whiskers the extremes.}
+  \includegraphics[width=0.66\textwidth]{Chapter4/Figs/fig_bias.pdf}
+  \caption[Predicted against true joint fitness for the 747 structures]{Joint
+  fitness predicted by the metamodel against the value obtained from the
+  reference solver, for each of the 747 distinct structures produced by the
+  searches, on the canonical scale. The shaded region indicates underestimation
+  and the colour the number of energy groups.}
   \label{eg:fig:bias}
 \end{figure}
 
