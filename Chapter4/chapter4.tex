@@ -1268,11 +1268,15 @@ pair of errors it was tuned to annul.
 
 All 747 distinct structures were recomputed with FRENETIC, which allows the
 metamodel to be judged on exactly the population it proposed and on the
-quantity the search actually uses, the joint fitness. The median difference
-between the predicted and the true joint fitness over the 747 structures is
+quantity the search actually uses, the joint fitness.
+Figure~\tref{eg:fig:bias} sets the two against each other, structure by
+structure. The median difference between the predicted and the true joint
+fitness over the 747 structures is
 $2.0\%$, while the accuracy on the fifteen quantities themselves is $0.39\%$,
 the same as on the external
-validation set. The two orderings agree where the workflow needs them to: the
+validation set. The points fall on both sides of the diagonal, $420$ of them
+below and $327$ above, so that the metamodel is no more inclined to flatter a
+structure than to penalize it. The two orderings agree where the workflow needs them to: the
 three structures the metamodel places first are the three the solver places
 first, and seventeen of its first twenty are among the first twenty of the
 solver. The structure that the metamodel ranks first is the second
@@ -1286,14 +1290,25 @@ by the solver would, and the verification of every structure the searches
 produce settles the rest. The fifteen best structures are listed in
 Table~\tref{eg:tab:ranking}.
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.66\textwidth]{Chapter4/Figs/fig_bias.pdf}
+  \caption[Predicted against true joint fitness for the 747 structures]{Joint
+  fitness predicted by the metamodel against the value obtained from the
+  reference solver, for each of the 747 distinct structures produced by the
+  searches, on the canonical scale. Points inside the shaded region are
+  structures whose fitness the metamodel underestimates, and the colour gives
+  the number of energy groups.}
+  \label{eg:fig:bias}
+\end{figure}
+
 \begin{table}[htbp]
 \centering
 \caption[The fifteen best of the 747 distinct structures]{The fifteen best of
 the 747 distinct structures, all of which were recomputed with FRENETIC, ranked
 by their true canonical fitness. The disagreement is the relative difference
-between predicted and true joint fitness. Over the whole set the rank
-correlation between predicted and true fitness is $0.990$ and the median
-disagreement is \SI{2.0}{\percent}.}
+between predicted and true joint fitness, and its median over the whole set is
+\SI{2.0}{\percent}.}
 \label{eg:tab:ranking}
 \begin{tabular}{rrccr}
 \toprule
