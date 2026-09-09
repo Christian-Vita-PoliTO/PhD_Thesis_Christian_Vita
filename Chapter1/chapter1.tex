@@ -86,95 +86,46 @@ against the angle of the drums~\cite{Roskoff2022physor}. With no operating
 experience to appeal to, the reference against which a model of either family is
 judged is the explicit Monte Carlo solution of the full core.
 
-\section{Motivations}
+\section{Aim of the work and outline of the thesis}
 
-The Monte Carlo method occupies a place apart among the tools of reactor
-physics. It solves the transport problem by simulating a large number of neutron
-histories in the true geometry of the system, with the nuclear data at their
-tabulated energies rather than averaged over energy groups, so that what limits
-its accuracy is the number of histories and the data themselves, and not a
-simplification of the physics. Its general-purpose
-implementations~\cite{mcnp63,Serpent_code_description,openmc} are for this
-reason the standard against which every approximate description of a core is
-measured, time-dependent modes included~\cite{serpentDynamic}.
-That the accuracy of these codes is
-paid in computing time is well known, but the form the cost takes for the
-problems of this thesis is worth stating. Neither the design nor the operation
-of a reactor asks for one state of the core. A design space is explored over
-the positions of the control system, the temperatures and the states of the
-fuel; a fuel cycle is a sequence of states; the monitoring of an operating core
-requires its critical configuration to be predicted continually as the core
-evolves. For the micro reactor of Part~\ref{part:hpmr} the Monte Carlo critical
-state of one configuration costs several tens of CPU hours, an expense that a
-study of a few states absorbs and a study of thousands does not, and where the
-answer is needed within the time of operation the size of the machine is not
-the limiting factor.
-
+Neither the design nor the operation of a reactor asks for a single state of the
+core. A design space is explored over the positions of the control system, the
+temperatures and the states of the fuel; a fuel cycle is a sequence of states;
+the monitoring of an operating core requires its critical configuration to be
+predicted as the core evolves. A Monte Carlo calculation of the critical state
+of the micro reactor of Part~\ref{part:hpmr} costs several tens of CPU hours, an
+expense that a study of a few states absorbs and a study of thousands does not.
 Every practical scheme therefore interposes, between the reference and the many
 evaluations, a representation of the reactor that is built once from a few
-reference calculations and consulted many times. In Part~\ref{part:lfr} it is
-the set of multi-group constants: the cross sections condensed over a few
-energy groups and homogenized over the regions of the core, on which a
-deterministic solver runs in a fraction of the time. In Part~\ref{part:hpmr} it
-is a database of fission matrices: a Monte Carlo calculation tallies, at each
-of a set of reference states, the matrix that couples every fissile region of
-the core to every other, and any intermediate state is then recovered by
-interpolating the matrices and solving an eigenvalue problem of modest
-size~\cite{CarneyANE2014,WaltersNSE2018}. The two representations have nothing
-in common in what they store or in the solver that uses them, but they share
-what decides their usefulness. Each is obtained from the reference by an
-operation, a weighting over energy and space in one case, a tally at fixed
-conditions in the other, that discards information the reference possessed,
-and the calculations downstream cannot restore it: what is lost in building
-the representation is lost for every evaluation that follows, and no accuracy
-of the solver recovers it.
+reference calculations and consulted many times: in Part~\ref{part:lfr} the
+multi-group constants that a deterministic solver reads, in Part~\ref{part:hpmr}
+a database of fission matrices tallied at a set of reference states, from which
+any intermediate state is recovered by interpolation and by the solution of an
+eigenvalue problem of modest size~\cite{CarneyANE2014,WaltersNSE2018}. What is
+lost in building that representation is lost for every evaluation that follows,
+and no accuracy of the solver recovers it.
 
-The thesis works on the representation itself, along two lines that recur in
-both Parts. The first is the choice of how it is built. Part~\ref{part:lfr}
-asks by which route the constants should be generated, from one full-core
-model or from a set of mini-core models, and on which energy mesh they should
-be condensed; Part~\ref{part:hpmr} asks which parameters the database should
-span, how dense it has to be and how its matrices should be interpolated. The
-second line is the correction: a quantity computed from a small number of
-reference calculations and applied to the representation so that it reproduces,
-at the conditions of the reference, what the reference reproduces. In
-Part~\ref{part:lfr} these are the superhomogenization factors~\cite{Hbert_1980},
-which rescale the constants of a region until the homogenized calculation
-returns the reaction rates of the heterogeneous one. In Part~\ref{part:hpmr}
-they are the correction ratios, ratios taken element by element between two
-matrices tallied at reference conditions that differ in a single effect, by
-which the interpolated matrix is multiplied to account for the burnup, for the
-temperature of the reflector and for the temperature gradients inside the core.
-Both act on the data and not on the solver, which receives corrected input and
-requires no modification, and this is what makes them applicable to a code that
-cannot be modified, because it is qualified or because its source is not
-available.
-
-Two rules govern the use of the representation throughout. The first is that
-the reference keeps the last word. No result of this thesis is a prediction of
-the intermediate model alone: every energy structure, every critical state and
-every corrected matrix is set against a Monte Carlo calculation made for that
-purpose, and the rule holds also where a further layer of approximation is
-introduced for the sake of speed. In Chapter~\ref{ch:energy-grid} a neural
-network trained on the outputs of the deterministic solver takes the place of
-the solver inside an optimization loop; the network is allowed to explore, and
-the solver alone decides, since every structure the search proposes is
-recomputed with it.
-
-The second rule concerns the nature of that reference. A Monte Carlo result is
-not an exact number but an estimate carrying a statistical uncertainty, and a
-comparison that ignores it credits a model with an agreement that the reference
-itself cannot resolve. Two energy structures whose predictions differ by less
-than the uncertainty of the reference are not, on that evidence, one better than
-the other, and it is for this reason that Chapter~\ref{ch:energy-grid} fixes the
-thresholds of its objective function in relation to that uncertainty. The same
-applies downstream: the coefficients of a fission matrix are tallied quantities
-and carry their own noise, which the interpolation passes on to every result
-obtained from them, so that Part~\ref{part:hpmr} derives an estimate of the
-uncertainty thus inherited and checks it against independent repetitions of the
-whole database.
-
-\section{Aim of the work and outline of the thesis}
+This thesis acts on that representation along two lines. The first is the way it
+is built: the route by which the group constants are generated and the energy
+mesh over which they are condensed in Part~\ref{part:lfr}, the parameters spanned
+by the database, its density and the interpolation of its matrices in
+Part~\ref{part:hpmr}. The second is the correction, a quantity computed from a
+small number of reference calculations and applied to the representation so that
+it reproduces, at the conditions of the reference, what the reference
+reproduces: the superhomogenization factors~\cite{Hbert_1980} in the first Part,
+and in the second the correction ratios, taken element by element between two
+matrices tallied at conditions that differ in a single effect. Both act on the
+data and not on the solver, which receives corrected input and requires no
+modification, and it is in this sense that the approaches proposed here are
+non-intrusive. Throughout, the reference keeps the last word: no result rests on
+the intermediate model alone, and where a further layer of approximation is
+introduced for the sake of speed, as with the neural network that replaces the
+solver inside the optimization of Chapter~\ref{ch:energy-grid}, that layer is
+allowed to explore while the solver decides. The reference is itself a
+statistical estimate and is treated as one, so that two structures whose
+predictions differ by less than its uncertainty are not held to be one better
+than the other, and the noise that the tallied fission matrices carry is
+propagated to every result obtained from them.
 
 The aim of this thesis is to improve the accuracy, and to contain the cost, of
 the neutronic analysis of two advanced reactor concepts by acting on the
