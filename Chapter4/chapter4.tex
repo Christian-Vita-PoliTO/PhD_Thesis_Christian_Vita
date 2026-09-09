@@ -615,9 +615,11 @@ factor of seventeen, and to $0.395$ against $0.044$ decades for the lifetime.
 The correspondence with the accuracy of the metamodel is direct.
 Figure~\tref{eg:fig:smallvalue} places the two quantities side by side, band by band
 and family by family: where the target changes most under a single boundary
-displacement, the metamodel errs most, and the two orderings agree over the
-thirty points with a rank correlation of $+0.70$, or $+0.68$ if the flux is
-left out. The flux is worth keeping in view because it is the control case: its
+displacement, the metamodel errs most. The right panel plots one against the
+other, and the thirty points rise together over two decades of steepness and
+one of error, the flattest quantity, the power, being the one the metamodel
+predicts best and the steepest, the flux, the one it predicts worst. The flux is
+worth keeping in view because it is the control case: its
 steepness grows with the value of the fitness function instead of falling, and
 its accuracy degrades in the same direction, opposite to the other four
 families. What the error tracks is therefore the local steepness of the target
@@ -700,15 +702,16 @@ Whether the window built in this way is an arbitrary choice was measured rather
 than assumed, in two ways. The same window computed over the $89\,723$
 configurations of the training database, a set the searches never see, assigns
 to each of the fifteen functions a width that differs from the one built from
-the searches by at most $3\%$; ranked with the two windows, the 747 structures
-analysed in the following give a rank correlation of $0.9999$, the same best
-structure and the same fifty best. The range that the searches explore on their
+the searches by no more than three per cent. Ranked with one window and with the
+other, the 747 structures analysed in the following keep the same best structure
+and the same fifty best, and none of them moves by more than sixteen places out
+of 747, the typical structure moving by one. The range that the searches explore on their
 own is therefore the range of the problem. Secondly, the whole campaign was
 repeated with that fixed window placed inside the search, so that the algorithm
 optimizes the canonical fitness directly instead of its own moving scale. The
-thousand searches so driven converge to the same best structure, and the
-frequencies with which the two campaigns select the 29 boundaries have a rank
-correlation of $0.995$; the fixed scale gives a slightly narrower spread of
+thousand searches so driven converge to the same best structure, they select the
+same six boundaries most often, and no boundary changes its frequency of
+selection by more than four points out of a hundred; the fixed scale gives a slightly narrower spread of
 outcomes, the median search ending $41\%$ above the best against $45\%$, which
 is consistent with a stationary objective being marginally easier to optimize
 than a moving one, and it runs faster, since the re-evaluation of the population
@@ -1371,8 +1374,8 @@ $0.403\%$ on configurations never seen during training and of $0.39\%$ on the
 747 structures the searches went on to propose, which is the population on which
 its accuracy actually matters. Every one of those structures was recomputed with
 the reference solver, so that the conclusions rest on FRENETIC and not on the
-metamodel, and the ordering the metamodel produces reproduces the ordering of
-the solver with a rank correlation of $0.990$.
+metamodel; the three structures the metamodel places first are the three the
+solver places first, which is what the workflow requires of it.
 
 The dependence on the seed is severe, and measuring it is the first result. A
 single search returns a structure whose joint fitness is typically forty-five
