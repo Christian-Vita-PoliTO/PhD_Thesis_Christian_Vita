@@ -13,23 +13,52 @@
 
 \section{Overview}
 
-The reactors studied in this thesis belong to two families that have, at first
-sight, little in common. Lead-cooled fast reactors (LFRs) are one of the
-concepts of the fourth generation: liquid lead allows the plant to operate at
-low pressure and at temperatures higher than those of light-water reactors, and
-the fast spectrum fissions plutonium and the minor actinides, so that the same
+The growing demand for energy, and the requirement that it be supplied without
+carbon emissions, is leading governments and companies to look for solutions
+beyond the ones in service today. In the nuclear industry that search has taken
+two directions at once. One is the fourth generation of power reactors, which
+aims at a better use of the fuel and at a reduced burden of long-lived waste.
+The other is a change of scale and of market: reactors of a few megawatts,
+transportable, addressed to sites that a large plant has never served, such as
+remote communities and installations off the grid, mining operations, ports and
+data centres, where the term of comparison is a diesel
+generator~\cite{hpmrMarkets}. Westinghouse Electric Company has proposed a
+design in each direction, a lead-cooled fast reactor of \SI{950}{MW_{th}}
+developed with Argonne National Laboratory~\cite{wecLFR} and the eVinci
+micro reactor, in which the heat is removed by alkali-metal heat pipes rather
+than by a circulating coolant~\cite{eVinci}.
+
+Designs of this kind have no operating experience behind them, and their
+performance has to be predicted, both while the design is being settled and
+when it is presented for licensing, by calculation. Experiments remain
+indispensable, and are neither quick nor cheap, so that the computing power now
+available is used to reduce their number and to decide what they should
+measure. The tools that answer these questions, however, were for the most part
+built for light-water reactors, and they do not transfer unchanged to a fast
+spectrum or to a core made of heat pipes and hydride moderators. This thesis is
+concerned with the methods rather than with a single design: it develops
+techniques that improve the simulation of concepts of these two kinds, working
+on models that are in the public domain and stating in each case how far the
+result carries beyond the core on which it was obtained.
+
+The reactors studied here therefore belong to two families that have, at first
+sight, little in common. Lead-cooled fast reactors (LFRs) operate at low
+pressure and at temperatures higher than those of light-water reactors, and
+their fast spectrum fissions plutonium and the minor actinides, so that the same
 core produces energy and reduces the long-lived waste. Part~\ref{part:lfr}
-considers two of them, the ALFRED core, the European demonstrator of the
+considers two of them, a simplified model of the Westinghouse
+LFR~\cite{wecLFR} and the ALFRED core, the European demonstrator of the
 technology, in the specification of the benchmark coordinated by the Nuclear
-Energy Agency~\cite{neaBench}, and the Westinghouse LFR. Heat-pipe micro
+Energy Agency~\cite{neaBench}. Heat-pipe micro
 reactors (HPMRs), the subject of Part~\ref{part:hpmr}, are cores of a few
 megawatts in which heat pipes take the place of the circulating coolant and the
-reactivity is governed by drums rotating in the radial reflector. The design
-considered is the micro reactor developed at Argonne National Laboratory as a
-modelling exercise meant to collect in one core the features that
-characterize the class, heat pipes, TRISO fuel, yttrium-hydride moderator pins
-and control drums~\cite{Stauff2024}, whose models are distributed on the
-Virtual Test Bed~\cite{moose_vtb_mrad_description}.
+reactivity is governed by drums rotating in the radial reflector. Since the
+commercial designs of this class are not published in the detail that a
+neutronic study requires, the reactor considered is the micro reactor developed
+at Argonne National Laboratory as a modelling exercise meant to collect in one
+core the features that characterize the class, heat pipes, TRISO fuel,
+yttrium-hydride moderator pins and control drums~\cite{Stauff2024}, whose models
+are distributed on the Virtual Test Bed~\cite{moose_vtb_mrad_description}.
 
 What the two families share is a problem. The computational chain that decades
 of light-water reactor practice have consolidated proceeds from the point-wise
@@ -50,10 +79,9 @@ for a geometrical generality that the traditional nodal methods do not
 possess~\cite{Wang2025griffin,Stauff2024}, that the homogenized solution departs
 from the heterogeneous one more than it does in light-water
 reactors~\cite{Pandya2022}, and that the cross sections have to be tabulated
-against the angle of the drums~\cite{Roskoff2022physor}. The designs considered
-here are, moreover, still on the drawing board, so that no operating experience
-stands behind their models, and for both families the reference against which a
-model is judged is the explicit Monte Carlo solution of the full core.
+against the angle of the drums~\cite{Roskoff2022physor}. With no operating
+experience to appeal to, the reference against which a model of either family is
+judged is the explicit Monte Carlo solution of the full core.
 
 \section{Motivations}
 
