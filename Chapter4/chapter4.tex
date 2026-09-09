@@ -912,13 +912,29 @@ a preference for one of the two, since 14 structures retain neither: the two
 boundaries are alternative, and the alternative is decided in favour of the
 first in $89\%$ of the cases against $9\%$ for the second.
 
-That choice carries others with it. Among the structures that adopt
-$2.231$~MeV, $90\%$ also adopt the boundary at $4\times10^{-6}$~MeV, which
-appears in $2\%$ of those that adopt $0.302$~MeV; conversely, $83\%$ of the
-latter adopt $3.679$~MeV and the thermal cut at $5.4\times10^{-7}$~MeV, against
-$20$ and $21\%$ of the former. The two blocks are therefore coherent well beyond
-the boundaries that define them, and Table~\tref{eg:tab:families} reports the
-frequencies.
+That choice carries others with it, and Fig.~\tref{eg:fig:blocks} shows which.
+The two panels compare, boundary by boundary, how often each block retains it.
+Six boundaries separate the blocks and are drawn in colour: besides the two that
+define them, a structure that adopts $2.231$~MeV takes with it the boundaries at
+four and at ninety-two electronvolts, while one that adopts $0.302$~MeV takes
+the boundary at $3.679$~MeV and the thermal cut at half an electronvolt. On the
+remaining twenty-three the two panels are alike, and the resemblance is the
+point: outside those six boundaries the two blocks build their structures in the
+same way, so that the choice made in the fast region is not one preference among
+many but the one that organizes the rest.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{Chapter4/Figs/fig_blocks.pdf}
+  \caption[The two blocks of solutions, boundary by boundary]{The two blocks of
+  solutions, boundary by boundary. Above, the fraction of the structures that
+  adopt the boundary at $2.231$~MeV which retains each of the 29 internal
+  boundaries of the fine mesh; below, the same fraction for the structures that
+  adopt the boundary at $0.302$~MeV, plotted downwards. The six boundaries on
+  which the two blocks differ by more than fifty points are drawn in colour and
+  labelled with their energy; on the others the two blocks agree.}
+  \label{eg:fig:blocks}
+\end{figure}
 
 The exclusion has a direct reading. The boundaries at $3.679$ and $2.231$~MeV
 are adjacent in the fine mesh, so that retaining both would subdivide a region
@@ -940,48 +956,17 @@ deciding whether to cover it.
 
 Which of the two prevails is not explained by the fidelity with which each
 represents the spectrum, and the point is worth recording because the opposite
-would be the natural expectation. For each structure the variation of the
-reference flux shape within its groups was computed and weighted by the total
-importance $\phi\phi^{\ddagger}/v$ of the group, which is the weight with which
-the flux fitness function of Eq.~(\ref{eg:eqn:distributed}) counts an error. The
-two blocks are indistinguishable on that measure, $0.171$ against $0.159$, and
-they remain so when the weight is the bare flux, $0.237$ against $0.252$. The
+would be the natural expectation. A structure represents the spectrum well when
+the reference flux keeps the same shape inside each of its groups, since a group
+is described by a single number. Measuring how much the flux per unit lethargy
+varies inside each group, and weighting the groups by the importance they carry,
+which is the weight with which the flux fitness function of
+Eq.~(\ref{eg:eqn:distributed}) counts an error, the variation inside a typical
+group is of the order of a sixth of its value in both blocks, and the two cannot
+be told apart on it; nor can they when the weight is the bare flux. The
 separation into two blocks is a property of the solutions, and the difference in
 quality between them is measured here; what decides it is not identified by
 these data.
-
-\begin{table}[htbp]
-\centering
-\caption[The two blocks of solutions]{The two blocks of solutions, defined by
-the exclusive choice between the boundaries at $2.231$ and $0.302$~MeV. Above,
-the boundaries whose presence distinguishes them, with the fraction of the
-structures of each block that retains the boundary. Below, the properties of the
-two blocks: the median joint fitness verified with the reference solver, the
-mean number of boundaries on which two structures of the same block disagree,
-and the variation of the reference flux shape within the groups, weighted by the
-total importance that appears in the flux fitness function and, for comparison,
-by the bare flux. Two structures belonging to different blocks disagree on
-$12.5$ boundaries on average.}
-\label{eg:tab:families}
-\small
-\begin{tabular}{lcc}
-\toprule
-Boundary [MeV] & $2.231$~MeV block [\%] & $0.302$~MeV block [\%] \\ \midrule
-    $2.231$ & 100 & 0 \\
-    $3.020\times10^{-1}$ & 0 & 100 \\
-    $4.000\times10^{-6}$ & 90 & 2 \\
-    $3.679$ & 20 & 83 \\
-    $5.400\times10^{-7}$ & 21 & 83 \\
-    $9.166\times10^{-5}$ & 57 & 3 \\
-\midrule
-    Property & $2.231$~MeV block & $0.302$~MeV block \\ \midrule
-    Distinct structures & 668 & 65 \\
-    Median joint fitness & $6.700\times10^{7}$ & $9.956\times10^{7}$ \\
-    Mean internal disagreement [boundaries] & 9.1 & 7.3 \\
-    Shape variation, importance weighted & 0.171 & 0.159 \\
-    Shape variation, flux weighted & 0.237 & 0.252 \\ \bottomrule
-\end{tabular}
-\end{table}
 
 \subsection{Recurring Features of the Optimized Structures}\label{eg:sec:recurring}
 
