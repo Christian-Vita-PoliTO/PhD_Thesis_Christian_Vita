@@ -88,12 +88,16 @@ judged is the explicit Monte Carlo solution of the full core.
 
 \section{Motivations}
 
-Neutronics has, in the Monte Carlo method, a reference model. The method
-follows the neutrons one by one through the actual geometry of the system with
-the continuous-energy nuclear data, and its general-purpose
-implementations~\cite{mcnp63,Serpent_code_description,openmc} are the standard
-against which every approximate description of a core is measured; time-dependent
-modes exist as well~\cite{serpentDynamic}. That the accuracy of these codes is
+The Monte Carlo method occupies a place apart among the tools of reactor
+physics. It solves the transport problem by simulating a large number of neutron
+histories in the true geometry of the system, with the nuclear data at their
+tabulated energies rather than averaged over energy groups, so that what limits
+its accuracy is the number of histories and the data themselves, and not a
+simplification of the physics. Its general-purpose
+implementations~\cite{mcnp63,Serpent_code_description,openmc} are for this
+reason the standard against which every approximate description of a core is
+measured, time-dependent modes included~\cite{serpentDynamic}.
+That the accuracy of these codes is
 paid in computing time is well known, but the form the cost takes for the
 problems of this thesis is worth stating. Neither the design nor the operation
 of a reactor asks for one state of the core. A design space is explored over
