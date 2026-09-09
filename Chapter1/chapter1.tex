@@ -159,13 +159,20 @@ introduced for the sake of speed. In Chapter~\ref{ch:energy-grid} a neural
 network trained on the outputs of the deterministic solver takes the place of
 the solver inside an optimization loop; the network is allowed to explore, and
 the solver alone decides, since every structure the search proposes is
-recomputed with it. The second rule is that the reference is a statistical
-estimate and is treated as one. In Chapter~\ref{ch:energy-grid} the difference
-between two energy structures is read against the statistical uncertainty of
-the reference values, and Part~\ref{part:hpmr} builds for the interpolated
-matrix an estimate of the uncertainty it inherits from the tallies, derives it
-from the correlations among the tallied coefficients and validates it against
-independent replicas of the whole database.
+recomputed with it.
+
+The second rule concerns the nature of that reference. A Monte Carlo result is
+not an exact number but an estimate carrying a statistical uncertainty, and a
+comparison that ignores it credits a model with an agreement that the reference
+itself cannot resolve. Two energy structures whose predictions differ by less
+than the uncertainty of the reference are not, on that evidence, one better than
+the other, and it is for this reason that Chapter~\ref{ch:energy-grid} fixes the
+thresholds of its objective function in relation to that uncertainty. The same
+applies downstream: the coefficients of a fission matrix are tallied quantities
+and carry their own noise, which the interpolation passes on to every result
+obtained from them, so that Part~\ref{part:hpmr} derives an estimate of the
+uncertainty thus inherited and checks it against independent repetitions of the
+whole database.
 
 \section{Aim of the work and outline of the thesis}
 
