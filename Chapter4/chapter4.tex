@@ -1192,13 +1192,18 @@ Figure of merit & Optimized & Equal & Uniform & Finest \\
 \end{table}
 
 
-The third reference is the finest structure the framework admits. The collapsing
-routine requires the condensed structure to contain fewer groups than the fine
-one, so that $G=30$ is not a legitimate option and the limit is $G=29$, obtained
-by suppressing a single boundary. All twenty-nine such structures were
-evaluated. The best of them, obtained by suppressing the boundary at
-$8.3\times10^{-6}$~MeV, reaches a canonical fitness of $4.20\times10^{12}$, the
-median is $6.81\times10^{13}$ and the worst is $7.25\times10^{16}$.
+The third reference is the finest structure that the framework allows to be
+built. The fine mesh has thirty groups and the collapsing routine requires the
+condensed structure to have fewer, so that keeping all thirty is not an
+admissible option: the finest structure available has twenty-nine groups and is
+obtained by merging two adjacent fine groups, that is by suppressing one of the
+twenty-nine internal boundaries. There are twenty-nine ways of doing so, and all
+of them were evaluated with the reference solver. Such a structure condenses
+almost nothing, and it is therefore the natural candidate for the best result
+that the multi-group model can deliver. It does not deliver it. The best of the
+twenty-nine, obtained by suppressing the boundary at $8.3\times10^{-6}$~MeV,
+reaches a canonical fitness of $4.20\times10^{12}$; half of them are worse than
+$6.81\times10^{13}$, and the worst is four orders of magnitude beyond the best.
 
 The optimized 15-group structure is therefore better than the best 29-group
 structure by five orders of magnitude on the joint fitness. Since that fitness
