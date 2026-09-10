@@ -123,11 +123,13 @@ eigenvalue problem of modest size~\cite{CarneyANE2014,WaltersNSE2018}. What is
 lost in building that representation is lost for every evaluation that follows,
 and no accuracy of the solver recovers it.
 
-This thesis acts on that representation along two lines. The first is the way it
-is built: the route by which the group constants are generated and the energy
-mesh over which they are condensed in Part~\ref{part:lfr}, the parameters spanned
-by the database, its density and the interpolation of its matrices in
-Part~\ref{part:hpmr}. The second is the correction, a quantity computed from a
+This thesis acts on that representation in two ways. The first concerns the
+decisions taken while the representation is being built, before any evaluation
+is made with it: in Part~\ref{part:lfr}, the route by which the group constants
+are generated and the energy mesh over which they are condensed; in
+Part~\ref{part:hpmr}, the parameters the database spans, how densely it covers
+them and how its matrices are interpolated between one entry and the next. The
+second way is the correction, a quantity computed from a
 small number of reference calculations and applied to the representation so that
 it reproduces, at the conditions of the reference, what the reference
 reproduces: the superhomogenization factors~\cite{Hbert_1980} in the first Part,
