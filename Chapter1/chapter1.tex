@@ -146,7 +146,7 @@ between two matrices tallied at conditions that differ in a single effect. Both 
 data and not on the solver, which receives corrected input and requires no
 modification, and it is in this sense that the approaches proposed here are
 non-intrusive. Throughout, the reference keeps the last word: no result rests on
-the intermediate model alone, and where a further layer of approximation is
+the precomputed data alone, and where a further layer of approximation is
 introduced for the sake of speed, as with the neural network that replaces the
 solver inside the optimization of Chapter~\ref{ch:energy-grid}, that layer is
 allowed to explore while the solver decides. The reference is itself a
@@ -156,12 +156,12 @@ than the other, and the noise that the tallied fission matrices carry is
 propagated to every result obtained from them.
 
 The aim of this thesis is to improve the accuracy, and to contain the cost, of
-the neutronic analysis of two advanced reactor concepts by acting on the
-representation that stands between the Monte Carlo reference and the
+the neutronic analysis of two advanced reactor concepts by acting on the data
+that stand between the Monte Carlo reference and the
 calculations that their design and operation require. For the lead-cooled fast
-reactor that representation is the multi-group data of a deterministic solver,
-and the work concerns the route by which the constants are generated, their
-correction and the energy mesh on which they are condensed. For the heat-pipe
+reactor these data are the multi-group constants of a deterministic solver,
+and the work concerns the route by which they are generated, their
+correction and the energy grid on which they are condensed. For the heat-pipe
 micro reactor it is a database of fission matrices, and the work concerns the
 construction of the database, its use for the search of the critical state and
 the corrections that extend it to the conditions of an operating core. The
