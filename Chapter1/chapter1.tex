@@ -113,28 +113,36 @@ computing a sequence of states; monitoring an operating core means predicting
 its critical configuration again and again as the core evolves. A Monte Carlo calculation of the critical state
 of the micro reactor of Part~\ref{part:hpmr} costs several tens of CPU hours, an
 expense that a study of a few states absorbs and a study of thousands does not.
-Every practical scheme therefore interposes, between the reference and the many
-evaluations, a representation of the reactor that is built once from a few
-reference calculations and consulted many times: in Part~\ref{part:lfr} the
-multi-group constants that a deterministic solver reads, in Part~\ref{part:hpmr}
-a database of fission matrices tallied at a set of reference states, from which
-any intermediate state is recovered by interpolation and by the solution of an
-eigenvalue problem of modest size~\cite{CarneyANE2014,WaltersNSE2018}. What is
-lost in building that representation is lost for every evaluation that follows,
-and no accuracy of the solver recovers it.
+Every practical scheme therefore places, between the reference calculation and
+the many evaluations, a set of precomputed data: prepared once from a few
+reference calculations, and used many times in their place. In
+Part~\ref{part:lfr} these data are the multi-group constants that a
+deterministic solver reads. In Part~\ref{part:hpmr} they are a database of
+fission matrices, tallied at a set of reference states, from which any
+intermediate state is recovered by interpolation and by the solution of an
+eigenvalue problem of modest size~\cite{CarneyANE2014,WaltersNSE2018}.
 
-This thesis acts on that representation in two ways. The first concerns the
-decisions taken while the representation is being built, before any evaluation
-is made with it: in Part~\ref{part:lfr}, the route by which the group constants
-are generated and the energy mesh over which they are condensed; in
+Preparing such data means averaging, and averaging means discarding. The
+multi-group constants retain a cross section averaged over each energy group and
+over each region of the core, and nothing of how it varied inside them; the
+database retains the fission matrix at the states at which it was tallied, and
+nothing of what happens between one state and the next. Whatever is discarded at
+this stage is not available to any calculation that uses the data afterwards,
+and a more accurate solver does not bring it back. The quality of these data
+therefore sets a limit on everything computed from them, which is the reason
+this thesis works on the data rather than on the solvers.
+
+This thesis improves these data in two ways. The first is the way they are
+prepared. In Part~\ref{part:lfr} this means the route by which the group
+constants are generated and the energy grid on which they are condensed; in
 Part~\ref{part:hpmr}, the parameters the database spans, how densely it covers
 them and how its matrices are interpolated between one entry and the next. The
-second way is the correction, a quantity computed from a
-small number of reference calculations and applied to the representation so that
-it reproduces, at the conditions of the reference, what the reference
-reproduces: the superhomogenization factors~\cite{Hbert_1980} in the first Part,
-and in the second the correction ratios, taken element by element between two
-matrices tallied at conditions that differ in a single effect. Both act on the
+second way is to correct the data once they are prepared. The correction is
+computed from a small number of reference calculations, and is applied so that
+the corrected data reproduce, at the conditions of the reference, what the
+reference itself gives: the superhomogenization factors~\cite{Hbert_1980} in the
+first Part, and in the second the correction ratios, taken element by element
+between two matrices tallied at conditions that differ in a single effect. Both act on the
 data and not on the solver, which receives corrected input and requires no
 modification, and it is in this sense that the approaches proposed here are
 non-intrusive. Throughout, the reference keeps the last word: no result rests on
