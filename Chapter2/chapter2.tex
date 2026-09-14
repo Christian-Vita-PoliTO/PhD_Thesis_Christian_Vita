@@ -3,7 +3,7 @@
 % PART I OPENER ("cappello"): theory and common ground for the LFR works.
 % Only theory and general framework, as agreed for the Part II opener: the
 % design-specific material, the generation strategies, the SPH algorithm and
-% the optimization of the energy mesh belong to Chapters 3 and 4.
+% the optimization of the energy grid belong to Chapters 3 and 4.
 %
 % Notation: Part I uses \vec{r} and \vec{\Omega}, as Chapter 3 does; Part II
 % uses \mathbf{r}. Harmonising the two is a cosmetic decision left open.
@@ -64,7 +64,7 @@ compares the routes by which the constants can be generated, a single full-core
 Monte Carlo calculation against a set of mini-core models representative of the
 different regions of the system, and weighs the accuracy each route delivers
 against the computational time it costs when several configurations of the core
-have to be analyzed. Chapter~\ref{ch:energy-grid} concerns the energy mesh on
+have to be analyzed. Chapter~\ref{ch:energy-grid} concerns the energy grid on
 which the condensation is performed, whose boundaries are treated as the unknown
 of an optimization rather than as a convention inherited from practice. The two
 works share the same scheme, in which the Monte Carlo code Serpent~2
@@ -314,7 +314,7 @@ inside the region changes and the constants are no longer the correct averages.
 The error is concentrated where the spectrum varies most sharply in space, which
 is at the interfaces between dissimilar regions and around the absorbers.
 
-The second is the energy mesh. Inside a group the shape of the flux is lost, and
+The second is the energy grid. Inside a group the shape of the flux is lost, and
 only its integral survives. A finer structure reduces the influence of the
 assumed shape, since in the limit of an infinite number of groups
 Eq.~(\ref{mg:eq:condensation}) becomes an identity, but the number of groups is
@@ -360,7 +360,7 @@ compares two strategies for generating the constants, and examines what the
 correction does to the multiplication factor, to the power distribution and to
 the kinetic parameters.
 
-The second approach acts on the energy mesh, treating the position of the group
+The second approach acts on the energy grid, treating the position of the group
 boundaries as a decision variable. The structure is chosen from the internal
 boundaries of a fine mesh, which makes the problem combinatorial, and the
 quantity to be optimized is the agreement of a set of integral parameters with
