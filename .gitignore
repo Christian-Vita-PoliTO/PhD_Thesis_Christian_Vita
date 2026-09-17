@@ -20,3 +20,6 @@
 *.synctex(busy)
 # Compiled thesis (Overleaf rebuilds it; keep the repo to sources)
 Polito PhD thesis template.pdf
+# editor session files
+*.upa
+*.upb
