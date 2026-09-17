@@ -33,7 +33,7 @@ constants, that is a set of cross sections defined over a finite number of
 energy intervals and over regions of the core within which the material is
 treated as uniform. The generation of that set is a calculation in its own
 right, and it has been organized for decades as a sequence of steps of
-decreasing detail: for light water reactors the established route proceeds from
+decreasing detail: for light-water reactors the established route proceeds from
 the point-wise libraries to a self-shielded set at the pin level, then to a
 fine-group set at the assembly level, and finally to the few-group data with
 which the full core is solved~\cite{cacuci2010handbook}. Whatever the route, the
@@ -41,14 +41,14 @@ accuracy of everything computed afterwards is bounded by the quality of its
 outcome, and that bound cannot be recovered by refining the solver.
 
 This Part examines two of the degrees of freedom that decide that quality, for
-Lead-cooled Fast Reactors (LFRs). Chapter~\ref{ch:sph-lfr} concerns the
+lead-cooled fast reactors (LFRs). Chapter~\ref{ch:sph-lfr} concerns the
 equivalence between the heterogeneous system and its homogenized representation,
 restored by correcting the constants themselves. Alongside the correction, it
 compares the routes by which the constants can be generated, a single full-core
-Monte Carlo calculation against a set of mini-core models representative of the
-different regions of the system, and weighs the accuracy each route delivers
+Monte Carlo calculation against a set of mini-core models, one for each region
+of the system, and weighs the accuracy each route delivers
 against the computational time it costs when several configurations of the core
-have to be analyzed. Chapter~\ref{ch:energy-grid} concerns the energy grid on
+have to be analysed. Chapter~\ref{ch:energy-grid} concerns the energy grid on
 which the condensation is performed, whose boundaries are treated as the unknown
 of an optimization rather than as a convention inherited from practice. The two
 works share the same scheme, in which the Monte Carlo code Serpent~2
@@ -203,7 +203,7 @@ Eqs.~(\ref{mg:eq:condensation}) to (\ref{mg:eq:homogenization}) directly
 \subsection{The weighting flux}
 
 The definitions above share a structure and, with it, a difficulty. The weight is
-the flux, which is the unknown of the very problem the constants are meant to
+the flux, which is the unknown of precisely the problem the constants are meant to
 solve. Were the true flux available, the multi-group equations would reproduce
 the reaction rates of the continuous problem exactly, and there would be no
 reason to solve them. What is available in its place is the flux of a model

@@ -3,9 +3,9 @@
 
 \chapter{Conclusions and Perspectives}\label{ch:conclusions}
 
-This thesis has worked on the data that stand between the Monte Carlo
-reference and the many neutronic evaluations that the design and the operation
-of a reactor require: the multi-group constants of a deterministic solver for
+This thesis has dealt with the data that a neutronic analysis consults in
+place of the Monte Carlo reference it cannot afford to repeat: the multi-group
+constants of a deterministic solver for
 two lead-cooled fast reactors, and a database of fission matrices for a
 heat-pipe micro reactor. The conclusions of each Part are gathered here, and
 the chapter closes with the developments that the work leaves open.
@@ -13,10 +13,9 @@ the chapter closes with the developments that the work leaves open.
 \section{Multi-group data for lead-cooled fast reactors}
 
 For the Westinghouse LFR, the group constants were generated with Serpent~2
-along two routes, from a single full-core model and from a set of mini-core
-models representative of the regions of the system, and used in a
-finite-element diffusion solver. The mini-core route pays off in accuracy and
-in computational time whenever several configurations of the core have to be
+either from one model of the whole core or from mini-core models built region
+by region, and fed to a diffusion solver based on finite elements. The mini-core route proves the better investment, in accuracy
+and in computing time, whenever several configurations of the core have to be
 analysed, since a full-core model has to be rerun for each of them, at a cost
 that grows when low statistical errors are wanted in the non-multiplying
 regions. The superhomogenization correction of the regions responsible for the
@@ -31,8 +30,8 @@ method, since the relatively uniform flux, the reduced anisotropy and the
 smooth energy dependence of the cross sections limit the condensation errors
 and let scalar factors preserve the global quantities.
 
-For the ALFRED core, the energy grid on which the constants are condensed was
-treated as the unknown of an optimization, and the dependence of the result on
+For the ALFRED core the object of the optimization was the grid itself, the
+set of energy boundaries on which the constants are condensed, and the dependence of the result on
 the random seed, observed in the work this chapter built on, was measured on
 one thousand independent searches instead of three. The number was made
 affordable by a neural metamodel trained on $91\,723$ full-core evaluations of
@@ -43,10 +42,10 @@ returns a structure typically forty-five per cent above the best on the joint
 objective, three searches twenty per cent, and a hundred two per cent, so that
 the gain from repeating the search lies precisely in the range that the
 reference solver cannot reach. The thousand searches converged to 747 distinct
-structures that share no common skeleton, and what they do share is a single
-exclusive choice in the fast region and a placement of the boundaries that
-follows the neutron importance rather than the flux, a criterion never imposed
-and found a posteriori. The best structure has fifteen groups and improves on
+structures with no common skeleton; the regularities they display are an
+exclusive choice between two boundaries of the fast region and a placement of
+the boundaries that follows the neutron importance rather than the flux, a
+criterion never imposed and found a posteriori. The best structure has fifteen groups and improves on
 the three obtained with the solver inside the loop, on the structures built by
 uniform spacing rules and on the finest structure the collapsing procedure
 admits, the last by five orders of magnitude on the joint objective. That last
@@ -59,75 +58,79 @@ over to another case is the procedure, whose cost was repaid after nine
 searches and which delivered analyses worth of the order of $390\,000$
 core-hours of the reference solver for twenty-nine.
 
-\section{Fission matrix methods for heat-pipe micro reactors}
+\section{Fission matrices for heat-pipe micro reactors}
 
-For the heat-pipe micro reactor of the Virtual Test Bed, a database of 136
-fission matrices over eight fuel temperatures and seventeen drum angles, with a
-density settled by a convergence study and a prescribed correlation between
-power and fuel temperature, supports a criticality search that closes on the
-fission matrix alone. At nominal power and fresh fuel the search converges in
-about one second on a single core, uncertainty quantification included, and the
-multiplication factor at the state it returns deviates from a reference Monte
-Carlo calculation by $-56\pm16$~pcm, which is the residual of the interpolation
-of the database. The extension to burnup adds no axis to the database: burnup
-enters the interpolated matrix as a multiplicative correction ratio tallied
-once per snapshot time, and a quasi-static cycle in which drum position,
-temperature field, fission source and cell-wise burnup are updated together
-keeps the multiplication factor of the states it returns within $-59$ to $-5$
-pcm of unity over sixty-six months, with the bias already present at beginning
-of life and no trend with burnup, and the assembly-wise fission source within
-about one per cent. The three assumptions of the factorization were measured
-on dedicated campaigns and found at or below that residual, and seven snapshot
-times suffice on the burnup axis.
+The heat-pipe micro reactor was studied on the model of the Virtual Test Bed.
+Its criticality search rests on a database of 136 fission matrices, tallied at
+eight fuel temperatures and seventeen angles of the control drums, and on a
+prescribed relation between power and fuel temperature that takes the place of
+a thermal solver; the density of the database was not assumed but established
+by a convergence study. With fresh fuel at nominal power one search takes about
+a second on a single core, its uncertainty quantification included, and a
+reference Monte Carlo calculation at the state it returns gives a
+multiplication factor $-56\pm16$~pcm away from the value sought, a deviation
+that is the residual of the interpolation of the database. Burnup was brought
+in without enlarging the database: a correction ratio, tallied once for each
+snapshot of the cycle at a single reference state, multiplies the interpolated
+matrix, and the cycle is followed quasi-statically, with drum angle,
+temperatures, fission source and cell-wise burnup advancing together. Over
+sixty-six months the states so obtained have a multiplication factor between
+$-59$ and $-5$~pcm from unity when recomputed by Monte Carlo, with the same
+bias found at beginning of life and no drift with burnup, and an assembly-wise
+fission source reproduced to about one per cent. The three assumptions on
+which the factorization rests were each tested on a dedicated campaign and
+found to cost no more than that residual, and seven snapshots along the cycle
+proved sufficient.
 
-Two effects that an isothermal database cannot represent were corrected with
-ratios of the same kind, each with its own reference case and its own weight.
-The reflector correction restores the temperature difference between core and
-reflector and reduces the deviation of the multiplication factor from several
-hundred pcm to a few tens on a uniformly hot core, and below the statistical
-uncertainty of the reference once the reference matrix follows the rotation of
-the drums; on non-uniform fields it recovers almost the whole discrepancy when
-the field is smooth and only part of it when the profile is steep from ring to
-ring. The core temperature correction restores the influence of the
-neighbouring cells on each coefficient and, over twelve temperature fields,
-reduces the mean absolute deviation of the multiplication factor by a quarter
-and that of the fission source by as much, with a benefit concentrated on the
-fields that are sharp and extended over several cells. The statistical
-uncertainty of the interpolated results was examined in full: the coefficients
-that share a source column are negatively correlated because a fixed number of
-histories is exhausted among mutually exclusive destinations, the correlation
-is predicted in closed form from the mean coefficients and the multiplicity
-alone, and against a brute-force reconstruction from 150 independent databases
-the closed form reproduces the uncertainty of the multiplication factor to
-within five per cent, while the uncorrelated assumption used elsewhere in the
-Part overestimates it, so that the bands reported for the criticality search
-are conservative.
+The isothermal database cannot represent a reflector colder than the core, nor
+a temperature that changes sharply from one cell to the next, and each of these
+effects received a correction ratio with its own reference case and its own
+weight. For the reflector, the correction takes the deviation of the
+multiplication factor on a uniformly hot core from several hundred pcm down to
+a few tens, and to less than the statistical uncertainty of the reference once
+the reference matrix is tallied at the angle of the drums, at the price of one
+further calculation per angle; on fields that vary across the core it removes
+almost all of the discrepancy when the variation is gradual and only a part of
+it when the temperature jumps from ring to ring. For the gradients inside the
+core, the correction reinstates the influence that the neighbouring cells exert
+on a coefficient, and over twelve temperature fields it lowers the mean
+absolute deviation of the multiplication factor by a quarter and that of the
+fission source by as much, the gain being largest on fields that are both
+sharp and extended over several cells. The statistical uncertainty of
+everything obtained from an interpolated matrix was also examined. The
+coefficients that share a source column turn out to be negatively correlated,
+because the histories of that source are divided among destinations that
+exclude one another, and the correlation follows in closed form from the mean
+coefficients and the multiplicity alone; checked against 150 independent
+databases, the closed form gives the uncertainty of the multiplication factor
+to within five per cent, whereas the uncorrelated assumption used elsewhere in
+the Part overestimates it, so that the bands reported for the criticality
+search err on the safe side.
 
 \section{Perspectives}
 
 Each of the works leaves a direction open, and they are stated as the chapters
 stated them. On the multi-group side, the mini-core route to the generation of
-the constants lends itself to uncertainty and sensitivity analyses related to
-nuclear data in transient calculations, and the reproduction of the kinetic
+the constants lends itself to sensitivity and uncertainty studies on the nuclear data in
+transient calculations, and the reproduction of the kinetic
 parameters under superhomogenization correction, which preserves reaction rates
-and not adjoint-weighted quantities, remains to be improved. The accuracy of
-the neural metamodel is still limited by the amount of reference data, and the
-data that would help most are those in the region where the target is
-steepest, around the optimized structures and their one-boundary neighbours,
-which a targeted campaign of the reference solver could supply; the description
-of a structure given to the network could also be enriched with
-physics-informed quantities, such as the lethargy widths of the condensed
-groups or the variation of the reference spectrum within them weighted by the
-importance, a possibility that a preliminary attempt did not exhaust.
+and not adjoint-weighted quantities, remains to be improved. The neural
+metamodel is still limited by the amount of reference data, and the evaluations
+that would help it most are those where the target is steepest, in the
+neighbourhood of the optimized structures, which a campaign of the reference
+solver aimed at that region could provide; the network could also receive, in
+addition to the boundaries of a structure, quantities that carry physical
+content, such as the lethargy width of each condensed group or the variation of
+the reference spectrum inside it, a possibility that a first attempt left open.
 
-On the fission matrix side, the residual of the criticality search is the
-interpolation of the original database, and the prescribed correlation between
-power and fuel temperature can be replaced by a thermal response from a
-conduction solver, which the interface of the workflow already allows. The two
-temperature corrections were developed on different models and applied
-separately; their combined application requires the calibration of both on the
-same model, and a weight that does not count twice a field that is hot overall
-and sharp inside, in the outermost ring of assemblies where the two effects
-overlap. Where the temperature profile is steep from ring to ring, a zonation
-of the reference matrix would address the part of the discrepancy that the
-reflector correction leaves.
+On the fission matrix side, what limits the criticality search is the
+interpolation of the original database rather than the burnup correction, and
+the prescribed relation between power and fuel temperature can give way to a
+thermal response computed by a conduction solver, for which the workflow
+already provides the interface. The two temperature corrections were built on
+different models and used one at a time; using them together requires
+calibrating both on one and the same model, together with a weight that avoids
+counting the same effect twice in the outermost ring of assemblies, where a hot
+core and a sharp gradient overlap. Where the temperature falls from ring to ring, a reference
+matrix tallied zone by zone would address the part of the discrepancy that the
+reflector correction leaves behind.
