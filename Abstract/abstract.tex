@@ -1,6 +1,51 @@
 % ************************** Thesis Abstract *****************************
-% Use `abstract' as an option in the document class to print only the titlepage and the abstract.
-% The maximum number of characters in abstract must be 4000 (defined by PhD school of Politecnico di Torino). 
+% The PhD school of Politecnico di Torino limits the abstract to 4000 characters.
 \begin{abstract}
-This is where you write your abstract ... (Max= 4000 characters)
+Innovative reactor concepts such as lead-cooled fast reactors and heat-pipe
+micro reactors are not served, as it stands, by the computational chain
+consolidated on light-water reactors, and the Monte Carlo solution of the full
+core remains their reference, at a cost that the many states required by design
+and operation cannot afford. This thesis works on the data that every practical
+scheme places between that reference and the many evaluations: the multi-group
+constants read by a deterministic solver, and a database of fission matrices
+from which any state of the core is recovered by interpolation. In both cases
+the data are prepared once from a few reference calculations, corrected without
+modifying the solver that uses them, and every result is verified against a
+Monte Carlo calculation made for that purpose.
+
+The first Part concerns the multi-group data of lead-cooled fast reactors. For a
+simplified model of the Westinghouse LFR the constants are generated with
+Serpent~2 along two routes, a single full-core model and a set of mini-core
+models representative of the regions of the system, and used in a
+finite-element diffusion solver with a superhomogenization correction of the
+regions responsible for the largest discrepancies. The mini-core route pays off
+in accuracy and in computational time whenever several control-rod
+configurations have to be analysed, and the correction brings the
+multiplication factor and the power distribution close to the reference. For
+the ALFRED core the energy grid on which the constants are condensed is treated
+as the unknown of an optimization. A neural metamodel trained on $91\,723$
+full-core evaluations of the FRENETIC code replaces the solver inside a genetic
+search, making one thousand independent searches affordable where three had
+been, and every structure the searches return is recomputed with the solver.
+The dependence of the result on the random seed is measured, the best
+fifteen-group structure improves on the three previously published ones, and
+the optimized structures share an exclusive choice in the fast region and place
+their boundaries according to the neutron importance rather than to the flux.
+Their quality rests on a cancellation between the condensation error and the
+error of the deterministic model, which binds the result to the core, the
+solver and the objective, while the procedure carries over.
+
+The second Part develops fission matrix methods for the online monitoring of a
+heat-pipe micro reactor, on the model distributed on the Virtual Test Bed. A
+database of matrices over fuel temperature and control-drum angle, with a
+prescribed correlation between power and temperature, supports a criticality
+search that converges in about one second on a single core and returns states
+whose multiplication factor lies within a few tens of pcm of a reference Monte
+Carlo calculation; a multiplicative burnup correction ratio extends it along
+the fuel cycle without adding an axis to the database. Two further correction
+ratios account for the temperature difference between core and reflector and
+for sharp temperature gradients inside the core, and the statistical
+uncertainty that the interpolated matrices inherit from the tallies is derived
+in closed form and validated against independent replicas of the whole
+database.
 \end{abstract}
