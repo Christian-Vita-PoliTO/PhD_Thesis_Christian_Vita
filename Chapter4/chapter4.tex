@@ -21,7 +21,7 @@ in accuracy. The impact of energy collapsing on the integral parameters of a
 fast system has been analysed in detail for the neutron
 lifetime~\cite{collapsing}, and the identification of the structure itself has
 been addressed with several metaheuristics: particle swarm optimization for
-thermal lattices~\cite{psoThermal}, genetic algorithms for multigroup searches
+thermal lattices~\cite{psoThermal}, genetic algorithms for multi-group searches
 in SIMMER~\cite{massoneGA,simmerGA} and for the ARC fusion
 reactor~\cite{arcGA}, simulated annealing for sodium-cooled fast
 reactors~\cite{sfrSA}, hierarchical division~\cite{hierDiv}, and dedicated
@@ -89,7 +89,7 @@ The chapter first defines the optimization problem, reporting in full the
 chromosome representation and the fitness functions inherited from
 \citet{prevMulti}. It then describes the metamodel, its training and its
 accuracy, and identifies the regime in which it is least reliable, since that
-regime dictates the role it is given. The resulting workflow, summarized in Figure~\tref{eg:fig:flow}, is presented next,
+regime dictates the role it is given. The resulting workflow, summarized in Fig.~\tref{eg:fig:flow}, is presented next,
 followed by the analysis of the thousand searches, of the structures they
 produce, and of the features those structures have in common.
 
@@ -123,8 +123,8 @@ produce, and of the features those structures have in common.
 ]
 
 % ── colonna sinistra: riferimento Monte Carlo (invariata) ────────────────
-\node[greyO] (fine) {fine-group homogenised\\constants (30 groups)};
-\node[serp, below=of fine] (serpent) {Serpent 2\\Monte Carlo};
+\node[greyO] (fine) {fine-group homogenized\\constants (30 groups)};
+\node[serp, below=of fine] (serpent) {Serpent~2\\Monte Carlo};
 \node[greyO, below=of serpent] (ref) {reference output\\$k_\mathrm{eff}$, $P$, $\Phi$,
   $\Lambda_\mathrm{eff}$, $\beta_\mathrm{eff}$};
 
@@ -212,7 +212,7 @@ produce, and of the features those structures have in common.
 \subsection{Reference Data and Fitness Functions}
 
 Serpent~2 is used to generate, for each core configuration, both the reference
-values of the integral parameters and the spatially homogenised fine-group
+values of the integral parameters and the spatially homogenized fine-group
 constants, evaluated at isothermal conditions with fuel and coolant at $673$~K.
 The data are collapsed onto a fine structure of 30 groups whose boundaries are
 extracted from the ECCO-33 grid, chosen so that few groups describe the thermal
@@ -398,7 +398,7 @@ set, after the architecture had been fixed.
 
 The fifteen fitness functions are not independent, since they group into five
 physical families, each evaluated for the same three core states. The network
-reproduces that organisation. A shared trunk of three fully connected layers of
+reproduces that organization. A shared trunk of three fully connected layers of
 $1024$, $512$ and $256$ neurons receives the 29-bit description of the structure
 together with the number of groups. The trunk feeds five family-level branches
 of $128$ and $64$ neurons, each of which feeds three configuration-level
@@ -594,7 +594,7 @@ The residual error is not distributed uniformly over the design space. It
 concentrates at small values of the reactivity and kinetics fitness functions
 and, for the flux, at large values. Since small fitness values identify the best
 structures, the behaviour deserves a quantitative explanation, and the
-explanation lies in the target function itself. Searching the data set for
+explanation lies in the target function itself. Searching the training database for
 pairs of structures differing by exactly one boundary yields 55\,058 such
 pairs. The median change of the base-ten logarithm of the fitness function
 across a pair amounts to $0.414$ decades in the lowest band of
@@ -739,7 +739,7 @@ cost of a hundred evaluations of the reference solver.
 Every distinct structure produced by the searches is submitted to FRENETIC, and
 the ranking reported in the following is the one obtained from the recomputed
 values, expressed on the canonical scale. No quantity discussed in the following is a prediction of the metamodel.
-This arrangement is deliberate and follows from the limit just characterised:
+This arrangement is deliberate and follows from the limit characterized above:
 the metamodel is accurate
 enough to order the candidates and thus to identify a short list worth a
 full-core calculation, which is a considerably weaker requirement than
@@ -752,7 +752,7 @@ them among themselves.
 \subsection{Behaviour of the Searches}
 
 The thousand searches produced 747 distinct structures, with a number of groups
-between 9 and 20. Figure~\tref{eg:fig:search} summarises their behaviour, with
+between 9 and 20. Figure~\tref{eg:fig:search} summarizes their behaviour, with
 the progress of every search re-expressed on the canonical scale. Each search
 settles quickly: measured against its own final value, the median search is
 within $10\%$ of it by generation 24 and within $1\%$ by generation 36, and 85
@@ -958,7 +958,7 @@ these data.
 
 \subsection{Recurring Features of the Optimized Structures}\label{eg:sec:recurring}
 
-Beyond the choice just described, the 747 structures display regularities which
+Beyond the choice described above, the 747 structures display regularities which
 can be examined collectively, and which constitute the general information that
 a single search cannot provide.
 
@@ -969,7 +969,7 @@ in $96\%$ of the structures, the next two, at $8.3\times10^{-6}$ and
 $2.231$~MeV, in $91$ and $89\%$, while no other exceeds $87\%$. At the other
 end four boundaries are used by fewer than one structure in ten, all of them in
 the fast region between $0.30$ and $1.35$~MeV. The optimized structures
-therefore agree on very little, and two of them taken at random disagree on
+therefore agree on little, and two of them taken at random disagree on
 $9.7$ of the 29 boundaries.
 
 \begin{table}[htbp]
@@ -1091,7 +1091,7 @@ solver.
   the dashed curve is the corresponding prediction of the metamodel. The faded
   blue points are the 747 distinct structures returned by the thousand
   unconstrained searches, placed at their own group count with a small
-  horizontal jitter, and mark the region the campaign actually visited. The
+  horizontal jitter, and mark the region the campaign visited. The
   stars mark the reference constructions discussed in the text, and the
   triangles the structures obtained by the three tribes of \citet{prevMulti},
   recomputed here on the same canonical scale.}
@@ -1123,7 +1123,7 @@ group count, is a question of how many searches were affordable, and the
 outcomes of the thousand searches, shown as the faded cloud in the same figure,
 say so directly: the three structures fall inside the region the campaign
 visits, not outside it. At $G=14$ the structure of \citet{prevMulti} is a
-typical outcome of one of our searches, worse than 24 of the 57 structures the
+typical outcome of one of the searches of this campaign, worse than 24 of the 57 structures the
 campaign returned at that group count and better than the other 33; at $G=20$ it
 lies in the upper tail, worse than 95 of 101; at $G=13$ it is worse than all 37.
 None of them is unreachable by a single search, and none is what a single search
@@ -1214,7 +1214,7 @@ it: a coarser structure introduces a condensation error of its own, and the
 search selects the structure whose condensation error cancels the model error
 most closely. The fifteen-group structure reproduces the multiplication factor
 with the rods partially inserted almost exactly not because it condenses better,
-but because its condensation error and the model error very nearly cancel.
+but because its condensation error and the model error nearly cancel.
 
 Two consequences follow. The first is practical: refining the energy grid is not
 a way of approaching the Monte Carlo reference in this framework, and a
@@ -1255,8 +1255,7 @@ pair of errors it was tuned to annul.
 \subsection{Accuracy of the Metamodel on the Proposed Structures}\label{eg:sec:accuracy}
 
 All 747 distinct structures were recomputed with FRENETIC, which allows the
-metamodel to be judged on exactly the population it proposed and on the
-quantity the search actually uses, the joint fitness.
+metamodel to be judged on exactly the population it proposed and on the quantity the search uses, the joint fitness.
 Figure~\tref{eg:fig:bias} sets the two against each other, structure by
 structure. The median difference between the predicted and the true joint
 fitness over the 747 structures is
@@ -1322,7 +1321,7 @@ Rank & $G$ & True fitness & Predicted & Disagr.\ [\%] \\ \midrule
 
 \subsection{Computational Cost}
 
-Table~\tref{eg:tab:cost} summarises the computational budget. Assembling the
+Table~\tref{eg:tab:cost} summarizes the computational budget. Assembling the
 training set required approximately $3\,516$ core-hours of FRENETIC, while a
 single search evaluated directly on the solver would require $383$. The
 metamodel therefore becomes advantageous beyond approximately nine searches, and
@@ -1364,7 +1363,7 @@ made accessible by a neural metamodel of the fifteen fitness functions, trained
 on 91\,723 full-core evaluations and accurate to a median relative error of
 $0.403\%$ on configurations never seen during training and of $0.39\%$ on the
 747 structures the searches went on to propose, which is the population on which
-its accuracy actually matters. Every one of those structures was recomputed with
+its accuracy matters. Every one of those structures was recomputed with
 the reference solver, so that the conclusions rest on FRENETIC and not on the
 metamodel; the three structures the metamodel places first are the three the
 solver places first, which is what the workflow requires of it.
@@ -1379,7 +1378,7 @@ concentrated in a range of campaign sizes that the reference solver cannot
 reach, which is the argument for replacing it inside the loop.
 
 The landscape that the thousand searches map is rugged and only partly
-organised. They converge to 747 distinct structures, five out of six of which
+organized. They converge to 747 distinct structures, five out of six of which
 were produced by a single search, and two structures taken at random disagree on
 ten of the twenty-nine available boundaries. Only two boundaries are retained by
 more than nine structures out of ten, and the best structure lacks one of them,

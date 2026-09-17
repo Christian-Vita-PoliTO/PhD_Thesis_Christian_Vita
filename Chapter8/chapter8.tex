@@ -30,11 +30,11 @@ target state. The first correction, the Reflector Correction Ratio, is developed
 the three-dimensional VTB model of Sec.~\ref{fm:sec:model}, the same used for
 the criticality search. The second, the Core Temperature Correction Ratio, is
 developed on a two-dimensional variant of the same design, described in
-Sec.~\ref{cr:sec:model2d}. This chapter also contains the examination of the statistical
-uncertainty of the interpolated results that Sec.~\ref{fm:sec:uq} announced:
-the correlations between the tallied coefficients, their analytical modelling,
-and the validation of the resulting estimate against independent replicas of
-the whole database.
+Sec.~\ref{cr:sec:model2d}. The chapter also carries out the study of the statistical
+uncertainty of the interpolated results that Sec.~\ref{fm:sec:uq} deferred to
+it: how the tallied coefficients are correlated, how that correlation can be
+modelled analytically, and how well the resulting estimate holds against
+independent replicas of the whole database.
 
 \section{The Reflector Correction Ratio}\label{cr:sec:rcr}
 
@@ -152,7 +152,7 @@ local differences.
 
 Equation~(\ref{cr:eq:rcr1}) accounts for temperature alone. The control drums,
 however, sit inside the reflector, and rotating them changes the absorption in
-the very region whose effect the ratio describes, most of all at the interface
+precisely the region whose effect the ratio describes, most of all at the interface
 with the outermost ring of assemblies. Each drum position therefore requires
 its own reference matrix, and the ratio becomes
 %
@@ -323,7 +323,7 @@ ring to ring, while the correction is calibrated on a spatially uniform
 gradient. A zonation of the correction, with a reference matrix generated
 separately for different regions of the core, would address this limitation and is left to future developments. In Case 7 there is little for the
 correction to recover, since the local difference is small and changes sign,
-and indeed the corrected and uncorrected results differ by \SI{14}{pcm}, of the
+and the corrected and uncorrected results differ by \SI{14}{pcm}, of the
 order of the combined uncertainty.
 
 \begin{table}[htbp]
@@ -619,8 +619,8 @@ specified, and four ways of specifying it are compared.
 \begin{enumerate}
   \item \emph{Uncorrelated resampling}, $\boldsymbol\rho=\mathbf I$. Each
   coefficient is perturbed on its own with its own variance. This is the
-  assumption of earlier work on the uncertainty of fission-matrix results
-  \cite{HeWaltersNSE2022} and serves here as the baseline.
+  assumption adopted in earlier studies of the uncertainty of fission-matrix
+  results~\cite{HeWaltersNSE2022}, and it serves here as the baseline.
   \item \emph{Analytical model},
   $\boldsymbol\rho=\boldsymbol\rho_{\mathrm{pred}}$, predicted in closed form
   from the branching structure of the fission process, derived in
