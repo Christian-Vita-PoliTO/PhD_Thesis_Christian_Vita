@@ -1,18 +1,5 @@
 %!TEX root = ../Polito PhD thesis template.tex
 % ******************************* Chapter 6 ************************************
-% Part II opener: the fission matrix method derived from the transport
-% equation, its generation strategies, the reactor model, and the general
-% framework (parametrization, statistical uncertainty, error metrics) shared
-% by Chapters 7 and 8; the correction ratios are introduced where they are
-% used (CV, 5 Sep 2026). Chapter-specific material (database
-% axes, interpolation formulae, correction-ratio definitions, correlation model
-% of the coefficients, validation numbers) lives in Chapters 7 and 8.
-%
-% Sources (materials/fission_matrix_HPMR/): NSE paper secs. 1, 3.1-3.6 (formal
-% definition, two generation strategies, uncertainty); AnE paper secs. 2, 3.1
-% (VTB model, Serpent tally) and the package notes (verified conventions,
-% detector comparison 0.3 % vs 3-9 %); M&C paper sec. 4. The derivation of
-% Sec. 6.2 follows Carney et al., Ann. Nucl. Energy 73 (2014).
 
 \chapter{The Fission Matrix Method for Heat-Pipe Micro Reactors}\label{ch:fm-theory}
 
@@ -296,11 +283,6 @@ geometry.
   \label{fm:fig:vtb}
 \end{figure}
 
-% NOTA: the AnE paper states that "only one-sixth of the core
-% geometry is modeled", while the mesh is 30 assemblies x 3 axial zones = the
-% whole core and Case 6 of the RCR tests imposes a non-symmetric gradient. The
-% wording above (whole core tallied, sextant only drawn) follows the mesh and
-% was confirmed by Christian on 5 Sep 2026: leave it as it stands.
 
 Serpent~2 tallies the fission matrix on a Cartesian mesh. That is convenient
 for a square lattice, where the mesh can be made to coincide with the fissile

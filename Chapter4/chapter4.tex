@@ -1,25 +1,13 @@
 %!TEX root = ../Polito PhD thesis template.tex
 % ******************************* Chapter 4 ************************************
-% From: Neural Network-Assisted Genetic Optimization of the Multi-Group
-%       Energy Structure for Lead-Cooled Fast Reactors
-% Source: materials/enanching_multigroup_LFR/lfr_energy_grid/paper/paper.tex
-%         tables/ and figures alongside; workflow_LFR.ipynb reproduces numbers
-% Bibliography for this chapter: Chapter4/refs_eg.bib (to be added to the
-% \bibliography list of the main file; References/references.bib not modified).
-% NOTE: the flowchart figure (TikZ) requires in the thesis preamble:
-%   \usepackage{tikz}
-%   \usetikzlibrary{shapes.geometric,arrows.meta,positioning,fit,backgrounds,calc}
-% (tikz also loads xcolor, needed by the \providecolor definitions below).
 
-% Colours defined in the paper preamble and used by the TikZ flowchart
-% (\providecolor instead of \definecolor to avoid collisions with other chapters)
 \providecolor{serpent}{HTML}{4CAF7D}
 \providecolor{fren}{HTML}{E8703A}
 \providecolor{nnc}{HTML}{3B7A99}
 \providecolor{ga}{HTML}{F2C14E}
 \providecolor{newc}{HTML}{1F6FB2}
 
-\chapter{Neural Network-Assisted Optimization of the LFR Multi-Group Energy Grid Driven by Genetic Algorithms}\label{ch:energy-grid}  %CV: ho cambiato il titolo qua
+\chapter{Neural Network-Assisted Optimization of the LFR Multi-Group Energy Grid Driven by Genetic Algorithms}\label{ch:energy-grid}
 
 \section{Introduction}
 
@@ -544,7 +532,7 @@ quantities: the power fitness functions are reproduced to better than $0.2\%$
 and the delayed neutron fraction to about $0.4\%$, while the flux functions,
 which are the least accurate, lie between $2.0$ and $2.3\%$.
 
-\begin{table}[htbp] %CV: il parametro di vita è il famoso parametro cinetico Lambda_eff
+\begin{table}[htbp]
 \centering
 \caption[Metamodel accuracy on the external validation set]{Metamodel accuracy on the external validation set, 1700 configurations
 never used in training nor for early stopping. The coefficient of determination
