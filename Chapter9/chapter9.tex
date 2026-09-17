@@ -3,6 +3,160 @@
 
 \chapter{Conclusions and Perspectives}\label{ch:conclusions}
 
-% =============================================================================
-% PLACEHOLDER -- common conclusions for both parts, to be written last.
-% =============================================================================
+This thesis has worked on the data that stand between the Monte Carlo
+reference and the many neutronic evaluations that the design and the operation
+of a reactor require: the multi-group constants of a deterministic solver for
+two lead-cooled fast reactors, and a database of fission matrices for a
+heat-pipe micro reactor. In both cases the data were prepared once from a few
+reference calculations, improved in the way they are built and corrected
+without modifying the solver that uses them, and every result was set against a
+Monte Carlo calculation made for that purpose. The conclusions of the two Parts
+are gathered here, followed by what the two have in common and by the
+developments that the work leaves open.
+
+\section{Multi-group data for lead-cooled fast reactors}
+
+For the Westinghouse LFR, the group constants were generated with Serpent~2
+along two routes, from a single full-core model and from a set of mini-core
+models representative of the regions of the system, and used in a
+finite-element diffusion solver. The mini-core route pays off in accuracy and
+in computational time whenever several configurations of the core have to be
+analysed, since a full-core model has to be rerun for each of them, at a cost
+that grows when low statistical errors are wanted in the non-multiplying
+regions. The superhomogenization correction of the regions responsible for the
+largest discrepancies brings the multiplication factor and the power density
+distribution of the deterministic model close to the reference, at a cost of
+seconds per supercell, and it does so more effectively where the system is more
+heterogeneous. The kinetic parameters respond to the correction without a
+direct benefit, which follows from what the correction preserves: reaction
+rates, the product of a cross section and the flux, and not bilinear quantities
+weighted with the adjoint. Fast reactors proved favourable ground for the
+method, since the relatively uniform flux, the reduced anisotropy and the
+smooth energy dependence of the cross sections limit the condensation errors
+and let scalar factors preserve the global quantities.
+
+For the ALFRED core, the energy grid on which the constants are condensed was
+treated as the unknown of an optimization, and the dependence of the result on
+the random seed, observed in the work this chapter built on, was measured on
+one thousand independent searches instead of three. The number was made
+affordable by a neural metamodel trained on $91\,723$ full-core evaluations of
+FRENETIC, which replaced the solver inside the search alone; every structure
+the searches returned was recomputed with the solver, so that the conclusions
+rest on it and not on the metamodel. The dependence is severe: a single search
+returns a structure typically forty-five per cent above the best on the joint
+objective, three searches twenty per cent, and a hundred two per cent, so that
+the gain from repeating the search lies precisely in the range that the
+reference solver cannot reach. The thousand searches converged to 747 distinct
+structures that share no common skeleton, and what they do share is a single
+exclusive choice in the fast region and a placement of the boundaries that
+follows the neutron importance rather than the flux, a criterion never imposed
+and found a posteriori. The best structure has fifteen groups and improves on
+the three obtained with the solver inside the loop, on the structures built by
+uniform spacing rules and on the finest structure the collapsing procedure
+admits, the last by five orders of magnitude on the joint objective. That last
+comparison is the one that explains the result: a structure that condenses
+almost nothing leaves the error of the deterministic model intact, and the
+optimized structure does better because its condensation error cancels that
+model error. The quality of the best structures is therefore bound to the core,
+to the solver and to the objective on which it was obtained, and what carries
+over to another case is the procedure, whose cost was repaid after nine
+searches and which delivered analyses worth of the order of $390\,000$
+core-hours of the reference solver for twenty-nine.
+
+\section{Fission matrix methods for heat-pipe micro reactors}
+
+For the heat-pipe micro reactor of the Virtual Test Bed, a database of 136
+fission matrices over eight fuel temperatures and seventeen drum angles, with a
+density settled by a convergence study and a prescribed correlation between
+power and fuel temperature, supports a criticality search that closes on the
+fission matrix alone. At nominal power and fresh fuel the search converges in
+about one second on a single core, uncertainty quantification included, and the
+multiplication factor at the state it returns deviates from a reference Monte
+Carlo calculation by $-56\pm16$~pcm, which is the residual of the interpolation
+of the database. The extension to burnup adds no axis to the database: burnup
+enters the interpolated matrix as a multiplicative correction ratio tallied
+once per snapshot time, and a quasi-static cycle in which drum position,
+temperature field, fission source and cell-wise burnup are updated together
+keeps the multiplication factor of the states it returns within $-59$ to $-5$
+pcm of unity over sixty-six months, with the bias already present at beginning
+of life and no trend with burnup, and the assembly-wise fission source within
+about one per cent. The three assumptions of the factorization were measured
+on dedicated campaigns and found at or below that residual, and seven snapshot
+times suffice on the burnup axis.
+
+Two effects that an isothermal database cannot represent were corrected with
+ratios of the same kind, each with its own reference case and its own weight.
+The reflector correction restores the temperature difference between core and
+reflector and reduces the deviation of the multiplication factor from several
+hundred pcm to a few tens on a uniformly hot core, and below the statistical
+uncertainty of the reference once the reference matrix follows the rotation of
+the drums; on non-uniform fields it recovers almost the whole discrepancy when
+the field is smooth and only part of it when the profile is steep from ring to
+ring. The core temperature correction restores the influence of the
+neighbouring cells on each coefficient and, over twelve temperature fields,
+reduces the mean absolute deviation of the multiplication factor by a quarter
+and that of the fission source by as much, with a benefit concentrated on the
+fields that are sharp and extended over several cells. The statistical
+uncertainty of the interpolated results was examined in full: the coefficients
+that share a source column are negatively correlated because a fixed number of
+histories is exhausted among mutually exclusive destinations, the correlation
+is predicted in closed form from the mean coefficients and the multiplicity
+alone, and against a brute-force reconstruction from 150 independent databases
+the closed form reproduces the uncertainty of the multiplication factor to
+within five per cent, while the uncorrelated assumption used elsewhere in the
+Part overestimates it, so that the bands reported for the criticality search
+are conservative.
+
+\section{What the two Parts share}
+
+The two Parts differ in the reactor, in the solver and in the data, and they
+agree on how the data were treated. The corrections developed in both,
+superhomogenization factors on one side and correction ratios on the other,
+are computed from a small number of reference calculations and applied to the
+data, so that the solver receives a corrected input and needs no modification:
+the approaches are non-intrusive, which is what makes them applicable to a
+code that cannot be altered. In both Parts the reference kept the last word,
+and where a further layer of approximation was introduced for speed, the neural
+metamodel of the energy-grid search, it was allowed to explore while the solver
+decided. In both the reference was treated as the statistical estimate it is,
+in the thresholds below which two structures are not told apart and in the
+uncertainty that the interpolated matrices inherit from the tallies.
+
+The two Parts also agree on the limits of what they obtained, and the limit is
+of the same nature in both. A correction calibrated on reference cases holds at
+the conditions of those cases: the superhomogenization factors are bound to the
+configuration on which they were computed, the optimized energy grid to the
+core, the solver and the objective whose errors it makes cancel, the
+correction ratios to the reference states and fields on which they were
+calibrated. None of this weakens the results, but it says what carries over to
+another core or another solver, and that is the procedure rather than the
+numbers it produced here.
+
+\section{Perspectives}
+
+Each of the works leaves a direction open, and they are stated as the chapters
+stated them. On the multi-group side, the mini-core route to the generation of
+the constants lends itself to uncertainty and sensitivity analyses related to
+nuclear data in transient calculations, and the reproduction of the kinetic
+parameters under superhomogenization correction, which preserves reaction rates
+and not adjoint-weighted quantities, remains to be improved. The accuracy of
+the neural metamodel is still limited by the amount of reference data, and the
+data that would help most are those in the region where the target is
+steepest, around the optimized structures and their one-boundary neighbours,
+which a targeted campaign of the reference solver could supply; the description
+of a structure given to the network could also be enriched with
+physics-informed quantities, such as the lethargy widths of the condensed
+groups or the variation of the reference spectrum within them weighted by the
+importance, a possibility that a preliminary attempt did not exhaust.
+
+On the fission matrix side, the residual of the criticality search is the
+interpolation of the original database, and the prescribed correlation between
+power and fuel temperature can be replaced by a thermal response from a
+conduction solver, which the interface of the workflow already allows. The two
+temperature corrections were developed on different models and applied
+separately; their combined application requires the calibration of both on the
+same model, and a weight that does not count twice a field that is hot overall
+and sharp inside, in the outermost ring of assemblies where the two effects
+overlap. Where the temperature profile is steep from ring to ring, a zonation
+of the reference matrix would address the part of the discrepancy that the
+reflector correction leaves.
