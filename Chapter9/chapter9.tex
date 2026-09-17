@@ -7,12 +7,8 @@ This thesis has worked on the data that stand between the Monte Carlo
 reference and the many neutronic evaluations that the design and the operation
 of a reactor require: the multi-group constants of a deterministic solver for
 two lead-cooled fast reactors, and a database of fission matrices for a
-heat-pipe micro reactor. In both cases the data were prepared once from a few
-reference calculations, improved in the way they are built and corrected
-without modifying the solver that uses them, and every result was set against a
-Monte Carlo calculation made for that purpose. The conclusions of the two Parts
-are gathered here, followed by what the two have in common and by the
-developments that the work leaves open.
+heat-pipe micro reactor. The conclusions of each Part are gathered here, and
+the chapter closes with the developments that the work leaves open.
 
 \section{Multi-group data for lead-cooled fast reactors}
 
@@ -106,31 +102,6 @@ the closed form reproduces the uncertainty of the multiplication factor to
 within five per cent, while the uncorrelated assumption used elsewhere in the
 Part overestimates it, so that the bands reported for the criticality search
 are conservative.
-
-\section{What the two Parts share}
-
-The two Parts differ in the reactor, in the solver and in the data, and they
-agree on how the data were treated. The corrections developed in both,
-superhomogenization factors on one side and correction ratios on the other,
-are computed from a small number of reference calculations and applied to the
-data, so that the solver receives a corrected input and needs no modification:
-the approaches are non-intrusive, which is what makes them applicable to a
-code that cannot be altered. In both Parts the reference kept the last word,
-and where a further layer of approximation was introduced for speed, the neural
-metamodel of the energy-grid search, it was allowed to explore while the solver
-decided. In both the reference was treated as the statistical estimate it is,
-in the thresholds below which two structures are not told apart and in the
-uncertainty that the interpolated matrices inherit from the tallies.
-
-The two Parts also agree on the limits of what they obtained, and the limit is
-of the same nature in both. A correction calibrated on reference cases holds at
-the conditions of those cases: the superhomogenization factors are bound to the
-configuration on which they were computed, the optimized energy grid to the
-core, the solver and the objective whose errors it makes cancel, the
-correction ratios to the reference states and fields on which they were
-calibrated. None of this weakens the results, but it says what carries over to
-another core or another solver, and that is the procedure rather than the
-numbers it produced here.
 
 \section{Perspectives}
 
