@@ -146,10 +146,9 @@ between two matrices tallied at conditions that differ in a single effect. Both 
 data and not on the solver, which receives corrected input and requires no
 modification, and it is in this sense that the approaches proposed here are
 non-intrusive. Throughout, the reference keeps the last word: no result rests on
-the precomputed data alone, and where a further layer of approximation is
-introduced for the sake of speed, as with the neural network that replaces the
-solver inside the optimization of Chapter~\ref{ch:energy-grid}, that layer is
-allowed to explore while the solver decides. The reference is itself a
+the precomputed data alone, and where a faster approximation of the solver is
+used to explore the alternatives, it is the solver that judges what the
+exploration returns. The reference is itself a
 statistical estimate and is treated as one, so that two structures whose
 predictions differ by less than its uncertainty are not held to be one better
 than the other, and the noise that the tallied fission matrices carry is
