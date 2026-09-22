@@ -1,17 +1,18 @@
 % ************************** Thesis Abstract *****************************
 % The PhD school of Politecnico di Torino limits the abstract to 4000 characters.
 \begin{abstract}
-Innovative reactor concepts such as lead-cooled fast reactors and heat-pipe
-micro reactors are not served, as it stands, by the computational chain
-consolidated on light-water reactors, and the Monte Carlo solution of the full
-core remains their reference, at a cost that the many states required by design
-and operation cannot afford. This thesis works on the data that every practical
-scheme places between that reference and the many evaluations: the multi-group
-constants read by a deterministic solver, and a database of fission matrices
-from which any state of the core is recovered by interpolation. In both cases
-the data are prepared once from a few reference calculations, corrected without
-modifying the solver that uses them, and every result is verified against a
-Monte Carlo calculation made for that purpose.
+The reactor concepts now under development depart from the light-water designs
+on which current computational practice was built. New geometries, new spectra
+and new materials call for calculation schemes that have yet to be established,
+for methods able to support them, and for the study that the design and the
+licensing of these reactors require. This thesis contributes to that effort on
+two concepts and along two lines. For lead-cooled fast reactors the work
+concerns the multi-group data on which deterministic full-core calculations
+rest: the route by which they are generated, their correction, and the energy
+grid over which they are condensed. For heat-pipe micro reactors it concerns
+fission matrix methods, used to search for the critical state of the core and
+to follow it along the fuel cycle. In both cases the reference against which
+every result is judged is a Monte Carlo calculation performed for that purpose.
 
 The first Part concerns the multi-group data of lead-cooled fast reactors. For a
 simplified model of the Westinghouse LFR the constants are generated with
