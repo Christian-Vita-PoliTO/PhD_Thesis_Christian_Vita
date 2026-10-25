@@ -97,17 +97,18 @@ The two terms on the left describe the neutrons that leave a point of the phase
 space, by streaming out of the volume element and by interacting, respectively;
 the two on the right describe those that enter it, by scattering from another
 energy and another direction and by fission. The multiplication factor
-$k_{\mathrm{eff}}$ is the eigenvalue that enforces the balance to be stationary.
-The fission source is assumed as isotropic, to a very good approximation.
+$k_{\mathrm{eff}}$ is the eigenvalue that enforces a stationary balance. The
+fission source is assumed to be isotropic, which it is to a very good
+approximation.
 
 Equation~(\ref{mg:eq:transport}) has seven independent variables, three of
-space, two of flying direction, one of energy and, in the time-dependent case,
+space, two of the direction of flight, one of energy and, in the time-dependent case,
 one of time.
 A Monte Carlo code does not discretize any of them: it samples neutron histories
 governed by statistical rules featuring the same cross sections and estimates
-the quantities of interest as averages over the histories. As a stochastic
-method, its estimate is uncertain and can be improved, at a known cost, by
-simulating more histories. A deterministic code discretizes all
+the quantities of interest as averages over the histories. Being a stochastic
+method, it returns an estimate whose uncertainty can be reduced, at a known
+cost, by simulating more histories. A deterministic code discretizes all
 of them, and its error is systematic: it is determined by the discretization,
 and refining the discretization reduces it at a cost that grows with the number
 of cells, of directions and of groups. The discretization of the
@@ -123,13 +124,13 @@ $E_{g}<E<E_{g-1}$. Integrating Eq.~(\ref{mg:eq:transport}) over one such interva
 returns an equation of identical structure, written in terms of the integrals of
 the flux over the interval and of a set of constants, provided that every
 constant is defined so as to preserve the corresponding rate. For a generic
-reaction $x$ we get
+reaction $x$ the constant is defined as
 %
 \begin{equation}
   \Sigma_{x,g}(\vec{r},\vec{\Omega}) =
   \frac{\displaystyle\int_{E_g}^{E_{g-1}}\Sigma_x(\vec{r},E)\,
         \phi(\vec{r},E,\vec{\Omega})\,\mathrm{d}E}
-       {\displaystyle\int_{E_g}^{E_{g-1}}\phi(\vec{r},E,\vec{\Omega})\,\mathrm{d}E} ,
+       {\displaystyle\int_{E_g}^{E_{g-1}}\phi(\vec{r},E,\vec{\Omega})\,\mathrm{d}E} .
   \label{mg:eq:condensation-angle}
 \end{equation}
 %
@@ -183,7 +184,7 @@ are transferred from one group to another.
 A deterministic solver of the kind used in this Part works on regions inside
 which the composition is taken as uniform, which the physical core is not: a
 fuel assembly contains fuel, cladding, coolant and structural material, which
-are homogenized to get a representative set of constants. The step that produces
+are homogenized into one representative set of constants. The step that produces
 them is the same average as before, performed over the volume $V_i$ of the
 region instead of over the energy interval,
 %
@@ -221,9 +222,9 @@ use before the error becomes unacceptable.
 Two routes lead to that flux. The first is a dedicated deterministic code, which
 solves the transport equation over a lattice cell or an assembly on a fine energy
 grid, with an explicit treatment of the resonance self-shielding; among the
-examples, ECCO, the cell code of the ERANOS system~\cite{eranos}, and
-MC$^2$-3~\cite{mc23} belong to the fast-reactor tradition, DRAGON~\cite{dragon}
-to the thermal one. The second,
+examples are ECCO, the cell code of the ERANOS system~\cite{eranos}, and
+MC$^2$-3~\cite{mc23}, which belong to the fast-reactor tradition, and
+DRAGON~\cite{dragon}, which belongs to the thermal one. The second,
 followed in this Part, is a Monte Carlo calculation of the system itself,
 which tallies the numerator and the denominator of
 Eqs.~(\ref{mg:eq:condensation}) to (\ref{mg:eq:homogenization}) with no
@@ -289,8 +290,8 @@ second of them in Chapter~\ref{ch:energy-grid}, and in Chapter~\ref{ch:sph-lfr}
 it aims at repairing the error that the third and the fourth introduce.
 
 A discrepancy between a deterministic result and a Monte Carlo reference is the
-sum of contributions of different origin, and attributing it requires that they
-be kept apart.
+sum of three contributions of different origin, and attributing it requires
+that they be kept apart.
 
 The first contribution is the weighting spectrum and the environment in which it
 was computed. Eqs.~(\ref{mg:eq:condensation}) and (\ref{mg:eq:homogenization})
@@ -338,7 +339,7 @@ contributions mentioned previously.
 The first approach accepts that the constants cannot be exact and corrects them
 so that the deterministic solution reproduces the reference reaction rates. This
 is the idea of an equivalence procedure. Here, the superhomogenization (SPH)
-\cite{Hbert_1980} is the instance adopted: each homogenized region receives,
+method~\cite{Hbert_1980} is the instance adopted: each homogenized region receives,
 in each group, a multiplicative factor applied to its constants, and the factors
 are computed iteratively until the deterministic model returns the reaction
 rates of the Monte Carlo reference. The equivalence is imposed on a model of
@@ -359,7 +360,7 @@ many times, and recomputes every structure it proposes with the solver, so that
 the conclusions rest on the solver and not on the metamodel.
 
 The two act on different terms and are complementary rather than alternative:
-one repairs the constants of a region whose space and energy environment is not
+one repairs the constants of a region whose spatial and energy environment is not
 the one assumed, the other chooses the intervals over which the averaging is
 performed. Applying both to the same design would require a single calculation
 chain and is not attempted here.
