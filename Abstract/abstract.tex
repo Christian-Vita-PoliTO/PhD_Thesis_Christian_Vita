@@ -1,52 +1,60 @@
 % ************************** Thesis Abstract *****************************
 % The PhD school of Politecnico di Torino limits the abstract to 4000 characters.
 \begin{abstract}
-The reactor concepts now under development depart from the light-water designs
-on which current computational practice was built. New geometries, new spectra
+The reactor concepts now under development depart significantly from the light-water designs
+on which current computational practice was built. New geometries, new energy spectra
 and new materials call for calculation schemes that have yet to be established,
 for methods able to support them, and for the study that the design and the
 licensing of these reactors require. This thesis contributes to that effort on
-two concepts and along two lines. For lead-cooled fast reactors the work
-concerns the multi-group data on which deterministic full-core calculations
-rest: the route by which they are generated, their correction, and the energy
-grid over which they are condensed. For heat-pipe micro reactors it concerns
-fission matrix methods, used to search for the critical state of the core and
-to follow it along the fuel cycle. In both cases the reference against which
-every result is judged is a Monte Carlo calculation performed for that purpose.
+two concepts, with two research lines each. For lead-cooled fast reactors
+(LFRs) the work concerns the multi-group data on which deterministic full-core
+calculations rest: the route by which they are generated and corrected, and the
+energy grid over which they are condensed. For heat-pipe micro reactors (HPMRs)
+it concerns fission matrix (FM) methods: the search for the critical state of
+the core along the fuel cycle, and the corrections that bring the method to the
+conditions of an operating core. In both cases the reference against which
+every result is judged is a Monte Carlo calculation performed for that specific purpose.
 
-The first Part concerns the multi-group data of lead-cooled fast reactors. For a
-simplified model of the Westinghouse LFR the constants are generated with
+The first line concerns the generation and the correction of the multi-group
+data, and is developed on a simplified model of the Westinghouse LFR design.
+The constants are generated with
 Serpent~2 along two routes, a single full-core model and a set of mini-core
 models representative of the regions of the system, and used in a
 finite-element diffusion solver with a superhomogenization correction of the
 regions responsible for the largest discrepancies. The mini-core route proves
-the better choice, for accuracy and for computing time alike, whenever several
+to be the better choice, for accuracy and for computing time alike, whenever several
 control-rod configurations have to be analysed, and the correction brings the
-multiplication factor and the power distribution close to the reference. For
-the ALFRED core the energy grid on which the constants are condensed is treated
-as the unknown of an optimization. A neural metamodel trained on $91\,723$
-full-core evaluations of the FRENETIC code replaces the solver inside a genetic
-search, making one thousand independent searches affordable where three had
-been, and every structure the searches return is recomputed with the solver.
+multiplication factor and the power distribution close to the reference.
+
+The second line concerns the energy grid, and is developed on the ALFRED core
+design, where the boundaries on which the constants are condensed are treated
+as the unknown of an optimization process. A neural metamodel trained on fewer
+than one hundred thousand full-core evaluations of the FRENETIC nodal diffusion
+code replaces the solver inside a genetic
+search, so that one thousand independent searches become affordable against the
+three that the solver alone allowed, and every structure the searches return is
+recomputed with the solver.
 The dependence of the result on the random seed is measured, the best
-fifteen-group structure improves on the three previously published ones, and
+fifteen-group structure improves on the three structures published for the same
+core, obtained from three searches with FRENETIC itself inside the loop, and
 the optimized structures share an exclusive choice in the fast region and place
 their boundaries according to the neutron importance rather than to the flux.
 Their quality rests on a cancellation between the condensation error and the
 error of the deterministic model, which binds the result to the core, the
 solver and the objective, while the procedure carries over.
 
-The second Part develops fission matrix methods for the online monitoring of a
-heat-pipe micro reactor, on the model distributed on the Virtual Test Bed. A
+The second Part develops FM methods for the online monitoring of an HPMR, on
+the model distributed on the Virtual Test Bed platform. Along its first line, a
 database of matrices over fuel temperature and control-drum angle, with a
 prescribed correlation between power and temperature, supports a criticality
-search that converges in about one second on a single core and returns states
+search that converges in about one second on a single computational core and returns states
 whose multiplication factor lies within a few tens of pcm of a reference Monte
 Carlo calculation; a multiplicative burnup correction ratio extends it along
-the fuel cycle without adding an axis to the database. Two further correction
+the fuel cycle without the need for adding an axis to the database. Along the
+second, two further correction
 ratios account for the temperature difference between core and reflector and
 for sharp temperature gradients inside the core, and the statistical
 uncertainty that the interpolated matrices inherit from the tallies is derived
-in closed form and validated against independent replicas of the whole
+in closed form and verified against independent replicas of the whole
 database.
 \end{abstract}
