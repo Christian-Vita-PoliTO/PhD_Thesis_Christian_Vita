@@ -5,8 +5,8 @@
 
 \section{Motivation and scope}
 
-The design of a reactor and the analysis of its safety require the neutron field
-to be computed many times: for the configurations of the control system that the
+The design of a reactor and its safety analysis require the neutron field to be
+computed many times: for the configurations of the control system that the
 plant will pass through, for the states of the fuel that follow one another
 along the cycle, and, in the transient analyses for which those calculations are
 ultimately intended, for many instants in time. A Monte Carlo (MC) calculation
@@ -18,36 +18,35 @@ OpenMC~\cite{openmc} are the most widely used in reactor physics, are therefore
 the reference against which every approximate model is measured. Their cost per
 configuration is what confines them to a limited number of reference states.
 
-Deterministic solvers return the same quantities in a time smaller by orders of
-magnitude, and it is with them that parametric studies and transient analyses
-are usually carried out. The separation is one of cost rather than of principle,
+Deterministic solvers estimate the same quantities in a time smaller by orders
+of magnitude; hence, they are used for parametric studies and transient
+analyses. The distinction is one of cost rather than of principle,
 since time-dependent Monte Carlo modes have been developed as well, in Serpent~2
-among other codes~\cite{serpentDynamic}; but a study that must repeat the same
-calculation over hundreds of configurations still turns to a deterministic
-solver.
+among other codes~\cite{serpentDynamic}. A study that repeats the same
+calculation over hundreds of configurations, however, still relies on a
+deterministic solver.
 
 The price of that speed is paid in the form in which the nuclear data have to be
 supplied. A deterministic solver does not read the continuous-energy cross
-sections: it reads a condensed and homogenized version of them, the multi-group
-constants, that is a set of cross sections defined over a finite number of
-energy intervals and over regions of the core within which the material is
-treated as uniform. The generation of that set is a calculation in its own
-right, and it has been organized for decades as a sequence of steps of
-decreasing detail: for light-water reactors the established route proceeds from
-the point-wise libraries to a self-shielded set at the pin level, then to a
-fine-group set at the assembly level, and finally to the few-group data with
+sections: it reads a set of multi-group constants, defined over a finite number
+of energy intervals and over regions of the core which are homogenized. The
+generation of this set is a calculation in its own right, and it has been
+organized for decades as a sequence of steps of decreasing detail: for
+light-water reactors the established route proceeds from the point-wise
+libraries to a self-shielded set at the pin level, then to a fine-group set at
+the assembly level, and finally to the few-group data with
 which the full core is solved~\cite{cacuci2010handbook}. Whatever the route, the
 accuracy of everything computed afterwards is bounded by the quality of its
 outcome, and that bound cannot be recovered by refining the solver.
 
-This Part examines two of the degrees of freedom that decide that quality, for
+This Part examines two of the degrees of freedom affecting that quality, for
 lead-cooled fast reactors (LFRs). Chapter~\ref{ch:sph-lfr} concerns the
 equivalence between the heterogeneous system and its homogenized representation,
 restored by correcting the constants themselves. Alongside the correction, it
 compares the routes by which the constants can be generated, a single full-core
-Monte Carlo calculation against a set of mini-core models, one for each region
+MC calculation against a set of mini-core models, one for each region
 of the system, and weighs the accuracy each route delivers
-against the computational time it costs when several configurations of the core
+against its computational time when several configurations of the core
 have to be analysed. Chapter~\ref{ch:energy-grid} concerns the energy grid on
 which the condensation is performed, whose boundaries are treated as the unknown
 of an optimization rather than as a convention inherited from practice. The two
@@ -65,11 +64,11 @@ error that follows from them.
 
 \section{The neutron transport equation}
 
-The stationary state of a multiplying system is described by the linear
+The behaviour of a multiplying system is described by the linear
 Boltzmann equation for the angular flux $\phi(\vec{r},E,\vec{\Omega})$, the
 density of neutrons at the position $\vec{r}$, with energy $E$, travelling in
-the direction $\vec{\Omega}$, multiplied by their speed. In the form in which
-criticality is expressed as an eigenvalue problem the equation reads
+the direction $\vec{\Omega}$, multiplied by their speed. The static form, where
+criticality can be expressed as an eigenvalue problem, reads
 \cite{SPH_book_Bell_Glasstone}
 %
 \begin{align}
@@ -85,44 +84,46 @@ criticality is expressed as an eigenvalue problem the equation reads
 \end{align}
 %
 where $\Sigma_t$ is the total macroscopic cross section, $\Sigma_s$ the
-double-differential scattering cross section, $\nu\Sigma_f$ the production
-cross section, $\chi$ the fission spectrum, and
+double-differential scattering cross section, $\nu\Sigma_f$ the fission
+production cross section, $\chi$ the fission spectrum, and
 %
 \begin{equation}
   \Phi(\vec{r},E) = \int_{4\pi}\phi(\vec{r},E,\vec{\Omega})\,\mathrm{d}\vec{\Omega}
   \label{mg:eq:totalflux}
 \end{equation}
 %
-the total flux, that is the angular flux integrated over the whole solid angle.
+the total flux, i.e., the angular flux integrated over the whole solid angle.
 The two terms on the left describe the neutrons that leave a point of the phase
-space, by streaming out of the volume element and by interacting; the two on the
-right describe those that enter it, by scattering from another energy and
-another direction and by fission. The multiplication factor $k_{\mathrm{eff}}$
-is the eigenvalue that makes the balance stationary, and the fission source is
-written as isotropic, which the emission of fission neutrons is to a very good
-approximation.
+space, by streaming out of the volume element and by interacting, respectively;
+the two on the right describe those that enter it, by scattering from another
+energy and another direction and by fission. The multiplication factor
+$k_{\mathrm{eff}}$ is the eigenvalue that enforces the balance to be stationary.
+The fission source is assumed as isotropic, to a very good approximation.
 
 Equation~(\ref{mg:eq:transport}) has seven independent variables, three of
-space, two of angle, one of energy and, in the time-dependent case, one of time.
+space, two of flying direction, one of energy and, in the time-dependent case,
+one of time.
 A Monte Carlo code does not discretize any of them: it samples neutron histories
-governed by the same cross sections and estimates the quantities of interest as
-averages over the histories, so that its error is statistical and can be reduced,
-at a known cost, by simulating more of them. A deterministic code discretizes all
-of them, and its error is systematic: it is decided by the discretization and it
-does not disappear with computational effort. The discretization of the energy
-variable is what this Part is concerned with.
+governed by statistical rules featuring the same cross sections and estimates
+the quantities of interest as averages over the histories. As a stochastic
+method, its estimate is uncertain and can be improved, at a known cost, by
+simulating more histories. A deterministic code discretizes all
+of them, and its error is systematic: it is determined by the discretization,
+and refining the discretization reduces it at a cost that grows with the number
+of cells, of directions and of groups. The discretization of the
+energy variable is what this Part is concerned with.
 
 \section{The multi-group form}\label{mg:sec:multigroup}
 
 \subsection{Condensation in energy}
 
 The energy interval of interest is partitioned into $G$ intervals, conventionally
-numbered from the highest energy downwards, group $g$ covering
+numbered from the highest energy downwards, with group $g$ covering
 $E_{g}<E<E_{g-1}$. Integrating Eq.~(\ref{mg:eq:transport}) over one such interval
 returns an equation of identical structure, written in terms of the integrals of
 the flux over the interval and of a set of constants, provided that every
 constant is defined so as to preserve the corresponding rate. For a generic
-reaction $x$ the definition that does so is
+reaction $x$ we get
 %
 \begin{equation}
   \Sigma_{x,g}(\vec{r},\vec{\Omega}) =
@@ -132,12 +133,13 @@ reaction $x$ the definition that does so is
   \label{mg:eq:condensation-angle}
 \end{equation}
 %
-and it already exhibits the first consequence of the condensation: the weight is
-the angular flux, so that the exact group cross section acquires a dependence on
-the direction which the continuous one does not have~\cite{SPH_book_Bell_Glasstone}.
+This equation already exhibits the first consequence of the condensation: the
+weight is the angular flux, so that the exact group cross section acquires a
+dependence on the direction which the continuous one does not
+have~\cite{SPH_book_Bell_Glasstone}.
 Retaining that dependence would defeat the purpose of the operation, which is to
-reduce the number of degrees of freedom of the problem, and it is therefore
-removed by assuming that the energy and the angular dependences of the flux
+reduce the number of degrees of freedom of the problem, it is removed by
+assuming that the energy and the angular dependences of the flux
 separate. The weight then becomes a function of energy alone, and
 Eq.~(\ref{mg:eq:condensation-angle}) reduces to
 %
@@ -179,9 +181,9 @@ are transferred from one group to another.
 \subsection{Homogenization in space}
 
 A deterministic solver of the kind used in this Part works on regions inside
-which the composition is uniform, which the physical core is not: a fuel
-assembly contains fuel, cladding, coolant and structural material, and the
-solver is given one set of constants for the whole of it. The step that produces
+which the composition is taken as uniform, which the physical core is not: a
+fuel assembly contains fuel, cladding, coolant and structural material, which
+are homogenized to get a representative set of constants. The step that produces
 them is the same average as before, performed over the volume $V_i$ of the
 region instead of over the energy interval,
 %
@@ -210,18 +212,19 @@ reason to solve them. What is available in its place is the flux of a model
 which resembles the target: an infinite lattice of identical assemblies, an
 assembly with a prescribed leakage, or, as in this Part, a full-core Monte Carlo
 calculation of the system in one of its configurations. The group constants are
-consequently exact for the state in which they were generated and approximate
-everywhere else. This is not a defect of the procedure but a property of its
-definition, and the practical question is not how to avoid the approximation but
-how far the state of generation may differ from the state of use before the
-error becomes unacceptable.
+consequently exact only for the state in which they were generated and lead to
+approximations otherwise. This is not a defect of the procedure but a property
+of its definition, and the practical question is not how to avoid the
+approximation but how far the state of generation may differ from the state of
+use before the error becomes unacceptable.
 
 Two routes lead to that flux. The first is a dedicated deterministic code, which
 solves the transport equation over a lattice cell or an assembly on a fine energy
-grid, with an explicit treatment of the resonance self-shielding: ECCO, the cell
-code of the ERANOS system~\cite{eranos}, and MC$^2$-3~\cite{mc23} belong to the
-fast-reactor tradition, DRAGON~\cite{dragon} to the thermal one. The second, the
-one followed in this Part, is a Monte Carlo calculation of the system itself,
+grid, with an explicit treatment of the resonance self-shielding; among the
+examples, ECCO, the cell code of the ERANOS system~\cite{eranos}, and
+MC$^2$-3~\cite{mc23} belong to the fast-reactor tradition, DRAGON~\cite{dragon}
+to the thermal one. The second,
+followed in this Part, is a Monte Carlo calculation of the system itself,
 which tallies the numerator and the denominator of
 Eqs.~(\ref{mg:eq:condensation}) to (\ref{mg:eq:homogenization}) with no
 approximation on the geometry and none on the energy dependence, at the price of
@@ -283,62 +286,63 @@ No general rule fixes these decisions for an arbitrary reactor concept, which is
 why the generation of a multi-group library remains a case-dependent operation
 and why it is examined here for one specific design. This Part addresses the
 second of them in Chapter~\ref{ch:energy-grid}, and in Chapter~\ref{ch:sph-lfr}
-it repairs, after the fact, the error that the third and the fourth introduce.
+it aims at repairing the error that the third and the fourth introduce.
 
 A discrepancy between a deterministic result and a Monte Carlo reference is the
-sum of three contributions of different origin, and attributing it requires that
-they be kept apart.
+sum of contributions of different origin, and attributing it requires that they
+be kept apart.
 
-The first is the weighting spectrum and the environment in which it was
-computed. What Eqs.~(\ref{mg:eq:condensation}) and (\ref{mg:eq:homogenization})
-preserve are the reaction rates of the model used for the generation. When the
+The first contribution is the weighting spectrum and the environment in which it
+was computed. Eqs.~(\ref{mg:eq:condensation}) and (\ref{mg:eq:homogenization})
+preserve the reaction rates of the model used for the generation. When the
 deterministic calculation places the same region in a different neighbourhood,
 or moves a control rod, or reaches a different point of the cycle, the spectrum
-inside the region changes and the constants are no longer the correct averages.
+inside the region changes and the constants are no longer consistent averages.
 The error is concentrated where the spectrum varies most sharply in space, which
 is at the interfaces between dissimilar regions and around the absorbers.
 
-The second is the energy grid. Inside a group the shape of the flux is lost, and
-only its integral survives. A finer structure reduces the influence of the
-assumed shape, since in the limit of an infinite number of groups
-Eq.~(\ref{mg:eq:condensation}) becomes an identity, but the number of groups is
-bounded by the cost of every calculation that will use them, and the benefit of
-adding one is not uniform. What decides the accuracy is where the boundaries are
-placed with respect to the features of the spectrum and of the cross sections,
+The second contribution is the energy grid. Inside a group, the shape of the
+flux is lost, and only its integral survives. A finer structure reduces the
+influence of the assumed shape, since in the limit of an infinite number of
+groups Eq.~(\ref{mg:eq:condensation}) becomes an identity, but the number of
+groups is bounded by the cost of every calculation that will use them, and the
+benefit of adding one is not uniform. What decides the accuracy is where the
+boundaries are placed with respect to the features of the spectrum and of the
+cross sections,
 and not the number of intervals alone \cite{collapsing}.
 
-The third is the solver. Diffusion in place of transport, the spatial
-discretization, the treatment of the anisotropy of scattering and of the
+The third contribution is the solver. Diffusion in place of transport, the
+spatial discretization, the treatment of the anisotropy of scattering and of the
 boundary conditions all contribute, and they do so whatever the quality of the
 data. This term is not addressed in this Part. It is recalled here because the
-comparisons reported in the following chapters contain it, and because a
-correction applied to the data can, and sometimes does, compensate an error that
-belongs to the solver.
+comparisons reported in the following chapters are affected by it, and because a
+correction applied to the data can, and sometimes does, compensate an error
+pertaining to the solver.
 
 Two features of a fast system give these contributions a particular weight. The
 neutron spectrum extends over the whole energy range without the thermal peak
 that anchors the structure of a light-water lattice, so that the placement of the
-group boundaries enjoys more freedom and receives less guidance from the physics
-of the problem. And the mean free path is long compared with the pitch of an
-assembly, so that the flux inside a region is determined by a wide neighbourhood
-and the environment in which the constants were generated matters more than it
-does in a thermal system.
+group boundaries enjoys more freedom and receives less clear and intuitive
+guidance from the physics of the problem. Moreover, the mean free path is long
+compared with the pitch of an assembly, so that the flux inside a region is
+determined by a wide neighbourhood and the environment in which the constants
+were generated matters more than it does in a thermal system.
 
 \section{Equivalence and energy structure}\label{mg:sec:approaches}
 
 Neither of the works that follow modifies Eq.~(\ref{mg:eq:transport}) or the
 definitions of Sec.~\ref{mg:sec:multigroup}. Both act on the data that the
 deterministic solver receives, and they act on the first two of the three
-contributions above.
+contributions mentioned previously.
 
 The first approach accepts that the constants cannot be exact and corrects them
 so that the deterministic solution reproduces the reference reaction rates. This
-is the idea of an equivalence procedure, of which superhomogenization (SPH)
-\cite{Hbert_1980} is the instance adopted here: each homogenized region receives,
+is the idea of an equivalence procedure. Here, the superhomogenization (SPH)
+\cite{Hbert_1980} is the instance adopted: each homogenized region receives,
 in each group, a multiplicative factor applied to its constants, and the factors
 are computed iteratively until the deterministic model returns the reaction
 rates of the Monte Carlo reference. The equivalence is imposed on a model of
-limited extent and then transferred to the full core.
+limited spatial extent and then transferred to the full core.
 Chapter~\ref{ch:sph-lfr} develops the procedure for the Westinghouse LFR design,
 compares two strategies for generating the constants, and examines what the
 correction does to the multiplication factor, to the power distribution and to
@@ -355,7 +359,7 @@ many times, and recomputes every structure it proposes with the solver, so that
 the conclusions rest on the solver and not on the metamodel.
 
 The two act on different terms and are complementary rather than alternative:
-one repairs the constants of a region whose environment is not the one assumed,
-the other chooses the intervals over which the averaging is performed. Applying
-both to the same design would require a single calculation chain and is not
-attempted here.
+one repairs the constants of a region whose space and energy environment is not
+the one assumed, the other chooses the intervals over which the averaging is
+performed. Applying both to the same design would require a single calculation
+chain and is not attempted here.
