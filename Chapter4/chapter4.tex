@@ -55,9 +55,9 @@ distribution. The irregularity of the resulting surface can be quantified on
 the structures computed in this work, by comparing the pairs of structures that
 differ by a single boundary, present in one of the two and absent from the
 other. Across such a pair the objective changes by a median factor of about
-fifteen; the change is smaller among the best structures, but among the one per
-cent of the pairs with the lowest values of the objective it still amounts to
-about forty per cent. A surface
+$15$. The change is smaller among the best structures but does not vanish: among
+the $1\%$ of the pairs whose two values have the lowest geometric mean, the
+median factor is still about $1.4$. A surface
 of this kind possesses many local optima separated by barriers that a
 population-based search crosses or does not cross depending on where it starts,
 which is precisely what three tribes with three different outcomes indicate.
@@ -246,7 +246,7 @@ of the fitness function of each individual, and no derivative of it, which makes
 it suited to problems such as the present one, whose variables are discrete and
 whose objective is evaluated by an external code. Its outcome, however, depends
 on the random initial population and on the random choices made by the
-operators, so that runs started from different random seeds can end on
+operators, so that runs started from different random seeds can converge to
 different solutions. The two ingredients specific to the problem, the fitness
 functions and the chromosome, are defined in the following.
 
@@ -294,12 +294,12 @@ the flux deviation of each group and assembly being weighted by the share of the
 total importance of the core that it carries,
 %
 \begin{equation}
-  w_{g,j} = \frac{\sum_{h\in g} n_{h,j}\,\phi^{\dagger}_{h,j}\,V_j}
-                 {\sum_{h=1}^{H}\sum_{j'=1}^{J} n_{h,j'}\,\phi^{\dagger}_{h,j'}\,V_{j'}},
+  w_{g,j} = \frac{\sum_{m\in g} n_{m,j}\,\phi^{\dagger}_{m,j}\,V_j}
+                 {\sum_{m=1}^{H}\sum_{j'=1}^{J} n_{m,j'}\,\phi^{\dagger}_{m,j'}\,V_{j'}},
   \label{eg:eqn:weight}
 \end{equation}
 %
-where $h$ runs over the $H=30$ groups of the fine structure, $h\in g$ denoting
+where $m$ runs over the $H=30$ groups of the fine structure, $m\in g$ denoting
 those contained in group $g$ of the candidate, $V_j$ is the volume of assembly
 $j$, and $n=\phi/v$ and $\phi^{\dagger}$ are the neutron density and the adjoint
 flux of a FRENETIC calculation performed on the fine structure, the speed $v$ of
@@ -373,9 +373,8 @@ values and to the candidate ones.
 The optimization variable is the set of internal boundaries retained from the
 fine structure. Of the 31 boundaries of the 30-group grid the two extremes are
 fixed, so that a candidate structure corresponds to a subset of the remaining
-$H-1=29$ internal boundaries, and the design space, that is, the set of all
-candidate structures, contains
-$2^{29}\approx5.4\times10^{8}$ elements.
+$H-1=29$ internal boundaries, and the design space, that is, the set of all the
+subsets of these boundaries, contains $2^{29}\approx5.4\times10^{8}$ elements.
 
 The earlier formulations of this problem fixed the number of groups before the 
 search and left the genetic algorithm to place the boundaries alone, with one
@@ -410,7 +409,7 @@ or weakened by mutation without being switched on or off abruptly, which
 smooths the effect of the genetic operators on the decoded structure. A repair
 operator enforces the bounds on $G$ and the validity of the alleles after
 crossover and mutation. Figure~\tref{eg:fig:chromosome} illustrates the
-encoding and its decoding on an example.
+encoding and its decoding with an example.
 
 \begin{figure}[htbp]
   \centering
@@ -618,13 +617,13 @@ encoding and its decoding on an example.
 \draw[black!30, line width=.3pt] (13.300,-1.420) -- ++(0,0.14);
 \end{tikzpicture}}
   \caption[Polyploid chromosome and its decoding]{Polyploid chromosome and its
-  decoding, on an illustrative individual with $G=5$. The gene $\gamma_0$ holds
+  decoding, for an illustrative individual with $G=5$. The gene $\gamma_0$ holds
   the number of groups; each of the $P=4$ arrays of $\gamma_1$ holds one allele
   in $\{0,1,2\}$ for each of the 29 internal boundaries of the fine grid, the
   shade growing with the value. Summing the arrays gives the score $s_i$ of each
   boundary, Eq.~(\ref{eg:eqn:score}), and the $G-1=4$ boundaries with the
   highest score are retained; of the three boundaries that share a score of six,
-  the two with the smaller index are retained. The retained boundaries, together
+  the two with the lower indices are retained. The retained boundaries, together
   with the two fixed extremes, define the five groups of the decoded structure.}
   \label{eg:fig:chromosome}
 \end{figure}
@@ -640,7 +639,7 @@ fraction, effective neutron lifetime, power and flux), and each type is
 evaluated for the same three control-rod configurations. The metamodel
 reproduces that organization with a feed-forward neural network, in which the
 input passes through a sequence of intermediate, or hidden, layers of neurons
-before reaching the outputs, and whose layers are arranged on three levels. The
+before reaching the outputs. The layers are arranged in three levels. The
 first level, called the trunk because the other levels branch off from it, is
 common to all the outputs. It receives the description of the structure as 29
 bits, one for each internal boundary of the fine grid and equal to one when the
@@ -676,12 +675,12 @@ construction of the training set rests on it.
 The metamodel is trained on more than $90\,000$ distinct structures, for each of
 which the neutronics module of FRENETIC has been run over the three
 configurations. Since every structure added to the training set costs a
-full-core calculation, the structures were chosen where they are most
-informative, by adaptive sampling: a first set of structures was drawn at random
-among all the candidate structures, and the structures added afterwards were those, among the
-candidates for which FRENETIC had not yet been run, on which the members of an
-ensemble of networks disagreed most, that is, those for which the prediction of
-the metamodel was most uncertain.
+full-core calculation, the training set was built by adaptive sampling, so that
+each addition was as informative as possible: an initial set was drawn at random
+from all the candidate structures, and the structures added afterwards were
+those, among the candidates for which FRENETIC had not yet been run, on which
+the members of an ensemble of networks disagreed most, that is, those for which
+the prediction of the metamodel was most uncertain.
 
 A further 1\,700 structures form an external validation set, which is used
 neither in training nor for early stopping, the procedure that ends the
@@ -693,13 +692,14 @@ The accuracy figures quoted in this work, which all refer to this set, may
 therefore be slightly optimistic. The conclusions of this chapter do not depend
 on them, however, because the workflow described later verifies with FRENETIC
 every result it uses. The ablation and reproducibility measurements reported
-further on are evaluated on the same set, after the architecture had been
+further on were also evaluated on this set, after the architecture had been
 fixed.
 
 \subsection{Training and Accuracy}
 
 The inputs, namely the 29 bits of the structure and the number of groups, and
-the fifteen targets, in the logarithmic space defined above, are standardized to
+the fifteen targets, in the space defined above, logarithmic for all but the
+three power functions, are standardized to
 zero mean and unit variance, with the mean and the standard deviation of each
 variable computed on the training portion alone. An internal validation split,
 $15\%$ of the training structures drawn once with a fixed seed, serves for early
@@ -723,20 +723,24 @@ adaptive sampling use the means alone.
 
 The networks are trained in PyTorch~\cite{pytorch} with the AdamW
 optimizer~\cite{adamw}, a gradient-based method that adapts the step of each
-weight during training, and no weight decay, in mini-batches of 200 structures
-reshuffled at every epoch, that is, at every pass over the training set, in four
-stages of decreasing learning rate, $3\times10^{-3}$, $3\times10^{-4}$,
-$10^{-4}$ and $3\times10^{-5}$. Each stage stops when the loss on the internal
+weight during training, used here without weight decay, that is, without the
+penalty on large weights that the method can include. The training structures
+are processed in mini-batches of 200, reshuffled at every epoch, that is, at
+every pass over the training set, and the training proceeds in four stages of
+decreasing learning rate, the base step of the optimizer, $3\times10^{-3}$,
+$3\times10^{-4}$, $10^{-4}$ and $3\times10^{-5}$. Each stage stops when the loss on the internal
 validation split has not improved for 40, 12, 12 and 10 epochs respectively,
 within caps of 400, 60, 60 and 40 epochs, and restores the best weights seen;
-the first stage does nearly all the work, running between 168 and 302 epochs
-depending on the member. Training the whole ensemble, the five members in
+most of the training takes place in the first stage, which lasts between 168
+and 302 epochs depending on the member. Training the whole ensemble, the five members in
 parallel, takes 79 minutes on CPUs alone. The staged schedule proves
-considerably more effective than a constant learning rate: the same architecture
-trained at $3\times10^{-3}$ with early stopping reaches a median relative error
-of $0.715\%$, against $0.422\%$ with the staged decay on the same data, a
-reduction of $41\%$ which exceeds the combined effect of the architectural
-refinements discussed further on.
+considerably more effective than a constant learning rate: for an ensemble of
+five networks of this architecture trained on almost the whole training set, it
+lowers the median relative error from $0.715\%$, obtained at a constant learning
+rate of $3\times10^{-3}$ with early stopping, to $0.422\%$, a reduction of
+$41\%$ which exceeds the combined effect of the architectural refinements
+discussed further on; trained on the whole set, the final ensemble reaches
+$0.403\%$.
 
 The accuracy of the metamodel is measured on the external validation set by
 comparing, for each structure and each output, the value $\hat{f}$ predicted by
@@ -803,7 +807,7 @@ Output & $R^2$ & Rel.\ err.\ [\%] & Output & $R^2$ & Rel.\ err.\ [\%] \\ \midrul
   \centering
   \includegraphics[width=\textwidth]{Chapter4/Figs/fig_scatter.pdf}
   \caption[Fitness functions predicted by the metamodel against those computed with FRENETIC]{Values of the fifteen fitness functions predicted by the metamodel
-  against those computed with FRENETIC, labelled reference on the horizontal
+  against those computed with FRENETIC, labelled ``reference'' on the horizontal
   axes, for the 1700 structures of the external validation set. Rows correspond
   to the five types of fitness function and columns to the three control-rod
   configurations. Colour encodes the number of energy groups of the structure.
@@ -814,7 +818,7 @@ Output & $R^2$ & Rel.\ err.\ [\%] & Output & $R^2$ & Rel.\ err.\ [\%] \\ \midrul
 
 Figure~\tref{eg:fig:learning} shows the external validation error as a function
 of the size of the training set, as the set is enlarged by adaptive sampling.
-The error decreases steadily up to the full set without reaching a plateau,
+The error decreases steadily over the whole range without reaching a plateau,
 which indicates that the accuracy is still limited by the amount of available
 data rather than by the model. The error obtained with the full set is
 nevertheless judged sufficient for the application of the metamodel in what
@@ -837,13 +841,13 @@ The size of the network was determined empirically. Since generating the
 training data was by far the most expensive part of the work, tuning the
 network was the most economical action: architectures, trunk widths and training
 parameters were explored extensively to improve the predictive accuracy
-obtained with the same data, and the sizes given in the description of the
-architecture are the result of that exploration. The learning curve of
-Fig.~\tref{eg:fig:learning} confirms that the accuracy of the resulting network
-is limited by the amount of training data.
+obtained with the same data, and the architectural parameters given in the
+description of the architecture, the numbers of layers and of neurons, are the
+result of that exploration.
 
 An ablation, in which levels of the network are removed in turn, quantifies
-what each level of the hierarchy contributes, and the result is not symmetric.
+what each level of the hierarchy contributes, and shows that the two levels of
+branches contribute very differently.
 Table~\tref{eg:tab:ablation} reports three architectures trained on the same
 data with the same reduced protocol, a single network at constant learning rate.
 Introducing the five type branches between the trunk and the outputs raises the
@@ -852,16 +856,16 @@ median relative error from $1.75$ to $1.50\%$, at the price of a $29\%$
 increase in the number of parameters. Adding the configuration branches below
 them changes neither figure appreciably, $0.9905$ and $1.49\%$.
 
-The second comparison rests on differences of $3.5\times10^{-4}$ in the mean
-coefficient of determination and of $0.007$ percentage points in the median
-relative error. To establish whether differences of this size are meaningful,
+The comparison between the last two architectures rests on differences below
+$4\times10^{-4}$ in the mean coefficient of determination and below $0.01$
+percentage points in the median relative error. To establish whether differences of this size are meaningful,
 the reproducibility of the training was measured: five networks of identical
 architecture, trained with the identical protocol and differing only in the
 random initialization of their weights, span a range of $0.0031$ in the
-coefficient of determination and of $0.24$ points in relative error, with
+coefficient of determination and of $0.24$ percentage points in relative error, with
 standard deviations of $0.0013$ and $0.11$. The difference between the two
-architectures is thus four times smaller than the scatter between two runs of
-the same one, and fifteen times smaller on the relative error. The comparison of
+architectures is thus about four times smaller than the standard deviation over
+runs of the same one, and fifteen times smaller on the relative error. The comparison of
 the fifteen outputs one by one leads to the same conclusion. The type branches
 improve twelve outputs out of fifteen with respect to the network without them,
 so the gain is shared by most of the predicted quantities. The configuration
@@ -875,9 +879,7 @@ differ only in the position of the control rods and share the same materials,
 the same geometry and the same fine grid. The metamodel used in the
 optimization retains the configuration branches, which were already present
 when the ablation was performed and add $3\%$ to the number of parameters, and
-the ablation gives no reason to retrain the networks without them. It does show,
-however, that the gain in accuracy brought by the hierarchical architecture
-comes from the type branches.
+the ablation gives no reason to retrain the networks without them.
 
 \begin{table}[htbp]
 \centering
@@ -889,7 +891,8 @@ meaningful. $R^2$ is the mean coefficient of determination and Rel.\ err.\ the
 median relative error, both on the external validation set. The last line gives
 the scatter observed over five networks of identical architecture differing only
 in their random initialization, which sets the scale below which a difference
-cannot be read.}
+between architectures cannot be distinguished from the effect of the
+initialization.}
 \label{eg:tab:ablation}
 \begin{tabular}{@{}p{66mm}ccc@{}}
 \toprule
@@ -916,11 +919,15 @@ smooth interpolator, and its accuracy is expected to degrade where the target
 changes strongly between structures that differ by a single boundary. To verify
 this, the steepness of the target was measured on the pairs of structures of the
 training database that differ by exactly one boundary, present in one structure
-of the pair and absent from the other, of which there are about $55\,000$. The
+of the pair and absent from the other, of which there are about $55\,000$, in
+the configuration with the rods partially inserted. Grouping the pairs into five
+bands of equal size by the mean of their two values on a logarithmic scale, the
 median change of the base-ten logarithm of the fitness function across a pair
-amounts to $0.414$ decades in the lowest band of multiplication-factor
-deviations, against $0.024$ decades in the highest (a factor of 17), and to
-$0.395$ against $0.044$ decades for the lifetime.
+amounts to $0.414$ decades in the band of the smallest multiplication-factor
+deviations, against $0.024$ decades in the band of the largest (a factor of 17),
+and to $0.395$ against $0.044$ decades for the lifetime. These values refer to
+the individual fitness functions, which the metamodel learns, rather than to the
+objective of the search, the product of the fifteen scaled terms.
 Figure~\tref{eg:fig:smallvalue} places the steepness and the error of the
 metamodel side by side, band by band and for each type of fitness function:
 where the target changes most under the addition or removal of a single
@@ -939,11 +946,10 @@ The physical interpretation is the following. A small fitness value means that
 the condensed calculation accurately reproduces the Monte Carlo reference, and
 the comparison with the finest admissible structure, reported further on, shows
 that such an agreement is reached by a cancellation between the error introduced
-by the condensation and the error of the deterministic model itself. A
-cancellation between two quantities of different origin is fragile, and adding
-or removing a single boundary can alter it. A smooth interpolator cannot follow
-a function that varies by half a decade under a single-boundary change of its
-input. This local limitation is distinct from the aggregate accuracy, which the
+by the condensation and the error of the deterministic model itself. Adding
+or removing a single boundary can alter this cancellation and change the fitness
+function by about half a decade, as measured above, a variation that a smooth
+interpolator such as the metamodel cannot follow. This local limitation is distinct from the aggregate accuracy, which the
 learning curve shows to be still limited by the data: more data of the same kind
 reduce the aggregate error but not this local one. For this reason, the
 workflow described in the next section uses the metamodel to explore the set of
@@ -956,16 +962,19 @@ metamodel and the robustness of the full-core calculation.
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{Chapter4/Figs/fig_steepness.pdf}
-  \caption[Steepness of the target and the error of the metamodel]{Left: steepness of the target, measured on the pairs of structures
-  that differ by exactly one boundary as the median change of the base-ten
-  logarithm of the fitness function across a pair. Centre: median relative error
-  of the metamodel, Eq.~(\ref{eg:eqn:relerr}). In both panels the horizontal
-  axis, labelled reference value, is the value of the fitness function computed
-  with FRENETIC, which the metamodel is trained to reproduce, divided into
-  bands, and each point corresponds to one band. Right: the two quantities
-  plotted against each other, one point per band and type of fitness function.
-  Colour identifies the type of fitness function, named in the legend beta,
-  flux, keff, life and powr, and the axes are logarithmic throughout.}
+  \caption[Steepness of the target and the error of the metamodel]{Left: steepness of the target, that is, the median change of the
+  base-ten logarithm of the fitness function across the pairs of structures that
+  differ by exactly one boundary, the pairs being grouped into eight bands of
+  equal size by their mean value. Centre: median relative error of the
+  metamodel, Eq.~(\ref{eg:eqn:relerr}), over six bands of the external
+  validation set bounded by the 10th, 25th, 50th, 75th and 90th percentiles of
+  the value. In both panels the horizontal axis, labelled ``reference value'', is
+  the value of the fitness function computed with FRENETIC, which the metamodel
+  is trained to reproduce. Right: the two quantities plotted against each other
+  on the six bands of the centre panel, one point per band and type of fitness
+  function. All the values refer to the configuration with the rods partially
+  inserted. Colour identifies the type of fitness function, named in the legend
+  beta, flux, keff, life and powr, and the axes are logarithmic throughout.}
   \label{eg:fig:smallvalue}
 \end{figure}
 
@@ -1016,8 +1025,8 @@ functions could, and that would take a structure better than any evaluated by
 the campaign.
 
 Whether the window built in this way is an arbitrary choice was measured rather
-than assumed, in two ways. The same window computed over almost ninety thousand
-structures of the training database, a set the searches never see, assigns
+than assumed, in two ways. The same window computed over almost the whole
+training database, a set the searches never see, assigns
 to each of the fifteen functions a width that differs from the one built from
 the searches by no more than three per cent. Ranked with one window and with the
 other, the 747 structures analysed in the following keep the same best structure
@@ -1150,9 +1159,9 @@ best one was returned by a single search out of the thousand, so that even a
 hundred searches typically stop at the second. Read the other way, the
 probability of landing within $5\%$ of the best structure is $2\%$ for one
 search, $7\%$ for three and $92\%$ for a hundred. The gain from repeating the search is therefore neither marginal nor
-unbounded: it is concentrated between one search and a few tens of them, and it
-is precisely the range that FRENETIC alone cannot reach and the metamodel
-can.
+unbounded: it is concentrated between one search and a few tens of them, and a
+campaign of that size can be afforded with the metamodel but not with FRENETIC
+inside the loop.
 
 \begin{table}[htbp]
 \centering
@@ -1416,7 +1425,8 @@ solver.
   \includegraphics[width=0.79\textwidth]{Chapter4/Figs/fig_tradeoff.pdf}
   \caption[Best attainable joint fitness against the number of groups]{Best attainable joint fitness as a function of the number of energy
   groups, obtained by repeating the searches with the group count constrained.
-  Each point of the solid curve was verified with FRENETIC, while
+  Each point of the solid curve, labelled ``reference solver'' in the legend,
+  was verified with FRENETIC, while
   the dashed curve is the corresponding prediction of the metamodel. The faded
   blue points are the 747 distinct structures returned by the thousand
   unconstrained searches, placed at their own group count with a small
@@ -1436,8 +1446,8 @@ and therefore belongs to the block that prevails, it uses none of the four
 boundaries that the searches almost never select, and it does not contain the
 boundary at $8.3\times10^{-6}$~MeV that nine structures out of ten retain, so
 that not even the most frequent boundaries are indispensable. It outperforms every one of
-the $124\,693$ configurations computed to date, by $28\%$ with respect to the
-best among them, and none of those configurations reaches its fitness.
+the $124\,693$ structures computed to date, by $28\%$ with respect to the
+best among them, and none of those structures reaches its fitness.
 
 The comparison that matters most is with the three tribes of
 \citet{prevMulti}, whose structures are the outcome of the same problem
@@ -1611,7 +1621,7 @@ Table~\tref{eg:tab:ranking}.
   \includegraphics[width=0.66\textwidth]{Chapter4/Figs/fig_bias.pdf}
   \caption[Predicted against true joint fitness for the 747 structures]{Joint
   fitness predicted by the metamodel against the value obtained from
-  FRENETIC, for each of the 747 distinct structures produced by the
+  FRENETIC, labelled ``reference solver'' in the figure, for each of the 747 distinct structures produced by the
   searches, on the canonical scale. Points inside the shaded region are
   structures whose fitness the metamodel underestimates, and the colour gives
   the number of energy groups.}
@@ -1663,7 +1673,8 @@ core-hours for the 747 structures.
 \begin{table}[htbp]
 \centering
 \caption[Computational budget in core-hours]{Computational budget in core-hours, from the measured cost of one
-FRENETIC configuration (46~s on 3 cores). One tribe is a complete genetic
+FRENETIC evaluation of a structure over the three control-rod configurations
+(46~s on 3 cores). One tribe is a complete genetic
 search of 100 individuals over 100 generations.}
 \label{eg:tab:cost}
 \begin{tabular}{lr}
@@ -1693,8 +1704,7 @@ on more than $90\,000$ full-core evaluations and accurate to a median relative e
 $0.403\%$ on structures never seen during training and of $0.39\%$ on the
 747 structures the searches went on to propose, which is the population on which
 its accuracy matters. Every one of those structures was recomputed with
-FRENETIC, so that the conclusions rest on it and not on the
-metamodel; the three structures the metamodel places first are the three the
+FRENETIC, on which the conclusions therefore rest; the three structures the metamodel places first are the three the
 solver places first, which is what the workflow requires of it.
 
 The dependence on the seed is severe, and measuring it is the first result. A
@@ -1703,8 +1713,8 @@ per cent above the best, and three searches, which is what a campaign with the
 solver inside the loop can afford, reach twenty per cent; a hundred searches
 reach two per cent and find a structure within five per cent of the best in nine
 cases out of ten. The gain from repeating the search is
-concentrated in a range of campaign sizes that FRENETIC alone cannot
-reach, which is the argument for replacing it inside the loop.
+concentrated in a range of campaign sizes that cannot be afforded with FRENETIC
+inside the loop, which is the argument for replacing it there.
 
 The landscape that the thousand searches map is rugged and only partly
 organized. They converge to 747 distinct structures, five out of six of which
@@ -1731,7 +1741,7 @@ equipartition of the importance, a criterion never imposed explicitly which
 follows from the weighting of the flux fitness function.
 
 The best structure identified employs fifteen groups. It improves by $28\%$ on
-the best of the $124\,693$ configurations computed to date, none of which
+the best of the $124\,693$ structures computed to date, none of which
 reaches it, on structures built by uniform spacing rules by three to five orders
 of magnitude, and on the three structures obtained with the solver inside the
 loop by factors between $1.7$ and $8.1$. The last comparison is the one that
