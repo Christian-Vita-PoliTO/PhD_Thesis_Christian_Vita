@@ -34,14 +34,14 @@ For the ALFRED core the object of the optimization was the grid itself, the
 set of energy boundaries on which the constants are condensed, and the dependence of the result on
 the random seed, observed in the work this chapter built on, was measured on
 one thousand independent searches instead of three. The number was made
-affordable by a neural metamodel trained on $91\,723$ full-core evaluations of
+affordable by a neural metamodel trained on more than $90\,000$ full-core evaluations of
 FRENETIC, which replaced the solver inside the search alone; every structure
 the searches returned was recomputed with the solver, so that the conclusions
 rest on it and not on the metamodel. The dependence is severe: a single search
 returns a structure typically forty-five per cent above the best on the joint
 objective, three searches twenty per cent, and a hundred two per cent, so that
-the gain from repeating the search lies precisely in the range that the
-reference solver cannot reach. The thousand searches converged to 747 distinct
+the gain from repeating the search lies precisely in the range that
+FRENETIC alone cannot reach. The thousand searches converged to 747 distinct
 structures with no common skeleton; the regularities they display are an
 exclusive choice between two boundaries of the fast region and a placement of
 the boundaries that follows the neutron importance rather than the flux, a
@@ -56,7 +56,7 @@ model error. The quality of the best structures is therefore bound to the core,
 to the solver and to the objective on which it was obtained, and what carries
 over to another case is the procedure, whose cost was repaid after nine
 searches and which delivered analyses worth of the order of $390\,000$
-core-hours of the reference solver for twenty-nine.
+core-hours of FRENETIC for twenty-nine.
 
 \section{Fission matrices for heat-pipe micro reactors}
 

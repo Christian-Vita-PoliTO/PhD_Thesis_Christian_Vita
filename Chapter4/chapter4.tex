@@ -82,8 +82,8 @@ approximately $383$ core-hours. One thousand similar searches would exceed
 $380\,000$ core-hours, which places the analysis out of reach.
 
 The present chapter aims at removing this bottleneck by replacing the evaluation inside the
-search with a neural network model of the fitness functions, while leaving the
-reference solver in charge of the conclusions. The metamodel is used to explore,
+search with a neural network model of the fitness functions, while leaving
+FRENETIC in charge of the conclusions. The metamodel is used to explore,
 to rank, and to propose; every structure that the searches produce is then
 recomputed with FRENETIC, and all the quantities discussed in the following
 sections are those returned by FRENETIC. The metamodel is therefore an
@@ -136,7 +136,7 @@ produce, and of the features those structures have in common.
   $\Lambda_\mathrm{eff}$, $\beta_\mathrm{eff}$};
 
 % ── addestramento del metamodello (nuovo) ───────────────────────────────
-\node[frenN, below=8mm of ref] (train) {FRENETIC (NE module)\\$91\,723$ full-core\\evaluations};
+\node[frenN, below=8mm of ref] (train) {FRENETIC (NE module)\\more than $90\,000$\\full-core evaluations};
 \node[netN, below=of train] (nn) {\textbf{neural metamodel}\\hierarchical ensemble};
 
 \draw[arO] (fine) -- (serpent);
@@ -196,7 +196,7 @@ produce, and of the features those structures have in common.
 \node[lbl, right=1.5mm of lg1, anchor=west] {introduced in this work};
 \node[old, fill=white, below=2.5mm of lg1, text width=3mm,
       minimum height=3mm, inner sep=0pt] (lg2) {};
-\node[lbl, right=1.5mm of lg2, anchor=west] {inherited from the reference workflow};
+\node[lbl, right=1.5mm of lg2, anchor=west] {inherited from the previous workflow};
 \node[faded, below=2.5mm of lg2, text width=3mm, minimum height=3mm, inner sep=0pt] (lg3) {};
 \node[lbl, right=1.5mm of lg3, anchor=west, text=black!45]
      {no longer required};
@@ -1016,8 +1016,8 @@ functions could, and that would take a structure better than any evaluated by
 the campaign.
 
 Whether the window built in this way is an arbitrary choice was measured rather
-than assumed, in two ways. The same window computed over the $89\,723$
-configurations of the training database, a set the searches never see, assigns
+than assumed, in two ways. The same window computed over almost ninety thousand
+structures of the training database, a set the searches never see, assigns
 to each of the fifteen functions a width that differs from the one built from
 the searches by no more than three per cent. Ranked with one window and with the
 other, the 747 structures analysed in the following keep the same best structure
@@ -1061,9 +1061,9 @@ reproducibility, and all results presented here can be regenerated exactly.
 The searches are mutually independent and are executed in parallel. One thousand
 of them require $841$~s on fourteen processes, about three core-hours, so that
 the cost of exploring the design space a thousand times over is smaller than the
-cost of a hundred evaluations of the reference solver.
+cost of a hundred evaluations with FRENETIC.
 
-\subsection{Verification with the Reference Solver}
+\subsection{Verification with FRENETIC}
 
 Every distinct structure produced by the searches is submitted to FRENETIC, and
 the ranking reported in the following is the one obtained from the recomputed
@@ -1104,8 +1104,8 @@ the next subsection makes it quantitative.
   every twentieth search with the median and the band between the tenth and
   ninetieth percentiles. Centre, fraction of the searches whose outcome lies
   within a given excess over the best structure found, with the values at five
-  and forty per cent marked. Right, joint fitness returned by the reference
-  solver against the number of groups, one point per distinct structure with a
+  and forty per cent marked. Right, joint fitness returned by FRENETIC
+  against the number of groups, one point per distinct structure with a
   small horizontal jitter, coloured by the choice made in the fast region and
   with the best structure starred.}
   \label{eg:fig:search}
@@ -1114,7 +1114,7 @@ the next subsection makes it quantitative.
 The internal dynamics of a single search are illustrated in
 Fig.~\tref{eg:fig:tribe}. The initial population is heterogeneous, most boundaries
 being present in about half of the individuals, and within a dozen generations
-the population crystallises, each boundary being either adopted by nearly every
+the population crystallizes, each boundary being either adopted by nearly every
 individual or abandoned by nearly all of them. Later events, in which a boundary
 that had been fixed is re-opened and replaced, show that crossover and mutation
 continue to restructure the solution after the joint fitness has apparently
@@ -1143,7 +1143,7 @@ and Fig.~\tref{eg:fig:howmany} separates them.
 The first concerns the optimum, and it is the result that motivates this work.
 Table~\tref{eg:tab:howmany} reports how close the best of $n$ searches comes to
 the best of the thousand. A single search lands $45\%$ above it, and three
-searches, which is what a campaign with the reference solver inside the loop can
+searches, which is what a campaign with FRENETIC inside the loop can
 afford, land $20\%$ above; ten searches reach $9\%$, thirty reach $5\%$ and a
 hundred reach $2\%$, which is the distance of the second-best structure: the
 best one was returned by a single search out of the thousand, so that even a
@@ -1151,14 +1151,14 @@ hundred searches typically stop at the second. Read the other way, the
 probability of landing within $5\%$ of the best structure is $2\%$ for one
 search, $7\%$ for three and $92\%$ for a hundred. The gain from repeating the search is therefore neither marginal nor
 unbounded: it is concentrated between one search and a few tens of them, and it
-is precisely the range that the reference solver cannot reach and the metamodel
+is precisely the range that FRENETIC alone cannot reach and the metamodel
 can.
 
 \begin{table}[htbp]
 \centering
 \caption[Effect of the number of independent searches]{Effect of the number of
 independent searches, obtained by drawing subsets of the thousand outcomes at
-random. The excess is measured on the values returned by the reference solver,
+random. The excess is measured on the values returned by FRENETIC,
 against the best structure of the whole campaign.}
 \label{eg:tab:howmany}
 \begin{tabular}{rcc}
@@ -1306,8 +1306,8 @@ $9.7$ of the 29 boundaries.
 \caption[The 29 internal boundaries of the fine grid]{The 29 internal boundaries
 of the fine grid. For each one: the fraction of the 747 distinct optimized
 structures that retains it, the mean share of the total importance
-$\phi\phi^{\ddagger}/v$ carried by the two groups it separates, evaluated on the
-reference calculation with the rods partially inserted, and whether it belongs
+$\phi\phi^{\dagger}/v$ carried by the two groups it separates, evaluated on the
+30-group FRENETIC calculation with the rods partially inserted, and whether it belongs
 to the best structure found.}
 \label{eg:tab:boundaries}
 \small
@@ -1351,7 +1351,7 @@ across it, shows nothing that twenty-nine points would allow to call a trend
 with either quantity. What the figure does show is where the two readings part
 company, which is the fast region, and the reason is physical. The flux fitness
 function of Eq.~(\ref{eg:eqn:distributed}) measures the flux error of every
-group weighted by the total importance $\phi\phi^{\ddagger}/v$, so that the
+group weighted by the total importance $\phi\phi^{\dagger}/v$, so that the
 relevant measure of how much a group matters is not how much flux it carries
 but how much importance it carries. The adjoint flux of this core varies by less
 than a factor of two over the whole energy range, so the importance follows
@@ -1416,7 +1416,7 @@ solver.
   \includegraphics[width=0.79\textwidth]{Chapter4/Figs/fig_tradeoff.pdf}
   \caption[Best attainable joint fitness against the number of groups]{Best attainable joint fitness as a function of the number of energy
   groups, obtained by repeating the searches with the group count constrained.
-  Each point of the solid curve was verified with the reference solver, while
+  Each point of the solid curve was verified with FRENETIC, while
   the dashed curve is the corresponding prediction of the metamodel. The faded
   blue points are the 747 distinct structures returned by the thousand
   unconstrained searches, placed at their own group count with a small
@@ -1441,7 +1441,7 @@ best among them, and none of those configurations reaches its fitness.
 
 The comparison that matters most is with the three tribes of
 \citet{prevMulti}, whose structures are the outcome of the same problem
-solved with the reference solver inside the loop, and which were recomputed here
+solved with FRENETIC inside the loop, and which were recomputed here
 on the canonical scale from the boundaries reported in that work. They are shown
 in Fig.~\tref{eg:fig:tradeoff} together with the curve of the best attainable
 fitness, and they lie above it: at $G=14$ the best of the three reaches
@@ -1456,7 +1456,7 @@ typical outcome of one of the searches of this campaign, worse than 24 of the 57
 campaign returned at that group count and better than the other 33; at $G=20$ it
 lies in the upper tail, worse than 95 of 101; at $G=13$ it is worse than all 37.
 None of them is unreachable by a single search, and none is what a single search
-is likely to return. With the reference solver inside the loop, three tribes
+is likely to return. With FRENETIC inside the loop, three tribes
 were what a reasonable budget allowed, and the same three tribes are the reason this chapter exists, since it
 was their disagreement that first showed the outcome to depend on the seed. The
 objective is the same in the two cases, so the comparison measures the size of
@@ -1515,7 +1515,7 @@ condensed structure to have fewer, so that keeping all thirty is not an
 admissible option: the finest structure available has twenty-nine groups and is
 obtained by merging two adjacent fine groups, that is by suppressing one of the
 twenty-nine internal boundaries. There are twenty-nine ways of doing so, and all
-of them were evaluated with the reference solver. Such a structure condenses
+of them were evaluated with FRENETIC. Such a structure condenses
 almost nothing, and it is therefore the natural candidate for the best result
 that the multi-group model can deliver. It does not deliver it. The best of the
 twenty-nine, obtained by suppressing the boundary at $8.3\times10^{-6}$~MeV,
@@ -1610,8 +1610,8 @@ Table~\tref{eg:tab:ranking}.
   \centering
   \includegraphics[width=0.66\textwidth]{Chapter4/Figs/fig_bias.pdf}
   \caption[Predicted against true joint fitness for the 747 structures]{Joint
-  fitness predicted by the metamodel against the value obtained from the
-  reference solver, for each of the 747 distinct structures produced by the
+  fitness predicted by the metamodel against the value obtained from
+  FRENETIC, for each of the 747 distinct structures produced by the
   searches, on the canonical scale. Points inside the shaded region are
   structures whose fitness the metamodel underestimates, and the colour gives
   the number of energy groups.}
@@ -1669,7 +1669,7 @@ search of 100 individuals over 100 generations.}
 \begin{tabular}{lr}
 \toprule
 Item & Core-hours \\ \midrule
-Building the metamodel ($91\,723$ configurations, once) & 3516 \\
+Building the metamodel ($91\,723$ structures, once) & 3516 \\
 One tribe evaluated directly with FRENETIC & 383 \\
 Break-even & 9 tribes \\ \midrule
 This work: 1000 tribes on the metamodel, all outcomes verified & 29 \\
@@ -1689,11 +1689,11 @@ The dependence of the optimized energy structure on the random seed, reported in
 the multi-configuration study which precedes this work, has been investigated by
 performing one thousand independent searches instead of three. The number was
 made accessible by a neural metamodel of the fifteen fitness functions, trained
-on 91\,723 full-core evaluations and accurate to a median relative error of
-$0.403\%$ on configurations never seen during training and of $0.39\%$ on the
+on more than $90\,000$ full-core evaluations and accurate to a median relative error of
+$0.403\%$ on structures never seen during training and of $0.39\%$ on the
 747 structures the searches went on to propose, which is the population on which
 its accuracy matters. Every one of those structures was recomputed with
-the reference solver, so that the conclusions rest on FRENETIC and not on the
+FRENETIC, so that the conclusions rest on it and not on the
 metamodel; the three structures the metamodel places first are the three the
 solver places first, which is what the workflow requires of it.
 
@@ -1703,7 +1703,7 @@ per cent above the best, and three searches, which is what a campaign with the
 solver inside the loop can afford, reach twenty per cent; a hundred searches
 reach two per cent and find a structure within five per cent of the best in nine
 cases out of ten. The gain from repeating the search is
-concentrated in a range of campaign sizes that the reference solver cannot
+concentrated in a range of campaign sizes that FRENETIC alone cannot
 reach, which is the argument for replacing it inside the loop.
 
 The landscape that the thousand searches map is rugged and only partly
@@ -1743,14 +1743,14 @@ beyond the training set: the metamodel replaces the solver only inside the
 search, the solver retains the last word, and the cost of building the metamodel
 is repaid after nine searches and then amortised over every subsequent analysis
 performed on the same reactor. The analyses presented here would have required
-of the order of $390\,000$ core-hours of the reference solver and were carried
+of the order of $390\,000$ core-hours of FRENETIC and were carried
 out for $29$.
 
 Two directions are left open. The accuracy of the metamodel is still limited by
-the amount of reference data, as the learning curve shows, and the data that
+the amount of training data, as the learning curve shows, and the data that
 would help most are those in the region where the target is steepest, around
 the optimized structures and their one-boundary neighbours, which a targeted
-campaign of the reference solver could supply. The description of the structure
+campaign of FRENETIC calculations could supply. The description of the structure
 given to the network could also be enriched with physics-informed quantities,
 such as the lethargy widths of the condensed groups or the variation of the
 reference spectrum within them weighted by the importance; a preliminary attempt
