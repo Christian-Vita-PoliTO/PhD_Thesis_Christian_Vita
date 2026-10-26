@@ -31,7 +31,7 @@ the three-dimensional VTB model of Sec.~\ref{fm:sec:model}, the same used for
 the criticality search. The second, the Core Temperature Correction Ratio, is
 developed on a two-dimensional variant of the same design, described in
 Sec.~\ref{cr:sec:model2d}. The chapter also carries out the study of the statistical
-uncertainty of the interpolated results that Sec.~\ref{fm:sec:uq} deferred to
+uncertainty of the interpolated results that Sec.~\ref{fm:sec:uq} defers to
 it: how the tallied coefficients are correlated, how that correlation can be
 modelled analytically, and how well the resulting estimate holds against
 independent replicas of the whole database.
@@ -121,11 +121,11 @@ gradient. The
 second concerns the localization of the weight. A coefficient describes a
 transfer between two cells, each with its own thermal environment, so the
 difference entering the weight is taken as the average of the differences of
-the two cells. Formulations in which the weight depends on a single index were
+the two cells. Formulations in which the weight depends on a single index are
 also tested: they coincide with Eq.~(\ref{cr:eq:rcr1}) whenever the local
 difference is spatially uniform, differ only in the non-uniform cases, and give
 larger deviations on the multiplication factor there. The same construction
-appeared, in single-index form, in the correction of \citet{HeANE2019}, where
+appears, in single-index form, in the correction of \citet{HeANE2019}, where
 the factor is a ratio of fission rates tallied at a given position under an
 imposed uniform source and is therefore a single-index quantity by
 construction, whereas the ratio adopted here is a ratio of two complete
@@ -134,7 +134,7 @@ matrices.
 The limiting cases follow from the definition. When fuel and reflector are at
 the same temperature in both cells, the weight vanishes, $r_{ij}=1$, and the
 interpolated matrix is returned unchanged, which is correct because that is
-exactly the condition under which the database was built. When the difference
+exactly the condition under which the database is built. When the difference
 in both cells equals the one of the reference case,
 $T_{f,i}=T_{f,j}=\SI{1000}{K}$ and $T_{r,i}=T_{r,j}=\SI{300}{K}$, the weight is
 unity and
@@ -425,7 +425,7 @@ Eq.~(\ref{cr:eq:rcr2}) stay within about $1.2\,\sigma_{\mathrm{tot}}$ in the
 four uniform cases, and the root-mean-square deviation of the source is of the
 same order as the combined noise everywhere except in Case 5, where the steep
 ring-wise profile leaves the residual discussed above. As a check of the
-reference side, the reference calculations of these cases were each repeated
+reference side, the reference calculations of these cases are each repeated
 three times with different seeds: the deviations obtained against the three
 runs are consistent with one another, and the seed has no visible effect on the
 comparison.
@@ -590,7 +590,7 @@ same field.
 
 \section{Statistical uncertainty of the interpolated matrix}\label{cr:sec:uq}
 
-Section~\ref{fm:sec:uq} left two questions open: how the coefficients tallied
+Section~\ref{fm:sec:uq} leaves two questions open: how the coefficients tallied
 in one criticality calculation are correlated with one another, and how far the
 uncorrelated estimate used elsewhere in this Part departs from the truth. Both
 are answered here, on the model and the database of Sec.~\ref{cr:sec:model2d}.
@@ -628,7 +628,7 @@ specified, and four ways of specifying it are compared.
   database itself.
   \item \emph{Measured correlation}, $\boldsymbol\rho=\hat{\boldsymbol\rho}$,
   obtained from the cycle-by-cycle tallies of one calculation, each active
-  cycle treated as a pseudo-replica. Since Serpent does not write the fission matrix per cycle, its source code was
+  cycle treated as a pseudo-replica. Since Serpent does not write the fission matrix per cycle, its source code is
 modified to do so. The matrix is measured once
   at \SI{300}{K} and reused at every database temperature, an assumption tested
   in Sec.~\ref{cr:sec:invariance}.
@@ -893,7 +893,7 @@ The reversal is consistent with what the model omits. The source is a less
 global quantity than the eigenvalue and is sensitive to the correlations
 between coefficients of different columns, which are precisely the ones the
 closed form of Eq.~(\ref{cr:eq:rho-pred}) does not describe, and which the
-bootstrap of the previous section measured as a small but non-zero residual.
+bootstrap of the previous section measures as a small but non-zero residual.
 The eigenvalue, which aggregates the whole matrix, is instead governed by the
 intra-column structure that the closed form captures.
 
@@ -1017,7 +1017,7 @@ its eight points, whereas several test cases hold the reflector at
 departs from \SI{300}{K}, this creates a core--reflector difference that is
 absent from the construction of the database, and every replica of that
 database inherits it. It is a bias of the comparison, not a fluctuation, and it
-is exactly the effect the correction of Sec.~\ref{cr:sec:rcr} was built for.
+is exactly the effect the correction of Sec.~\ref{cr:sec:rcr} is built for.
 
 Where the corrected cloud is centred near zero, which is the case for the
 central cell at \SI{300}{K}, for the linear gradient and for most of the
@@ -1037,7 +1037,7 @@ improves substantially in the region of interest and nowhere else. Figure~\tref{
 deviation of the source cell by cell for the first six cases, with the
 brute-force replicas behind each point; Fig.~\tref{cr:fig:hexmap} gives the
 numbering of the cells. A corrected point is highlighted when it falls inside
-the band of the reference and the corresponding raw point did not, which
+the band of the reference and the corresponding raw point does not, which
 isolates the population the correction is meant to act on.
 
 \begin{figure}[htbp]

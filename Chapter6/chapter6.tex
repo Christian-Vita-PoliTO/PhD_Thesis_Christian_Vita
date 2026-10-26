@@ -57,7 +57,7 @@ The fission matrix (FM) method \cite{CarneyANE2014} addresses this limitation.
 A single Monte Carlo calculation is made to tally, in addition to its usual
 results, a matrix that couples every fissile region of the core to every other.
 That matrix contains the eigenvalue and the fission source of the state at
-which it was tallied, and it can be stored. A database of matrices tallied at a
+which it is tallied, and it can be stored. A database of matrices tallied at a
 set of reference states then represents any intermediate state by
 interpolation, at the cost of an eigenvalue problem of modest size, solved in seconds and
 requiring no further Monte Carlo calculation.
@@ -182,7 +182,7 @@ interchangeable. Transposition preserves the eigenvalues, so that
 $k_{\mathrm{eff}}$ is unaffected; the right eigenvector of the transposed
 matrix, however, is the left eigenvector of $\mathbf A$, which in this
 formalism plays the role of the adjoint source, the importance of a fission
-neutron born in each region, and not of the source itself. The point was
+neutron born in each region, and not of the source itself. The point is
 verified on the database of Chapter~\ref{ch:crit-search} against the fission
 source tallied by Serpent with an independent detector: the right eigenvector
 of the matrix, as written by the code, reproduces the detector source with a
@@ -304,7 +304,7 @@ Sec.~\ref{cs:sec:snapshots}.
 
 A matrix describes one state of the core. The method becomes predictive when a
 database of matrices, tallied at a set of reference states, is interpolated to
-represent a state that was never simulated. The operating state is described by
+represent a state that has never been simulated. The operating state is described by
 a small number of parameters, the temperature field, the angle of the drums and
 the burnup of the fuel in the works of this Part; the database is a grid over
 those parameters, or over a subset of them, computed once and reused for every subsequent evaluation. The number of entries required for a given accuracy is not known in advance
@@ -366,7 +366,7 @@ the fission source is normalized to its sum, the relative uncertainty of a
 normalized value coincides with that of the corresponding tally, and the
 relative quantities of Eq.~(\ref{fm:eq:sigma}) combine directly.
 
-The realizations were drawn, in all three works, by uncorrelated sampling: each
+The realizations are drawn, in all three works, by uncorrelated sampling: each
 coefficient is perturbed independently of the others, which is also the
 assumption of earlier work on the uncertainty of fission-matrix results
 \cite{HeWaltersNSE2022}. The assumption is not exact. The coefficients tallied
@@ -409,7 +409,7 @@ deviation and the root-mean-square of the deviations over the core are
   \label{fm:eq:source}
 \end{equation}
 %
-These metrics were preferred to a covariance-weighted distance, such as the
+These metrics are preferred to a covariance-weighted distance, such as the
 Mahalanobis distance, because they are less sensitive to the spatial pattern of
 a residual and directly interpretable, as a case-by-case comparison requires. Every uncertainty band drawn in Chapters~\ref{ch:crit-search} and
 \ref{ch:correction-ratios} is $\pm2\sigma_{\mathrm{tot}}$, so that a point

@@ -32,9 +32,9 @@ consistent series of works~\citetext{\citealp{lfrGA2022}; \citealp{lfrGA2024}; \
 culminating in the multi-configuration optimization problem of
 \citet{prevMulti}, in which a single energy structure is optimized
 simultaneously for three control-rod configurations, with the goal of having
-an adequate grid as the core evolves during a transient. That study reported an observation which motivates the
-present one. In that work, the genetic algorithm was run from three different random seeds,
-referred to as tribes, and the three tribes converged to three different
+an adequate grid as the core evolves during a transient. That study reports an observation which motivates the
+present one. In that work, the genetic algorithm is run from three different random seeds,
+referred to as tribes, and the three tribes converge to three different
 structures sharing many boundaries but not all of them. Since the tribes differ
 only in the initial population, the outcome indicates that the objective
 possesses several distinct optima of comparable quality, and that a single run
@@ -675,24 +675,24 @@ construction of the training set rests on it.
 The metamodel is trained on more than $90\,000$ distinct structures, for each of
 which the neutronics module of FRENETIC has been run over the three
 configurations. Since every structure added to the training set costs a
-full-core calculation, the training set was built by adaptive sampling, so that
-each addition was as informative as possible: an initial set was drawn at random
-from all the candidate structures, and the structures added afterwards were
-those, among the candidates for which FRENETIC had not yet been run, on which
-the members of an ensemble of networks disagreed most, that is, those for which
-the prediction of the metamodel was most uncertain.
+full-core calculation, the training set is built by adaptive sampling, so that
+each addition is as informative as possible: an initial set is drawn at random
+from all the candidate structures, and the structures added afterwards are
+those, among the candidates for which FRENETIC has not yet been run, on which
+the members of an ensemble of networks disagree most, that is, those for which
+the prediction of the metamodel is most uncertain.
 
 A further 1\,700 structures form an external validation set, which is used
 neither in training nor for early stopping, the procedure that ends the
 training when the error on a separate set of structures, kept aside for this
-purpose, stops decreasing. The external validation set nevertheless guided the
+purpose, stops decreasing. The external validation set nevertheless guides the
 development: the architectures and trunk widths explored in the preliminary
-phase were compared on their accuracy on this set, overall and output by output.
+phase are compared on their accuracy on this set, overall and output by output.
 The accuracy figures quoted in this work, which all refer to this set, may
 therefore be slightly optimistic. The conclusions of this chapter do not depend
 on them, however, because the workflow described later verifies with FRENETIC
 every result it uses. The ablation and reproducibility measurements reported
-further on were also evaluated on this set, after the architecture had been
+further on are also evaluated on this set, after the architecture has been
 fixed.
 
 \subsection{Training and Accuracy}
@@ -829,7 +829,7 @@ follows, for the reasons given below.
   \includegraphics[width=\textwidth]{Chapter4/Figs/fig_learning.pdf}
   \caption[External validation error against the size of the training set]{External validation error as a function of the size of the training
   set, enlarged by adaptive sampling. Left: median relative error; right: mean
-  coefficient of determination over the fifteen outputs. All the points were
+  coefficient of determination over the fifteen outputs. All the points are
   obtained with a shorter training protocol than that of the final ensemble,
   three networks at constant learning rate, so their accuracy is lower.}
   \label{eg:fig:learning}
@@ -837,10 +837,10 @@ follows, for the reasons given below.
 
 \subsection{Choice of the Architecture}
 
-The size of the network was determined empirically. Since generating the
-training data was by far the most expensive part of the work, tuning the
-network was the most economical action: architectures, trunk widths and training
-parameters were explored extensively to improve the predictive accuracy
+The size of the network is determined empirically. Since generating the
+training data is by far the most expensive part of the work, tuning the
+network is the most economical action: architectures, trunk widths and training
+parameters are explored extensively to improve the predictive accuracy
 obtained with the same data, and the architectural parameters given in the
 description of the architecture, the numbers of layers and of neurons, are the
 result of that exploration.
@@ -859,7 +859,7 @@ them changes neither figure appreciably, $0.9905$ and $1.49\%$.
 The comparison between the last two architectures rests on differences below
 $4\times10^{-4}$ in the mean coefficient of determination and below $0.01$
 percentage points in the median relative error. To establish whether differences of this size are meaningful,
-the reproducibility of the training was measured: five networks of identical
+the reproducibility of the training is measured: five networks of identical
 architecture, trained with the identical protocol and differing only in the
 random initialization of their weights, span a range of $0.0031$ in the
 coefficient of determination and of $0.24$ percentage points in relative error, with
@@ -877,8 +877,8 @@ The physical quantity is therefore the dimension along which the fifteen outputs
 need separate parameters, and this is consistent with three configurations that
 differ only in the position of the control rods and share the same materials,
 the same geometry and the same fine grid. The metamodel used in the
-optimization retains the configuration branches, which were already present
-when the ablation was performed and add $3\%$ to the number of parameters, and
+optimization retains the configuration branches, which are already present
+when the ablation is performed and add $3\%$ to the number of parameters, and
 the ablation gives no reason to retrain the networks without them.
 
 \begin{table}[htbp]
@@ -917,7 +917,7 @@ target function, namely the function that the metamodel learns, which assigns
 to each group structure the value of a fitness function. The metamodel is a
 smooth interpolator, and its accuracy is expected to degrade where the target
 changes strongly between structures that differ by a single boundary. To verify
-this, the steepness of the target was measured on the pairs of structures of the
+this, the steepness of the target is measured on the pairs of structures of the
 training database that differ by exactly one boundary, present in one structure
 of the pair and absent from the other, of which there are about $55\,000$, in
 the configuration with the rods partially inserted. Grouping the pairs into five
@@ -1003,7 +1003,7 @@ What this work adds is a second step, taken after the searches have ended. The
 comparison of a thousand independent searches requires a single axis, and it is
 obtained by replacing the two extremes of Eq.~(\ref{eg:eqn:scaling}) with the
 smallest and the largest value that each fitness function has taken over
-everything the thousand searches evaluated, and by re-expressing every outcome
+everything the thousand searches evaluate, and by re-expressing every outcome
 on that window. The window is a property of the campaign as a whole, and since
 the searches are mutually independent and already complete when it is built, it
 cannot have influenced what any of them found. This common scale, and the
@@ -1012,8 +1012,8 @@ following; the ranking of the candidates, the curve at constrained group count
 and every comparison reported below are made on it.
 
 The two ends of the window are not of the same kind. The upper end is a genuine
-extreme of what the searches explored, so that a structure would have to be
-worse than anything they evaluated to exceed one hundred. The lower end is, for
+extreme of what the searches explore, so that a structure would have to be
+worse than anything they evaluate to exceed one hundred. The lower end is, for
 twelve of the fifteen functions, the threshold of the controls rather than the
 smallest value observed, since the searches evaluate structures that reach every
 threshold: only the three power functions, to which no control is applied,
@@ -1024,7 +1024,7 @@ raises to the threshold every value that would go there; only the three power
 functions could, and that would take a structure better than any evaluated by
 the campaign.
 
-Whether the window built in this way is an arbitrary choice was measured rather
+Whether the window built in this way is an arbitrary choice is measured rather
 than assumed, in two ways. The same window computed over almost the whole
 training database, a set the searches never see, assigns
 to each of the fifteen functions a width that differs from the one built from
@@ -1032,7 +1032,7 @@ the searches by no more than three per cent. Ranked with one window and with the
 other, the 747 structures analysed in the following keep the same best structure
 and the same fifty best, and none of them moves by more than sixteen places out
 of 747, the typical structure moving by one. The range that the searches explore on their
-own is therefore the range of the problem. Secondly, the whole campaign was
+own is therefore the range of the problem. Secondly, the whole campaign is
 repeated with that fixed window placed inside the search, so that the algorithm
 optimizes the canonical fitness directly instead of its own moving scale. The
 thousand searches so driven converge to the same best structure, they select the
@@ -1041,7 +1041,7 @@ selection by more than four points out of a hundred; the fixed scale gives a sli
 outcomes, the median search ending $41\%$ above the best against $45\%$, which
 is consistent with a stationary objective being marginally easier to optimize
 than a moving one, and it runs faster, since the re-evaluation of the population
-becomes unnecessary. The formulation of the search was nevertheless kept as
+becomes unnecessary. The formulation of the search is nevertheless kept as
 inherited: nothing in the results depends on the choice, and the comparison with
 \citet{prevMulti} is then made at equal objective.
 
@@ -1052,12 +1052,12 @@ tournament selection, two-point crossover, integer random mutation at $0.05$ per
 gene and the repair operator introduced with the chromosome. The
 implementation is built on the pymoo library~\cite{pymoo} and reproduces the
 scheme of \citet{prevMulti} in its representation, operators and fitness
-functions. The population and generation counts were established by
+functions. The population and generation counts are established by
 measurement: a population of 40 individuals yields a median final fitness $1.7$
 times worse and a population of 200 improves it by $17\%$ at twice the cost per
 search, while the median search reaches within $1\%$ of its own final value by
 generation 36 and 85 searches out of a thousand are still improving after
-generation 90. The population was kept at 100 and the budget spent on the number
+generation 90. The population is kept at 100 and the budget spent on the number
 of independent searches instead, a choice the following section quantifies.
 
 One implementation detail deserves mention because it affects reproducibility.
@@ -1089,7 +1089,7 @@ them among themselves.
 
 \subsection{Behaviour of the Searches}
 
-The thousand searches produced 747 distinct structures, with a number of groups
+The thousand searches produce 747 distinct structures, with a number of groups
 between 9 and 20. Figure~\tref{eg:fig:search} summarizes their behaviour, with
 the progress of every search re-expressed on the canonical scale. Each search
 settles quickly: measured against its own final value, the median search is
@@ -1125,7 +1125,7 @@ Fig.~\tref{eg:fig:tribe}. The initial population is heterogeneous, most boundari
 being present in about half of the individuals, and within a dozen generations
 the population crystallizes, each boundary being either adopted by nearly every
 individual or abandoned by nearly all of them. Later events, in which a boundary
-that had been fixed is re-opened and replaced, show that crossover and mutation
+that has been fixed is re-opened and replaced, show that crossover and mutation
 continue to restructure the solution after the joint fitness has apparently
 settled.
 
@@ -1144,7 +1144,7 @@ settled.
 
 \subsection{How Many Searches Are Enough}\label{eg:sec:howmany}
 
-The size of the campaign was not chosen a priori, and the same data allow it to
+The size of the campaign is not chosen a priori, and the same data allow it to
 be justified after the fact by re-drawing subsets of the thousand outcomes at
 random. The question has three answers depending on what is asked of the sample,
 and Fig.~\tref{eg:fig:howmany} separates them.
@@ -1155,7 +1155,7 @@ the best of the thousand. A single search lands $45\%$ above it, and three
 searches, which is what a campaign with FRENETIC inside the loop can
 afford, land $20\%$ above; ten searches reach $9\%$, thirty reach $5\%$ and a
 hundred reach $2\%$, which is the distance of the second-best structure: the
-best one was returned by a single search out of the thousand, so that even a
+best one is returned by a single search out of the thousand, so that even a
 hundred searches typically stop at the second. Read the other way, the
 probability of landing within $5\%$ of the best structure is $2\%$ for one
 search, $7\%$ for three and $92\%$ for a hundred. The gain from repeating the search is therefore neither marginal nor
@@ -1194,7 +1194,7 @@ grid, which is what would add anything new to the comparison.
 
 The third question is the one the sample does not answer, and the right panel of
 Fig.~\tref{eg:fig:howmany} shows it plainly: the number of distinct structures is
-still growing at the thousandth search. Of the 747 structures obtained, 619 were
+still growing at the thousandth search. Of the 747 structures obtained, 619 are
 produced by exactly one search, so that five structures out of six have been
 seen once, which is what a sample far from complete looks like. A further search
 returns a structure already obtained in about four cases out of ten. A complete
@@ -1381,7 +1381,7 @@ the largest share of the importance carries $11.5\%$ of it, against $17.0\%$ in
 structures drawn at random with the same number of groups: the optimized
 structures avoid concentrating the importance in one group. Measured on the bare
 flux the comparison is reversed, $33.1\%$ against $26.5\%$, so that what the
-optimization levels out is the importance and not the flux. The criterion was
+optimization levels out is the importance and not the flux. The criterion is
 never imposed explicitly: it follows from the weighting of the flux term in
 Eq.~(\ref{eg:eqn:distributed}), which discriminates among the structures in the
 first generations of each search, when three quarters of the population still
@@ -1413,7 +1413,7 @@ $G=12$ and $G=20$ lie within $10\%$ of that minimum. Twelve groups are therefore
 of fitness functions, and the additional groups used by the best structures
 bring little further benefit. The curve is not monotone inside the basin,
 reaching $5.5\times10^{7}$ at $G=16$ against $4.4\times10^{7}$ at $G=15$: each
-point is the best structure a constrained search found at that group count, so
+point is the best structure a constrained search finds at that group count, so
 the curve is an upper bound on the attainable fitness and the residual roughness
 measures how hard the search is at fixed $G$, not a feature of the landscape.
 Seventeen constrained optimizations of this kind require two minutes on the
@@ -1426,11 +1426,11 @@ solver.
   \caption[Best attainable joint fitness against the number of groups]{Best attainable joint fitness as a function of the number of energy
   groups, obtained by repeating the searches with the group count constrained.
   Each point of the solid curve, labelled ``reference solver'' in the legend,
-  was verified with FRENETIC, while
+  is verified with FRENETIC, while
   the dashed curve is the corresponding prediction of the metamodel. The faded
   blue points are the 747 distinct structures returned by the thousand
   unconstrained searches, placed at their own group count with a small
-  horizontal jitter, and mark the region the campaign visited. The
+  horizontal jitter, and mark the region the campaign visits. The
   stars mark the reference constructions discussed in the text, and the
   triangles the structures obtained by the three tribes of \citet{prevMulti},
   recomputed here on the same canonical scale.}
@@ -1451,23 +1451,23 @@ best among them, and none of those structures reaches its fitness.
 
 The comparison that matters most is with the three tribes of
 \citet{prevMulti}, whose structures are the outcome of the same problem
-solved with FRENETIC inside the loop, and which were recomputed here
+solved with FRENETIC inside the loop, and which are recomputed here
 on the canonical scale from the boundaries reported in that work. They are shown
 in Fig.~\tref{eg:fig:tradeoff} together with the curve of the best attainable
 fitness, and they lie above it: at $G=14$ the best of the three reaches
 $7.37\times10^{7}$ against $4.55\times10^{7}$ attainable, at $G=20$
 $1.45\times10^{8}$ against $4.53\times10^{7}$, and at $G=13$ $3.60\times10^{8}$
 against $4.92\times10^{7}$. The gap, between $1.6$ and $7.3$ times at equal
-group count, is a question of how many searches were affordable, and the
+group count, is a question of how many searches are affordable, and the
 outcomes of the thousand searches, shown as the faded cloud in the same figure,
 say so directly: the three structures fall inside the region the campaign
 visits, not outside it. At $G=14$ the structure of \citet{prevMulti} is a
 typical outcome of one of the searches of this campaign, worse than 24 of the 57 structures the
-campaign returned at that group count and better than the other 33; at $G=20$ it
+campaign returns at that group count and better than the other 33; at $G=20$ it
 lies in the upper tail, worse than 95 of 101; at $G=13$ it is worse than all 37.
 None of them is unreachable by a single search, and none is what a single search
 is likely to return. With FRENETIC inside the loop, three tribes
-were what a reasonable budget allowed, and the same three tribes are the reason this chapter exists, since it
+are what a reasonable budget allows, and the same three tribes are the reason this chapter exists, since it
 was their disagreement that first showed the outcome to depend on the seed. The
 objective is the same in the two cases, so the comparison measures the size of
 the campaign and nothing else.
@@ -1525,7 +1525,7 @@ condensed structure to have fewer, so that keeping all thirty is not an
 admissible option: the finest structure available has twenty-nine groups and is
 obtained by merging two adjacent fine groups, that is by suppressing one of the
 twenty-nine internal boundaries. There are twenty-nine ways of doing so, and all
-of them were evaluated with FRENETIC. Such a structure condenses
+of them are evaluated with FRENETIC. Such a structure condenses
 almost nothing, and it is therefore the natural candidate for the best result
 that the multi-group model can deliver. It does not deliver it. The best of the
 twenty-nine, obtained by suppressing the boundary at $8.3\times10^{-6}$~MeV,
@@ -1564,12 +1564,12 @@ cancellation between two errors of different origin, their fitness is bound to
 be a fragile function of the grid, and therefore a hard one to interpolate.
 
 A third consequence concerns the scope of the result, and is worth stating
-plainly because it was so far left implicit. If the quality of a structure rests
+plainly because it has so far been left implicit. If the quality of a structure rests
 on a cancellation, the structure is bound to everything that fixes the two
 errors being cancelled. It is specific to the core analysed, with its geometry,
 its materials and its enrichments, and to the operating states over which the
-search was conducted, the three control-rod configurations at the single
-isothermal state point at which the reference data were generated. It is
+search is conducted, the three control-rod configurations at the single
+isothermal state point at which the reference data are generated. It is
 specific to the deterministic scheme whose error it offsets, the diffusion
 approximation together with the assembly-wise homogenization: it would not
 offset the error of a transport solver, nor that of a different homogenization.
@@ -1580,21 +1580,21 @@ relation to the statistical uncertainty of that reference. It is specific to the
 objective itself, in the five quantities chosen and equally in the way they are
 combined by Eq.~(\ref{eg:eqn:joint}), since the clipping and the logarithm decide
 which deviations the search is still allowed to see. And it is confined to the
-pool it was offered, the boundaries of the 30-group parent grid, outside which
+pool it is offered, the boundaries of the 30-group parent grid, outside which
 no search can place a cut.
 
 None of this weakens the result, but it delimits it: what carries over to
 another core, another solver or another set of target quantities is the
-procedure, not the fourteen boundaries it produced here. The point runs against
+procedure, not the fourteen boundaries it produces here. The point runs against
 the intuition that a better structure should also be a more general one, and the
 cancellation is precisely the reason why the opposite holds: the closer a
 structure comes to the reference, the more tightly it is tied to the particular
-pair of errors it was tuned to annul.
+pair of errors it is tuned to annul.
 
 \subsection{Accuracy of the Metamodel on the Proposed Structures}\label{eg:sec:accuracy}
 
-All 747 distinct structures were recomputed with FRENETIC, which allows the
-metamodel to be judged on exactly the population it proposed and on the quantity the search uses, the joint fitness.
+All 747 distinct structures are recomputed with FRENETIC, which allows the
+metamodel to be judged on exactly the population it proposes and on the quantity the search uses, the joint fitness.
 Figure~\tref{eg:fig:bias} sets the two against each other, structure by
 structure. The median difference between the predicted and the true joint
 fitness over the 747 structures is
@@ -1631,7 +1631,7 @@ Table~\tref{eg:tab:ranking}.
 \begin{table}[htbp]
 \centering
 \caption[The fifteen best of the 747 distinct structures]{The fifteen best of
-the 747 distinct structures, all of which were recomputed with FRENETIC, ranked
+the 747 distinct structures, all of which are recomputed with FRENETIC, ranked
 by their true canonical fitness. The disagreement is the relative difference
 between predicted and true joint fitness, and its median over the whole set is
 \SI{2.0}{\percent}.}
@@ -1661,13 +1661,13 @@ Rank & $G$ & True fitness & Predicted & Disagr.\ [\%] \\ \midrule
 \subsection{Computational Cost}
 
 Table~\tref{eg:tab:cost} summarizes the computational budget. Assembling the
-training set required approximately $3\,516$ core-hours of FRENETIC, while a
+training set requires approximately $3\,516$ core-hours of FRENETIC, while a
 single search evaluated directly on the solver would require $383$. The
 metamodel therefore becomes advantageous beyond approximately nine searches, and
 the analysis presented here, which comprises one thousand searches together with
 seventeen constrained optimizations, would have required of the order of
 $390\,000$ core-hours without it. The verification, which is the only part of
-the procedure that still calls the solver during the analysis, cost $29$
+the procedure that still calls the solver during the analysis, costs $29$
 core-hours for the 747 structures.
 
 \begin{table}[htbp]
@@ -1688,7 +1688,7 @@ Equivalent cost avoided & 389\,485 \\ \bottomrule
 \end{tabular}
 \end{table}
 
-The comparison is favourable also in the terms in which the problem was posed.
+The comparison is favourable also in the terms in which the problem is posed.
 The training set is an asset that outlives the single optimization: once
 assembled, it supports the analyses at constrained group count, any subsequent
 re-optimization with modified fitness functions, and the characterization of the
@@ -1698,12 +1698,12 @@ landscape, none of which would be affordable otherwise.
 
 The dependence of the optimized energy structure on the random seed, reported in
 the multi-configuration study which precedes this work, has been investigated by
-performing one thousand independent searches instead of three. The number was
+performing one thousand independent searches instead of three. The number is
 made accessible by a neural metamodel of the fifteen fitness functions, trained
 on more than $90\,000$ full-core evaluations and accurate to a median relative error of
 $0.403\%$ on structures never seen during training and of $0.39\%$ on the
-747 structures the searches went on to propose, which is the population on which
-its accuracy matters. Every one of those structures was recomputed with
+747 structures the searches go on to propose, which is the population on which
+its accuracy matters. Every one of those structures is recomputed with
 FRENETIC, on which the conclusions therefore rest; the three structures the metamodel places first are the three the
 solver places first, which is what the workflow requires of it.
 
@@ -1718,7 +1718,7 @@ inside the loop, which is the argument for replacing it there.
 
 The landscape that the thousand searches map is rugged and only partly
 organized. They converge to 747 distinct structures, five out of six of which
-were produced by a single search, and two structures taken at random disagree on
+are produced by a single search, and two structures taken at random disagree on
 ten of the twenty-nine available boundaries. Only two boundaries are retained by
 more than nine structures out of ten, and the best structure lacks one of them,
 so that the solutions share no common skeleton. What they do share is a single exclusive choice in the fast region:
@@ -1746,14 +1746,14 @@ reaches it, on structures built by uniform spacing rules by three to five orders
 of magnitude, and on the three structures obtained with the solver inside the
 loop by factors between $1.7$ and $8.1$. The last comparison is the one that
 measures what this work adds, and the gap is a question of how many searches
-were affordable rather than of how the objective was posed.
+are affordable rather than of how the objective is posed.
 
 The workflow itself is transferable. Nothing in it is specific to this core
 beyond the training set: the metamodel replaces the solver only inside the
 search, the solver retains the last word, and the cost of building the metamodel
 is repaid after nine searches and then amortised over every subsequent analysis
 performed on the same reactor. The analyses presented here would have required
-of the order of $390\,000$ core-hours of FRENETIC and were carried
+of the order of $390\,000$ core-hours of FRENETIC and are carried
 out for $29$.
 
 Two directions are left open. The accuracy of the metamodel is still limited by
@@ -1764,5 +1764,5 @@ campaign of FRENETIC calculations could supply. The description of the structure
 given to the network could also be enriched with physics-informed quantities,
 such as the lethargy widths of the condensed groups or the variation of the
 reference spectrum within them weighted by the importance; a preliminary attempt
-in this direction did not lower the error, but the possibilities were far from
+in this direction does not lower the error, but the possibilities are far from
 exhausted and the question deserves a study of its own.
