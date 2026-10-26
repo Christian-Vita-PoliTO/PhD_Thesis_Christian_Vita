@@ -27,69 +27,76 @@ reactor~\cite{arcGA}, simulated annealing for sodium-cooled fast
 reactors~\cite{sfrSA}, hierarchical division~\cite{hierDiv}, and dedicated
 studies for specific systems~\cite{scwr}.
 
-For the lead-cooled fast reactor the problem has been developed along a
-consistent line of work~\cite{lfrGA2022,lfrGA2024,prevGA}, culminating in the
-multi-configuration formulation of \citet{prevMulti}, in which a single
-energy structure is optimized simultaneously for three control-rod
-configurations, so that the same grid remains adequate as the core evolves
-during a transient. That study reported an observation which motivates the
-present one. The genetic algorithm was run from three different random seeds,
+For the lead-cooled fast reactor the subject has been developed through a
+consistent series of works~\citetext{\citealp{lfrGA2022}; \citealp{lfrGA2024}; \citealp{prevGA}},
+culminating in the multi-configuration optimization problem of
+\citet{prevMulti}, in which a single energy structure is optimized
+simultaneously for three control-rod configurations, with the goal of having
+an adequate grid as the core evolves during a transient. That study reported an observation which motivates the
+present one. In that work, the genetic algorithm was run from three different random seeds,
 referred to as tribes, and the three tribes converged to three different
 structures sharing many boundaries but not all of them. Since the tribes differ
 only in the initial population, the outcome indicates that the objective
 possesses several distinct optima of comparable quality, and that a single run
 samples one of them without any indication of which.
 
-The behaviour has a natural explanation in the nature of the problem. The
+The behaviour has an intuitive explanation in the nature of the problem. The
 decision variable is a subset of the internal boundaries of a fine grid, so that
 the search space is combinatorial rather than continuous and contains
 $2^{29}\approx5.4\times10^{8}$ elements, on which no notion of gradient exists.
-The objective is the product of fifteen terms, each measuring the agreement of a
-different physical quantity in a different core configuration, and the terms do
-not respond in the same way to the displacement of a boundary: a change that
-improves the multiplication factor may worsen the flux distribution. How abrupt
-the resulting surface is can be measured on the available data. Among the
-structures computed in this work, those differing by exactly one boundary have
-joint fitness values that differ by a median of $0.41$ decades in the region of
-the best solutions, so that a single bit of the
-representation can move the objective by a factor of two and a half. A surface
+The objective is the product of fifteen terms, which measure, in each of the
+three control-rod configurations, the agreement of five quantities with the
+Monte Carlo reference: the multiplication factor, the effective delayed neutron
+fraction, the effective neutron lifetime and the distributions of power and of
+flux over the core. The terms do not respond in the same way to a change of the
+structure and can move in opposite directions: a change that reduces the
+deviation on the multiplication factor may increase the deviation on the flux
+distribution. The irregularity of the resulting surface can be quantified on
+the structures computed in this work, by comparing the pairs of structures that
+differ by a single boundary, present in one of the two and absent from the
+other. Across such a pair the objective changes by a median factor of about
+fifteen; the change is smaller among the best structures, but among the one per
+cent of the pairs with the lowest values of the objective it still amounts to
+about forty per cent. A surface
 of this kind possesses many local optima separated by barriers that a
 population-based search crosses or does not cross depending on where it starts,
 which is precisely what three tribes with three different outcomes indicate.
 
 Two consequences follow. The first is that the result of a single optimization
-should not be interpreted as the optimal structure, but as one member of a set
+should not be interpreted as the optimal structure, but as a nearly optimal solution, i.e., one member of a set
 whose extent is unknown. The second is that any statement of general validity
 about where the boundaries of a good structure should lie requires many
-independent searches, not one. Both consequences call for the same remedy, a higher
-number of simulated tribes could provide a better answer to the need to find an optimized
+independent searches, not only one. Both consequences call for the same remedy, i.e., a higher
+number of simulated tribes, to provide a better characterization of an optimized
 energy grid.
 
 That remedy is not affordable within the workflow shown in \citet{prevMulti}. The fitness of a
-candidate structure can only be established by running the reference
-calculation, and a population-based search requires one such evaluation for
-every individual of every generation. In the present case a single evaluation,
-covering the three control-rod configurations, costs on average $46$~s on three cores with
-the neutronics module of FRENETIC~\cite{frenetic,freneticBench}, so that one
+candidate structure can only be established by running the full-core
+model, and a population-based search requires one such evaluation for
+every individual of every generation. In the present case a single evaluation
+covering the three control-rod configurations costs on average $46$~s on three cores with
+the neutronics module of FRENETIC~\cite{frenetic,freneticBench}, which solves the
+multi-group diffusion equations with a nodal method. Hence, one
 search of a hundred individuals over a hundred generations amounts to
-approximately $383$ core-hours. One thousand such searches would exceed
+approximately $383$ core-hours. One thousand similar searches would exceed
 $380\,000$ core-hours, which places the analysis out of reach.
 
-The present work removes this bottleneck by replacing the evaluation inside the
-search with a neural network of the fitness functions, while leaving the
+The present chapter aims at removing this bottleneck by replacing the evaluation inside the
+search with a neural network model of the fitness functions, while leaving the
 reference solver in charge of the conclusions. The metamodel is used to explore,
 to rank, and to propose; every structure that the searches produce is then
 recomputed with FRENETIC, and all the quantities discussed in the following
-sections are those returned by the solver. The metamodel is therefore an
-accelerator of the search and not a substitute for the physics, an arrangement
-which also protects the results from the regions in which its accuracy is hard to
-learn for the metamodel.
+sections are those returned by FRENETIC. The metamodel is therefore an
+accelerator of the search and not a substitute for the physical model, an arrangement
+which also protects the results from the regions where the metamodel is less
+accurate.
 
 The chapter first defines the optimization problem, reporting in full the
 chromosome representation and the fitness functions inherited from
 \citet{prevMulti}. It then describes the metamodel, its training and its
-accuracy, and identifies the regime in which it is least reliable, since that
-regime dictates the role it is given. The resulting workflow, summarized in Fig.~\tref{eg:fig:flow}, is presented next,
+accuracy, and identifies the regime in which it is least reliable. That regime includes the
+best structures, and for this reason the metamodel is used only inside the
+search, while the conclusions rest on FRENETIC. The resulting workflow, summarized in Fig.~\tref{eg:fig:flow}, is presented next,
 followed by the analysis of the thousand searches, of the structures they
 produce, and of the features those structures have in common.
 
@@ -155,7 +162,7 @@ produce, and of the features those structures have in common.
 \draw[arN] (nn.east) -- ++(6mm,0) |- (eval.west);
 \draw[arO] (ref.east) -- ++(3mm,0) |- (ff.west);
 \draw[arO] (term.east) -- ++(7mm,0) node[lbl, above right, xshift=-6mm] {no}
-          |- ([yshift=2mm]eval.east) -- (eval.east);
+          |- ([yshift=2mm]eval.east);
 
 % ── ciò che il metamodello ha sostituito ────────────────────────────────
 \node[faded, right=30mm of eval, yshift=6.5mm] (old1) {C++/Python coupling};
@@ -164,7 +171,7 @@ produce, and of the features those structures have in common.
 \node[draw=black!25, dashed, rounded corners=1.5pt, inner sep=2.5mm,
       fit=(old1)(old3)] (deadbox) {};
 \node[lbl, above=1.2mm of deadbox, text=black!45, align=center, text width=34mm]
-     {replaced by the metamodel};
+     {\textbf{replaced by the metamodel}};
 \draw[dashed, draw=black!35, line width=.5pt] (eval.east) -- (deadbox.west);
 
 % ── multi-start e giudizio finale (nuovi) ───────────────────────────────
@@ -209,6 +216,40 @@ produce, and of the features those structures have in common.
 
 \section{Definition of the Optimization Problem}
 
+The case study is the ALFRED core, in the specification of the lead-cooled fast
+reactor benchmark coordinated by the Nuclear Energy Agency~\cite{neaBench}.
+Three control-rod configurations are considered simultaneously, shown in
+Fig.~\tref{eg:fig:core} together with the radial layout of the core: rods fully
+withdrawn, with the absorber entirely below the active fuel; rods partially
+inserted, with the absorber facing the fuel over a length of $28$~cm; and rods
+fully inserted, with the absorber covering the whole active height. The
+multiplication factor of the Monte Carlo reference calculation falls from
+$1.096$ to $1.072$ and then to $1.019$ across the three, and they are denoted in
+what follows by the subscripts ``out'', ``partial'' and ``in'', respectively.
+
+The structure is optimized with a genetic algorithm, a stochastic search method
+modelled on natural selection~\citetext{\citealp{holland1975}; \citealp{goldberg1989}}. Rather than
+improving a single candidate solution, a genetic algorithm evolves a population
+of them. Each candidate, or individual, is encoded as a chromosome, a sequence
+of genes whose values, called alleles, determine the solution it represents;
+decoding a chromosome yields that solution, here a group structure. The quality
+of each individual is measured by a fitness function, which in this problem
+expresses how closely the condensed full-core calculation reproduces the Monte
+Carlo reference. At each generation, individuals are selected for reproduction
+with a preference for those of better fitness; pairs of selected individuals
+exchange portions of their chromosomes through crossover, so that features of
+good solutions can be combined, and mutation alters a small fraction of the
+genes at random, so that the population keeps exploring regions it has not yet
+visited. The offspring replace part of the population, and the process is
+repeated for a prescribed number of generations. The method needs only the value
+of the fitness function of each individual, and no derivative of it, which makes
+it suited to problems such as the present one, whose variables are discrete and
+whose objective is evaluated by an external code. Its outcome, however, depends
+on the random initial population and on the random choices made by the
+operators, so that runs started from different random seeds can end on
+different solutions. The two ingredients specific to the problem, the fitness
+functions and the chromosome, are defined in the following.
+
 \subsection{Reference Data and Fitness Functions}
 
 Serpent~2 is used to generate, for each core configuration, both the reference
@@ -216,22 +257,13 @@ values of the integral parameters and the spatially homogenized fine-group
 constants, evaluated at isothermal conditions with fuel and coolant at $673$~K.
 The data are collapsed onto a fine structure of 30 groups whose boundaries are
 extracted from the ECCO-33 grid, chosen so that few groups describe the thermal
-and the fast regions where the Monte Carlo statistics are poorest. That
-30-group structure constitutes the pool of boundaries available to the
-optimization, and the case study is the ALFRED core, in the specification of
-the lead-cooled fast reactor benchmark coordinated by the Nuclear Energy
-Agency~\cite{neaBench}.
+and the fast regions, where the statistical uncertainty of the Monte Carlo
+calculation is largest. The 30-group structure constitutes the pool of
+boundaries available to the optimization.
 
-Three control-rod configurations are considered simultaneously, shown in
-Fig.~\tref{eg:fig:core} together with the radial layout of the core: rods fully
-withdrawn, with the absorber entirely below the active fuel; rods partially
-inserted, with the absorber facing the fuel over a length of $28$~cm; and rods
-fully inserted, with the absorber covering the whole active height. The multiplication factor of the reference calculation falls from $1.096$ to
-$1.072$ and then to $1.019$ across the three, and the three are denoted in
-what follows by the subscripts $\mathrm{out}$, $\mathrm{partial}$
-and $\mathrm{in}$ respectively. For a candidate structure $I$, the agreement with
-the Monte Carlo reference is measured by five fitness functions per
-configuration~\cite{prevMulti}. Three of them concern integral quantities,
+For a candidate structure $I$, the agreement with the Monte Carlo reference is
+measured by five fitness functions per configuration~\cite{prevMulti}. Three of
+them concern integral quantities,
 %
 \begin{equation}
   f_k^I = \left|k^I - k^\mathrm{MC}\right|\times10^5, \qquad
@@ -258,11 +290,23 @@ distributions over the $J$ core assemblies,
   \label{eg:eqn:distributed}
 \end{equation}
 %
-the flux being weighted by the total importance $\phi\phi^{\ddagger}/v$, the
-product of the flux and of the adjoint flux divided by the neutron speed of the
-group as tabulated in the reference library, which measures how much the
-neutrons of a group contribute to the chain reaction and is examined in
-Sec.~\ref{eg:sec:recurring}. All
+the flux deviation of each group and assembly being weighted by the share of the
+total importance of the core that it carries,
+%
+\begin{equation}
+  w_{g,j} = \frac{\sum_{h\in g} n_{h,j}\,\phi^{\dagger}_{h,j}\,V_j}
+                 {\sum_{h=1}^{H}\sum_{j'=1}^{J} n_{h,j'}\,\phi^{\dagger}_{h,j'}\,V_{j'}},
+  \label{eg:eqn:weight}
+\end{equation}
+%
+where $h$ runs over the $H=30$ groups of the fine structure, $h\in g$ denoting
+those contained in group $g$ of the candidate, $V_j$ is the volume of assembly
+$j$, and $n=\phi/v$ and $\phi^{\dagger}$ are the neutron density and the adjoint
+flux of a FRENETIC calculation performed on the fine structure, the speed $v$ of
+each group being the one tabulated in the reference library. The product
+$n\phi^{\dagger}=\phi\phi^{\dagger}/v$ is the total importance, which measures how
+much the neutrons of a group contribute to the chain reaction; its distribution
+over the groups of the optimized structures is examined further on. All
 five are deviations from the reference, so that smaller values indicate a better
 structure.
 
@@ -290,16 +334,17 @@ three configurations,
 %
 Before the scaling, the three integral fitness functions are clipped from below
 and the flux fitness function is replaced by its base-ten logarithm floored at
-unity. The threshold of the clipping is ten pcm, and since
+unity. The threshold of the clipping is $10$~pcm, and since
 Eq.~(\ref{eg:eqn:integral}) does not express the three functions in the same
 units it takes a different numerical value in each. For $f_k$ and $f_{\beta}$,
-defined as absolute deviations multiplied by $10^{5}$, ten pcm is the value
-ten; for $f_{\Lambda}$, defined as a relative deviation multiplied by $10^{2}$,
-the same ten pcm is the value $0.01$. For $f_k$ and $f_{\beta}$ the threshold
+defined as absolute deviations multiplied by $10^{5}$, the threshold
+corresponds to $f_k = 10$ and $f_{\beta} = 10$; for $f_{\Lambda}$, defined as a
+relative deviation expressed as a percentage, the same threshold corresponds to
+$f_{\Lambda} = 0.01$. For $f_k$ and $f_{\beta}$ the threshold
 stands a few times above the statistical uncertainty of the reference, which
-is below two pcm on the multiplication factor and below one pcm on the delayed
+is below $2$~pcm on the multiplication factor and below $1$~pcm on the delayed
 neutron fraction; for $f_{\Lambda}$ it stands below it, since the reference
-lifetime carries an uncertainty of about five hundredths of a per cent, so that
+lifetime carries an uncertainty of about $0.05\%$, so that
 a structure has to reproduce the lifetime more finely than the reference
 resolves it before the control takes effect. Its purpose is to mark
 the level below which a difference between two structures is not treated as an
@@ -328,7 +373,8 @@ values and to the candidate ones.
 The optimization variable is the set of internal boundaries retained from the
 fine structure. Of the 31 boundaries of the 30-group grid the two extremes are
 fixed, so that a candidate structure corresponds to a subset of the remaining
-$H-1=29$ internal boundaries and the design space contains
+$H-1=29$ internal boundaries, and the design space, that is, the set of all
+candidate structures, contains
 $2^{29}\approx5.4\times10^{8}$ elements.
 
 The earlier formulations of this problem fixed the number of groups before the 
@@ -336,8 +382,7 @@ search and left the genetic algorithm to place the boundaries alone, with one
 binary gene per internal boundary of the fine grid stating whether it is
 retained. Prescribing $G$ restricts the space that can be reached and excludes
 the structures that a different number of groups would make available. Several
-chromosome definitions were therefore compared in the line of work that precedes
-this one, and the one retained combines the features of the others and carries
+chromosome definitions were compared in previous works, and the one retained combines the features of the others and carries
 the number of groups as a gene of its own, so that $G$ is searched over rather
 than imposed~\cite{prevGA}.
 
@@ -358,13 +403,231 @@ are summed into a score
   \label{eg:eqn:score}
 \end{equation}
 %
-and the $G-1$ boundaries with the highest score are retained, ties being
-resolved by increasing energy index. The polyploid structure gives each boundary
+and the $G-1$ boundaries with the highest score are retained; when several boundaries have the same score, those with the smaller index $i$
+are retained first. The polyploid structure gives each boundary
 a graded rather than binary expression, so that a boundary can be strengthened
 or weakened by mutation without being switched on or off abruptly, which
 smooths the effect of the genetic operators on the decoded structure. A repair
 operator enforces the bounds on $G$ and the validity of the alleles after
-crossover and mutation.
+crossover and mutation. Figure~\tref{eg:fig:chromosome} illustrates the
+encoding and its decoding on an example.
+
+\begin{figure}[htbp]
+  \centering
+  \resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[font=\footnotesize,
+  cell/.style={draw=black!45, line width=.3pt, minimum width=0.40cm, minimum height=0.40cm, inner sep=0pt, anchor=south west},
+  lab/.style={anchor=east, inner sep=1.5pt}]
+\node[lab] at (1.85,3.280) {$\gamma_0$};
+\node[cell, minimum width=1.6cm, fill=ga!85] at (1.90,3.080) {$G=5$};
+\node[anchor=west, text=black!60] at (3.65,3.280) {number of groups, $4\le G\le20$};
+\node[text=black!60] at (2.100,2.600) {1};
+\node[text=black!60] at (3.700,2.600) {5};
+\node[text=black!60] at (5.700,2.600) {10};
+\node[text=black!60] at (7.700,2.600) {15};
+\node[text=black!60] at (9.700,2.600) {20};
+\node[text=black!60] at (11.700,2.600) {25};
+\node[text=black!60] at (13.300,2.600) {29};
+\node[lab, text=black!60] at (1.85,2.600) {boundary $i$};
+\node[lab] at (1.85,2.050) {$\gamma_{1,1}$};
+\node[cell, fill=white] at (1.900,1.850) {0};
+\node[cell, fill=white] at (2.300,1.850) {0};
+\node[cell, fill=ga!35] at (2.700,1.850) {1};
+\node[cell, fill=white] at (3.100,1.850) {0};
+\node[cell, fill=ga!35] at (3.500,1.850) {1};
+\node[cell, fill=white] at (3.900,1.850) {0};
+\node[cell, fill=ga!85] at (4.300,1.850) {2};
+\node[cell, fill=white] at (4.700,1.850) {0};
+\node[cell, fill=white] at (5.100,1.850) {0};
+\node[cell, fill=white] at (5.500,1.850) {0};
+\node[cell, fill=ga!35] at (5.900,1.850) {1};
+\node[cell, fill=white] at (6.300,1.850) {0};
+\node[cell, fill=white] at (6.700,1.850) {0};
+\node[cell, fill=white] at (7.100,1.850) {0};
+\node[cell, fill=white] at (7.500,1.850) {0};
+\node[cell, fill=ga!85] at (7.900,1.850) {2};
+\node[cell, fill=white] at (8.300,1.850) {0};
+\node[cell, fill=white] at (8.700,1.850) {0};
+\node[cell, fill=white] at (9.100,1.850) {0};
+\node[cell, fill=ga!35] at (9.500,1.850) {1};
+\node[cell, fill=white] at (9.900,1.850) {0};
+\node[cell, fill=white] at (10.300,1.850) {0};
+\node[cell, fill=ga!85] at (10.700,1.850) {2};
+\node[cell, fill=white] at (11.100,1.850) {0};
+\node[cell, fill=white] at (11.500,1.850) {0};
+\node[cell, fill=ga!35] at (11.900,1.850) {1};
+\node[cell, fill=white] at (12.300,1.850) {0};
+\node[cell, fill=white] at (12.700,1.850) {0};
+\node[cell, fill=ga!35] at (13.100,1.850) {1};
+\node[lab] at (1.85,1.650) {$\gamma_{1,2}$};
+\node[cell, fill=ga!35] at (1.900,1.450) {1};
+\node[cell, fill=white] at (2.300,1.450) {0};
+\node[cell, fill=white] at (2.700,1.450) {0};
+\node[cell, fill=white] at (3.100,1.450) {0};
+\node[cell, fill=ga!35] at (3.500,1.450) {1};
+\node[cell, fill=white] at (3.900,1.450) {0};
+\node[cell, fill=ga!85] at (4.300,1.450) {2};
+\node[cell, fill=white] at (4.700,1.450) {0};
+\node[cell, fill=ga!85] at (5.100,1.450) {2};
+\node[cell, fill=white] at (5.500,1.450) {0};
+\node[cell, fill=ga!35] at (5.900,1.450) {1};
+\node[cell, fill=white] at (6.300,1.450) {0};
+\node[cell, fill=white] at (6.700,1.450) {0};
+\node[cell, fill=white] at (7.100,1.450) {0};
+\node[cell, fill=white] at (7.500,1.450) {0};
+\node[cell, fill=ga!35] at (7.900,1.450) {1};
+\node[cell, fill=white] at (8.300,1.450) {0};
+\node[cell, fill=ga!35] at (8.700,1.450) {1};
+\node[cell, fill=ga!35] at (9.100,1.450) {1};
+\node[cell, fill=white] at (9.500,1.450) {0};
+\node[cell, fill=white] at (9.900,1.450) {0};
+\node[cell, fill=white] at (10.300,1.450) {0};
+\node[cell, fill=ga!85] at (10.700,1.450) {2};
+\node[cell, fill=white] at (11.100,1.450) {0};
+\node[cell, fill=ga!35] at (11.500,1.450) {1};
+\node[cell, fill=ga!85] at (11.900,1.450) {2};
+\node[cell, fill=ga!35] at (12.300,1.450) {1};
+\node[cell, fill=white] at (12.700,1.450) {0};
+\node[cell, fill=ga!35] at (13.100,1.450) {1};
+\node[lab] at (1.85,1.250) {$\gamma_{1,3}$};
+\node[cell, fill=white] at (1.900,1.050) {0};
+\node[cell, fill=white] at (2.300,1.050) {0};
+\node[cell, fill=white] at (2.700,1.050) {0};
+\node[cell, fill=white] at (3.100,1.050) {0};
+\node[cell, fill=white] at (3.500,1.050) {0};
+\node[cell, fill=white] at (3.900,1.050) {0};
+\node[cell, fill=ga!85] at (4.300,1.050) {2};
+\node[cell, fill=ga!35] at (4.700,1.050) {1};
+\node[cell, fill=white] at (5.100,1.050) {0};
+\node[cell, fill=white] at (5.500,1.050) {0};
+\node[cell, fill=ga!85] at (5.900,1.050) {2};
+\node[cell, fill=white] at (6.300,1.050) {0};
+\node[cell, fill=white] at (6.700,1.050) {0};
+\node[cell, fill=ga!35] at (7.100,1.050) {1};
+\node[cell, fill=ga!35] at (7.500,1.050) {1};
+\node[cell, fill=ga!85] at (7.900,1.050) {2};
+\node[cell, fill=white] at (8.300,1.050) {0};
+\node[cell, fill=ga!85] at (8.700,1.050) {2};
+\node[cell, fill=white] at (9.100,1.050) {0};
+\node[cell, fill=ga!35] at (9.500,1.050) {1};
+\node[cell, fill=white] at (9.900,1.050) {0};
+\node[cell, fill=white] at (10.300,1.050) {0};
+\node[cell, fill=ga!35] at (10.700,1.050) {1};
+\node[cell, fill=white] at (11.100,1.050) {0};
+\node[cell, fill=ga!35] at (11.500,1.050) {1};
+\node[cell, fill=ga!35] at (11.900,1.050) {1};
+\node[cell, fill=white] at (12.300,1.050) {0};
+\node[cell, fill=white] at (12.700,1.050) {0};
+\node[cell, fill=white] at (13.100,1.050) {0};
+\node[lab] at (1.85,0.850) {$\gamma_{1,4}$};
+\node[cell, fill=white] at (1.900,0.650) {0};
+\node[cell, fill=white] at (2.300,0.650) {0};
+\node[cell, fill=ga!35] at (2.700,0.650) {1};
+\node[cell, fill=ga!35] at (3.100,0.650) {1};
+\node[cell, fill=ga!35] at (3.500,0.650) {1};
+\node[cell, fill=white] at (3.900,0.650) {0};
+\node[cell, fill=ga!85] at (4.300,0.650) {2};
+\node[cell, fill=white] at (4.700,0.650) {0};
+\node[cell, fill=white] at (5.100,0.650) {0};
+\node[cell, fill=white] at (5.500,0.650) {0};
+\node[cell, fill=ga!85] at (5.900,0.650) {2};
+\node[cell, fill=ga!35] at (6.300,0.650) {1};
+\node[cell, fill=white] at (6.700,0.650) {0};
+\node[cell, fill=ga!35] at (7.100,0.650) {1};
+\node[cell, fill=white] at (7.500,0.650) {0};
+\node[cell, fill=ga!85] at (7.900,0.650) {2};
+\node[cell, fill=white] at (8.300,0.650) {0};
+\node[cell, fill=white] at (8.700,0.650) {0};
+\node[cell, fill=white] at (9.100,0.650) {0};
+\node[cell, fill=white] at (9.500,0.650) {0};
+\node[cell, fill=white] at (9.900,0.650) {0};
+\node[cell, fill=ga!35] at (10.300,0.650) {1};
+\node[cell, fill=ga!35] at (10.700,0.650) {1};
+\node[cell, fill=white] at (11.100,0.650) {0};
+\node[cell, fill=white] at (11.500,0.650) {0};
+\node[cell, fill=ga!85] at (11.900,0.650) {2};
+\node[cell, fill=white] at (12.300,0.650) {0};
+\node[cell, fill=white] at (12.700,0.650) {0};
+\node[cell, fill=white] at (13.100,0.650) {0};
+\node[lab] at (1.85,-0.150) {$s_i$};
+\node[cell] at (1.900,-0.350) {1};
+\node[cell] at (2.300,-0.350) {0};
+\node[cell] at (2.700,-0.350) {2};
+\node[cell] at (3.100,-0.350) {1};
+\node[cell] at (3.500,-0.350) {3};
+\node[cell] at (3.900,-0.350) {0};
+\node[cell, draw=newc, line width=1pt, fill=newc!15] at (4.300,-0.350) {\textbf{8}};
+\node[cell] at (4.700,-0.350) {1};
+\node[cell] at (5.100,-0.350) {2};
+\node[cell] at (5.500,-0.350) {0};
+\node[cell, draw=newc, line width=1pt, fill=newc!15] at (5.900,-0.350) {\textbf{6}};
+\node[cell] at (6.300,-0.350) {1};
+\node[cell] at (6.700,-0.350) {0};
+\node[cell] at (7.100,-0.350) {2};
+\node[cell] at (7.500,-0.350) {1};
+\node[cell, draw=newc, line width=1pt, fill=newc!15] at (7.900,-0.350) {\textbf{7}};
+\node[cell] at (8.300,-0.350) {0};
+\node[cell] at (8.700,-0.350) {3};
+\node[cell] at (9.100,-0.350) {1};
+\node[cell] at (9.500,-0.350) {2};
+\node[cell] at (9.900,-0.350) {0};
+\node[cell] at (10.300,-0.350) {1};
+\node[cell, draw=newc, line width=1pt, fill=newc!15] at (10.700,-0.350) {\textbf{6}};
+\node[cell] at (11.100,-0.350) {0};
+\node[cell] at (11.500,-0.350) {2};
+\node[cell] at (11.900,-0.350) {6};
+\node[cell] at (12.300,-0.350) {1};
+\node[cell] at (12.700,-0.350) {0};
+\node[cell] at (13.100,-0.350) {2};
+\draw[-{Latex[length=1.4mm]}, black!55] (13.75,2.200) -- (13.75,-0.150);
+\node[lab] at (1.85,-1.350) {structure};
+\draw[black!55, line width=.5pt] (1.90,-1.350) -- (13.50,-1.350);
+\draw[black, line width=1pt] (1.90,-1.510) -- ++(0,0.32) (13.50,-1.510) -- ++(0,0.32);
+\draw[black!30, line width=.3pt] (2.100,-1.420) -- ++(0,0.14);
+\draw[black!30, line width=.3pt] (2.500,-1.420) -- ++(0,0.14);
+\draw[black!30, line width=.3pt] (2.900,-1.420) -- ++(0,0.14);
+\draw[black!30, line width=.3pt] (3.300,-1.420) -- ++(0,0.14);
+\draw[black!30, line width=.3pt] (3.700,-1.420) -- ++(0,0.14);
+\draw[black!30, line width=.3pt] (4.100,-1.420) -- ++(0,0.14);
+\draw[newc, line width=1.1pt] (4.500,-1.510) -- ++(0,0.32);
+\draw[newc!60, densely dotted] (4.500,-0.350) -- (4.500,-1.190);
+\draw[black!30, line width=.3pt] (4.900,-1.420) -- ++(0,0.14);
+\draw[black!30, line width=.3pt] (5.300,-1.420) -- ++(0,0.14);
+\draw[black!30, line width=.3pt] (5.700,-1.420) -- ++(0,0.14);
+\draw[newc, line width=1.1pt] (6.100,-1.510) -- ++(0,0.32);
+\draw[newc!60, densely dotted] (6.100,-0.350) -- (6.100,-1.190);
+\draw[black!30, line width=.3pt] (6.500,-1.420) -- ++(0,0.14);
+\draw[black!30, line width=.3pt] (6.900,-1.420) -- ++(0,0.14);
+\draw[black!30, line width=.3pt] (7.300,-1.420) -- ++(0,0.14);
+\draw[black!30, line width=.3pt] (7.700,-1.420) -- ++(0,0.14);
+\draw[newc, line width=1.1pt] (8.100,-1.510) -- ++(0,0.32);
+\draw[newc!60, densely dotted] (8.100,-0.350) -- (8.100,-1.190);
+\draw[black!30, line width=.3pt] (8.500,-1.420) -- ++(0,0.14);
+\draw[black!30, line width=.3pt] (8.900,-1.420) -- ++(0,0.14);
+\draw[black!30, line width=.3pt] (9.300,-1.420) -- ++(0,0.14);
+\draw[black!30, line width=.3pt] (9.700,-1.420) -- ++(0,0.14);
+\draw[black!30, line width=.3pt] (10.100,-1.420) -- ++(0,0.14);
+\draw[black!30, line width=.3pt] (10.500,-1.420) -- ++(0,0.14);
+\draw[newc, line width=1.1pt] (10.900,-1.510) -- ++(0,0.32);
+\draw[newc!60, densely dotted] (10.900,-0.350) -- (10.900,-1.190);
+\draw[black!30, line width=.3pt] (11.300,-1.420) -- ++(0,0.14);
+\draw[black!30, line width=.3pt] (11.700,-1.420) -- ++(0,0.14);
+\draw[black!30, line width=.3pt] (12.100,-1.420) -- ++(0,0.14);
+\draw[black!30, line width=.3pt] (12.500,-1.420) -- ++(0,0.14);
+\draw[black!30, line width=.3pt] (12.900,-1.420) -- ++(0,0.14);
+\draw[black!30, line width=.3pt] (13.300,-1.420) -- ++(0,0.14);
+\end{tikzpicture}}
+  \caption[Polyploid chromosome and its decoding]{Polyploid chromosome and its
+  decoding, on an illustrative individual with $G=5$. The gene $\gamma_0$ holds
+  the number of groups; each of the $P=4$ arrays of $\gamma_1$ holds one allele
+  in $\{0,1,2\}$ for each of the 29 internal boundaries of the fine grid, the
+  shade growing with the value. Summing the arrays gives the score $s_i$ of each
+  boundary, Eq.~(\ref{eg:eqn:score}), and the $G-1=4$ boundaries with the
+  highest score are retained; of the three boundaries that share a score of six,
+  the two with the smaller index are retained. The retained boundaries, together
+  with the two fixed extremes, define the five groups of the decoded structure.}
+  \label{eg:fig:chromosome}
+\end{figure}
 
 
 \section{The Metamodel}
