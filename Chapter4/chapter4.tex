@@ -632,130 +632,82 @@ encoding and its decoding on an example.
 
 \section{The Metamodel}
 
-\subsection{Training Set}
-
-The metamodel is trained on 91\,723 distinct structures for which the
-neutronics module of FRENETIC has been run over the three configurations. The
-set was assembled incrementally, over seventeen batches. The first was drawn at
-random from the design space; each of the following ones was selected, among the
-structures not yet simulated, by the disagreement among the members of an
-ensemble of networks -- the variance of their predicted means, in the space in
-which the networks are trained -- averaged over the nine quantities that the
-model predicts least accurately, namely the multiplication factor, the flux and the generation
-time for the three configurations. The criterion was applied with the ensemble
-available at the time of each batch, so the acquisition history is not
-homogeneous, and the retrospective experiment described below replays it under a
-single protocol in order to measure what the accumulated data are worth. A
-further 1\,700 structures form an external validation set which is never used
-in training nor for early stopping. It did guide the development: the
-architectures and trunk widths explored in the preliminary phase were compared
-on its coefficient of determination, overall and output by output. The accuracy
-figures quoted in this work, which all refer to this set, are therefore not
-fully immune from selection effects, and the protection against over-reliance
-on them is structural rather than statistical: the workflow described later
-verifies with the reference solver every result it uses. The ablation and
-reproducibility measurements of the next subsection are evaluated on the same
-set, after the architecture had been fixed.
-
 \subsection{Architecture}
 
-The fifteen fitness functions are not independent, since they group into five
-physical families, each evaluated for the same three core states. The network
-reproduces that organization. A shared trunk of three fully connected layers of
-$1024$, $512$ and $256$ neurons receives the 29-bit description of the structure
-together with the number of groups. The trunk feeds five family-level branches
-of $128$ and $64$ neurons, each of which feeds three configuration-level
-branches of $32$ neurons terminating in the corresponding output. Every hidden
-layer uses the ReLU activation, and each configuration branch in fact ends in
-two numbers, the predicted value and the logarithm of a variance, whose only
-role is in the loss function described below. Parameters are
-thus shared to the extent that the physics shares them and specialised where it
-does not.
+The fifteen fitness functions are not independent: they are of five types, one
+for each physical quantity (multiplication factor, effective delayed neutron
+fraction, effective neutron lifetime, power and flux), and each type is
+evaluated for the same three control-rod configurations. The metamodel
+reproduces that organization with a feed-forward neural network, in which the
+input passes through a sequence of intermediate, or hidden, layers of neurons
+before reaching the outputs, and whose layers are arranged on three levels. The
+first level, called the trunk because the other levels branch off from it, is
+common to all the outputs. It receives the description of the structure as 29
+bits, one for each internal boundary of the fine grid and equal to one when the
+boundary is retained, together with the number of groups, and it consists of
+three fully connected layers of $1024$, $512$ and $256$ neurons, in which every
+neuron receives the outputs of all the neurons of the preceding layer. The
+trunk feeds five type branches, one for each type of fitness function, each made
+of two layers of $128$ and $64$ neurons. Each type branch in turn feeds three
+configuration branches, one for each control-rod configuration, each made of a
+layer of $32$ neurons terminating in the corresponding output. Every hidden
+layer uses the rectified linear unit (ReLU) activation function, $\max(0,x)$,
+and each configuration branch in fact ends in two numbers, the predicted value
+and the logarithm of a variance, whose only role is in the loss function
+described further on. The parameters of the trunk are thus shared by all the
+outputs, while those of the branches are specific to one type of fitness
+function or to one configuration.
 
-The capacity is the outcome of exploration, not of a rule. The first
-configuration adopted was considerably smaller and saturated during the
-active-learning campaign, its accuracy no longer improving as data kept
-arriving. Since generating the training data was by far the expensive side of
-the exercise, the network was the economical one to act on, and architectures,
-trunk widths and training parameters were explored extensively to extract more
-accuracy from the same data; the sizes above are what that exploration
-settled on. The retrospective learning curve reported below confirms that,
-after the enlargement, the limit moved back to the data.
+Twelve of the fifteen outputs span several orders of magnitude and are learned
+as $\log_{10}(y+10^{-6})$; the offset $10^{-6}$, smaller than any value in the
+training data, only keeps the transformation defined for a vanishing deviation.
+The three power fitness functions are instead learned as they are, without the
+logarithmic transformation. The prediction of the metamodel is the average of
+the predictions of an ensemble~\cite{deepEnsembles}, that is, a set of five
+networks with the same architecture, trained on the same data from different
+random initializations of their weights. The average is taken in the space in
+which the networks are trained, which for the twelve logarithmic outputs
+amounts to a geometric mean in physical units. The disagreement among the
+members of the ensemble indicates how uncertain the prediction is, and the
+construction of the training set rests on it.
 
-An ablation quantifies what each level of the hierarchy is worth, and the result
-is not symmetric. Table~\tref{eg:tab:ablation} reports three architectures trained
-on the same data with the same reduced protocol, a single network at constant
-learning rate. Introducing the five family necks raises the mean coefficient of
-determination from $0.9848$ to $0.9908$ and lowers the median relative error
-from $1.75$ to $1.50\%$, at the price of a $29\%$ increase in the number of
-parameters. Adding the configuration branch below them changes neither figure
-appreciably, $0.9905$ and $1.49\%$.
+\subsection{Training Set}
 
-The second comparison rests on differences of four ten-thousandths in the
-coefficient of determination and of seven thousandths of a point in relative
-error, and margins of that size mean nothing unless the reproducibility of the
-training is known. It was therefore measured: five networks of identical
-architecture, trained with the identical protocol and differing only in the
-random initialisation of their weights, span a range of $0.0031$ in the
-coefficient of determination and of $0.24$ points in relative error, with
-standard deviations of $0.0013$ and $0.11$. The difference between the two
-architectures is thus four times smaller than the scatter between two runs of
-the same one, and fifteen times smaller on the relative error. The comparison of
-the fifteen outputs one by one leads to the same conclusion: the family necks
-improve twelve outputs out of fifteen with respect to the flat network, a
-consistent effect, while the configuration branch improves eight out of fifteen,
-a proportion indistinguishable from the one expected
-if the two architectures were equivalent.
+The metamodel is trained on more than $90\,000$ distinct structures, for each of
+which the neutronics module of FRENETIC has been run over the three
+configurations. Since every structure added to the training set costs a
+full-core calculation, the structures were chosen where they are most
+informative, by adaptive sampling: a first set of structures was drawn at random
+among all the candidate structures, and the structures added afterwards were those, among the
+candidates for which FRENETIC had not yet been run, on which the members of an
+ensemble of networks disagreed most, that is, those for which the prediction of
+the metamodel was most uncertain.
 
-The physical quantity, and not the core configuration, is therefore the
-dimension along which the fifteen outputs need separate parameters, and this is
-consistent with three configurations that differ only in the position of the
-control rods and share the same materials, the same geometry and the same fine
-grid. The production model retains the configuration branch, which was already
-present when the ablation was performed and costs $3\%$ additional parameters,
-and the measurement gives no reason to retrain without it; it does, however,
-identify the family level as the one that carries the architectural gain.
-
-\begin{table}[htbp]
-\centering
-\caption[Contribution of each level of the hierarchy]{Contribution of each level of the hierarchy, measured on the same
-91\,723 configurations and with the same reduced protocol: one network per
-architecture, constant learning rate and early stopping. The absolute values are
-therefore higher than those of the final ensemble, and only their differences
-are meaningful. The last line gives the scatter observed over five networks of
-identical architecture differing only in their random initialisation, which sets
-the scale below which a difference cannot be read.}
-\label{eg:tab:ablation}
-\begin{tabular}{@{}p{62mm}ccc@{}}
-\toprule
-Architecture & Parameters & $R^2$ & Rel.\ err.\ [\%] \\ \midrule
-    Shared trunk, fifteen linear heads & 0.70M & 0.9848 & 1.750 \\
-    Shared trunk, one neck per family & 0.90M & 0.9908 & 1.501 \\
-    Shared trunk, family neck, configuration branch & 0.93M & 0.9905 & 1.494 \\
-\midrule
-    \emph{Spread over five random initialisations} & & $\pm$0.0013 & $\pm$0.11 \\ \bottomrule
-\end{tabular}
-\end{table}
-Twelve of the fifteen outputs span several orders of magnitude and are learned 
-as $\log_{10}(y+10^{-6})$, while the three power fitness functions are learned
-directly. Predictions are averaged over an ensemble of five networks trained
-from different random initialisations~\cite{deepEnsembles}; the average is taken
-in the standardised space in which the networks are trained, which for the
-twelve logarithmic outputs amounts to a geometric mean in physical units. The
-disagreement among the members of the ensemble also provides the criterion used
-to select the configurations added to the training set.
+A further 1\,700 structures form an external validation set, which is used
+neither in training nor for early stopping, the procedure that ends the
+training when the error on a separate set of structures, kept aside for this
+purpose, stops decreasing. The external validation set nevertheless guided the
+development: the architectures and trunk widths explored in the preliminary
+phase were compared on their accuracy on this set, overall and output by output.
+The accuracy figures quoted in this work, which all refer to this set, may
+therefore be slightly optimistic. The conclusions of this chapter do not depend
+on them, however, because the workflow described later verifies with FRENETIC
+every result it uses. The ablation and reproducibility measurements reported
+further on are evaluated on the same set, after the architecture had been
+fixed.
 
 \subsection{Training and Accuracy}
 
-The inputs -- the 29-bit description of the structure and the number of
-groups -- and the fifteen targets, in the logarithmic space defined above, are
-standardised to zero mean and unit variance, with the scalers fitted on the
-training portion alone. An internal validation split, $15\%$ of the $91\,723$
-configurations drawn once with a fixed seed, serves for early stopping; it is
-distinct from the external validation set, which no training signal touches.
+The inputs, namely the 29 bits of the structure and the number of groups, and
+the fifteen targets, in the logarithmic space defined above, are standardized to
+zero mean and unit variance, with the mean and the standard deviation of each
+variable computed on the training portion alone. An internal validation split,
+$15\%$ of the training structures drawn once with a fixed seed, serves for early
+stopping; it is distinct from the external validation set described above.
 
 The loss is the Gaussian negative log-likelihood built from the two outputs of
-each branch, averaged over the mini-batch,
+each branch, averaged over the mini-batch, the subset of training structures
+used for a single update of the network weights,
 %
 \begin{equation}
   \mathcal{L} \;=\; \frac{1}{15}\sum_{q=1}^{15} \frac{1}{2}
@@ -766,41 +718,71 @@ each branch, averaged over the mini-batch,
 with $\mu_q$ the predicted value of output $q$, $t_q$ its target and $s_q$ the
 predicted log-variance, clamped to $|s_q|\le5$. The predicted variance acts as a
 self-adjusting weight on the residuals during training and appears nowhere
-else: predictions, accuracy figures and the acquisition criterion use the means
-alone.
+else: predictions, accuracy figures and the selection of the structures added by
+adaptive sampling use the means alone.
 
 The networks are trained in PyTorch~\cite{pytorch} with the AdamW
-optimizer~\cite{adamw} and no weight decay, in mini-batches of 200
-configurations reshuffled at every epoch, in four stages of decreasing
-learning rate, $3\times10^{-3}$, $3\times10^{-4}$, $10^{-4}$ and
-$3\times10^{-5}$. Each stage stops when the loss on the internal validation
-split has not improved for 40, 12, 12 and 10 epochs respectively, within caps
-of 400, 60, 60 and 40 epochs, and restores the best weights seen; the first
-stage does nearly all the work, running between 168 and 302 epochs depending on
-the member. Training the whole ensemble, the five members in parallel, takes
-79 minutes on CPUs alone. The staged schedule
-proves considerably more effective than a constant learning rate: the same
-architecture trained at $3\times10^{-3}$ with early stopping reaches a median
-relative error of $0.715\%$, against $0.422\%$ with the staged decay on the same
-data, a reduction of $41\%$ which exceeds the combined effect of all the
-architectural refinements described above. A control run performed with the
-staged schedule and no additional data reproduces the improvement exactly, which
-confirms that it originates in the schedule and not in the training set.
+optimizer~\cite{adamw}, a gradient-based method that adapts the step of each
+weight during training, and no weight decay, in mini-batches of 200 structures
+reshuffled at every epoch, that is, at every pass over the training set, in four
+stages of decreasing learning rate, $3\times10^{-3}$, $3\times10^{-4}$,
+$10^{-4}$ and $3\times10^{-5}$. Each stage stops when the loss on the internal
+validation split has not improved for 40, 12, 12 and 10 epochs respectively,
+within caps of 400, 60, 60 and 40 epochs, and restores the best weights seen;
+the first stage does nearly all the work, running between 168 and 302 epochs
+depending on the member. Training the whole ensemble, the five members in
+parallel, takes 79 minutes on CPUs alone. The staged schedule proves
+considerably more effective than a constant learning rate: the same architecture
+trained at $3\times10^{-3}$ with early stopping reaches a median relative error
+of $0.715\%$, against $0.422\%$ with the staged decay on the same data, a
+reduction of $41\%$ which exceeds the combined effect of the architectural
+refinements discussed further on.
+
+The accuracy of the metamodel is measured on the external validation set by
+comparing, for each structure and each output, the value $\hat{f}$ predicted by
+the metamodel with the value $f$ computed with FRENETIC for the same structure.
+Two measures are used. The relative error,
+%
+\begin{equation}
+  \varepsilon = \frac{\left|\hat{f}-f\right|}{f}\times10^{2},
+  \label{eg:eqn:relerr}
+\end{equation}
+%
+is computed in physical units and summarized by its median over the structures
+of the set, and over the fifteen outputs as well when a single figure is given.
+The coefficient of determination of an output,
+%
+\begin{equation}
+  R^2 = 1-\frac{\sum_{n}\left(\hat{y}_n-y_n\right)^2}
+               {\sum_{n}\left(y_n-\bar{y}\right)^2},
+  \label{eg:eqn:r2}
+\end{equation}
+%
+is computed instead in the space in which the networks are trained, $y_n$ being
+the transformed value of the output for structure $n$, $\hat{y}_n$ its
+prediction and $\bar{y}$ the mean of $y_n$ over the set. It equals one when the
+predictions are exact and decreases as the residuals grow with respect to the
+spread of the values; the mean coefficient of determination is its average over
+the fifteen outputs. The relative error thus measures how far the metamodel is
+from FRENETIC, whereas each fitness function measures how far the condensed
+calculation is from the Monte Carlo reference.
 
 Table~\tref{eg:tab:accuracy} reports the accuracy of the final ensemble for each
-output and Fig.~\tref{eg:fig:scatter} the corresponding predicted against reference
-values. The mean coefficient of determination is $0.99634$ and the median
-relative error $0.403\%$. The accuracy is not uniform across the fifteen
-quantities: the power fitness functions are reproduced to better than $0.2\%$
-and the delayed neutron fraction to about $0.4\%$, while the flux functions,
-which are the least accurate, lie between $2.0$ and $2.3\%$.
+output and Fig.~\tref{eg:fig:scatter} the values predicted by the metamodel
+against those computed with FRENETIC. The mean coefficient of determination is
+$0.996$ and the median relative error $0.403\%$. The relative error is not
+uniform across the fifteen outputs: it is below $0.2\%$ for the power fitness
+functions, between $0.17$ and $0.40\%$ for those of the delayed neutron fraction
+and between $2.0$ and $2.3\%$ for those of the flux, which are the least
+accurately predicted.
 
 \begin{table}[htbp]
 \centering
-\caption[Metamodel accuracy on the external validation set]{Metamodel accuracy on the external validation set, 1700 configurations
-never used in training nor for early stopping. The coefficient of determination
-is computed in the space in which the network is trained; the relative error is
-in physical units.}
+\caption[Metamodel accuracy on the external validation set]{Metamodel accuracy on the external validation set, 1700 structures
+used neither in training nor for early stopping. The coefficient of
+determination $R^2$, Eq.~(\ref{eg:eqn:r2}), is computed in the space in which
+the network is trained; the relative error, Eq.~(\ref{eg:eqn:relerr}), is in
+physical units.}
 \label{eg:tab:accuracy}
 \begin{tabular}{lcc@{\hspace{4mm}}lcc}
 \toprule
@@ -820,86 +802,170 @@ Output & $R^2$ & Rel.\ err.\ [\%] & Output & $R^2$ & Rel.\ err.\ [\%] \\ \midrul
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{Chapter4/Figs/fig_scatter.pdf}
-  \caption[Predicted against reference values of the fitness functions]{Predicted against reference values of the fifteen fitness functions
-  for the 1700 configurations of the external validation set. Rows correspond to
-  the five physical families and columns to the three control-rod
+  \caption[Fitness functions predicted by the metamodel against those computed with FRENETIC]{Values of the fifteen fitness functions predicted by the metamodel
+  against those computed with FRENETIC, labelled reference on the horizontal
+  axes, for the 1700 structures of the external validation set. Rows correspond
+  to the five types of fitness function and columns to the three control-rod
   configurations. Colour encodes the number of energy groups of the structure.
   Axes are in the space in which the network is trained, logarithmic for every
   quantity except the power. The dashed line is the identity.}
   \label{eg:fig:scatter}
 \end{figure}
 
-The size of the training set was established by a retrospective experiment
-rather than assumed. Starting from a random subset of $10\,000$ configurations,
-the campaign was replayed by repeatedly training an ensemble, ranking the
-remaining configurations by ensemble disagreement and adding the ten thousand
-most uncertain ones. The resulting curve, Fig.~\tref{eg:fig:learning}, decreases
-steadily and does not flatten before the pool is exhausted, which indicates
-that the accuracy is still limited by the amount of available data rather than
-by the model. The campaign was stopped because the pool was exhausted, and the
-error obtained with the full set is sufficient for the use made of the metamodel
-in the following, for the reason set out when the workflow is described.
+Figure~\tref{eg:fig:learning} shows the external validation error as a function
+of the size of the training set, as the set is enlarged by adaptive sampling.
+The error decreases steadily up to the full set without reaching a plateau,
+which indicates that the accuracy is still limited by the amount of available
+data rather than by the model. The error obtained with the full set is
+nevertheless judged sufficient for the application of the metamodel in what
+follows, for the reasons given below.
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{Chapter4/Figs/fig_learning.pdf}
   \caption[External validation error against the size of the training set]{External validation error as a function of the size of the training
-  set, obtained by replaying the acquisition campaign on the assembled data.
-  Left, median relative error; right, mean coefficient of determination over the
-  fifteen outputs. All the points were obtained with the same reduced training
-  protocol, so their absolute level is higher than that of the final ensemble.}
+  set, enlarged by adaptive sampling. Left: median relative error; right: mean
+  coefficient of determination over the fifteen outputs. All the points were
+  obtained with a shorter training protocol than that of the final ensemble,
+  three networks at constant learning rate, so their accuracy is lower.}
   \label{eg:fig:learning}
 \end{figure}
 
-\subsection{The Regime of Reduced Accuracy}
+\subsection{Choice of the Architecture}
 
-The residual error is not distributed uniformly over the design space. It
-concentrates at small values of the reactivity and kinetics fitness functions
-and, for the flux, at large values. Since small fitness values identify the best
-structures, the behaviour deserves a quantitative explanation, and the
-explanation lies in the target function itself. Searching the training database for
-pairs of structures differing by exactly one boundary yields 55\,058 such
-pairs. The median change of the base-ten logarithm of the fitness function
-across a pair amounts to $0.414$ decades in the lowest band of
-multiplication-factor deviations, against $0.024$ decades in the highest, a
-factor of seventeen, and to $0.395$ against $0.044$ decades for the lifetime.
-The correspondence with the accuracy of the metamodel is direct.
-Figure~\tref{eg:fig:smallvalue} places the two quantities side by side, band by band
-and family by family: where the target changes most under a single boundary
-displacement, the metamodel errs most. The right panel plots one against the
+The size of the network was determined empirically. Since generating the
+training data was by far the most expensive part of the work, tuning the
+network was the most economical action: architectures, trunk widths and training
+parameters were explored extensively to improve the predictive accuracy
+obtained with the same data, and the sizes given in the description of the
+architecture are the result of that exploration. The learning curve of
+Fig.~\tref{eg:fig:learning} confirms that the accuracy of the resulting network
+is limited by the amount of training data.
+
+An ablation, in which levels of the network are removed in turn, quantifies
+what each level of the hierarchy contributes, and the result is not symmetric.
+Table~\tref{eg:tab:ablation} reports three architectures trained on the same
+data with the same reduced protocol, a single network at constant learning rate.
+Introducing the five type branches between the trunk and the outputs raises the
+mean coefficient of determination from $0.9848$ to $0.9908$ and lowers the
+median relative error from $1.75$ to $1.50\%$, at the price of a $29\%$
+increase in the number of parameters. Adding the configuration branches below
+them changes neither figure appreciably, $0.9905$ and $1.49\%$.
+
+The second comparison rests on differences of $3.5\times10^{-4}$ in the mean
+coefficient of determination and of $0.007$ percentage points in the median
+relative error. To establish whether differences of this size are meaningful,
+the reproducibility of the training was measured: five networks of identical
+architecture, trained with the identical protocol and differing only in the
+random initialization of their weights, span a range of $0.0031$ in the
+coefficient of determination and of $0.24$ points in relative error, with
+standard deviations of $0.0013$ and $0.11$. The difference between the two
+architectures is thus four times smaller than the scatter between two runs of
+the same one, and fifteen times smaller on the relative error. The comparison of
+the fifteen outputs one by one leads to the same conclusion. The type branches
+improve twelve outputs out of fifteen with respect to the network without them,
+so the gain is shared by most of the predicted quantities. The configuration
+branches improve eight outputs out of fifteen, about half, which is the
+proportion expected if the two architectures were equivalent and each output had
+the same chance of improving or worsening.
+
+The physical quantity is therefore the dimension along which the fifteen outputs
+need separate parameters, and this is consistent with three configurations that
+differ only in the position of the control rods and share the same materials,
+the same geometry and the same fine grid. The metamodel used in the
+optimization retains the configuration branches, which were already present
+when the ablation was performed and add $3\%$ to the number of parameters, and
+the ablation gives no reason to retrain the networks without them. It does show,
+however, that the gain in accuracy brought by the hierarchical architecture
+comes from the type branches.
+
+\begin{table}[htbp]
+\centering
+\caption[Contribution of each level of the hierarchy]{Contribution of each level of the hierarchy, measured on the same
+training structures and with the same reduced protocol: one network per
+architecture, constant learning rate and early stopping. The accuracy is
+therefore lower than that of the final ensemble, and only the differences are
+meaningful. $R^2$ is the mean coefficient of determination and Rel.\ err.\ the
+median relative error, both on the external validation set. The last line gives
+the scatter observed over five networks of identical architecture differing only
+in their random initialization, which sets the scale below which a difference
+cannot be read.}
+\label{eg:tab:ablation}
+\begin{tabular}{@{}p{66mm}ccc@{}}
+\toprule
+Architecture & Parameters & $R^2$ & Rel.\ err.\ [\%] \\ \midrule
+    Trunk only & 695\,582 & 0.9848 & 1.750 \\
+    Trunk and type branches & 895\,582 & 0.9908 & 1.501 \\
+    Trunk, type and configuration branches & 925\,822 & 0.9905 & 1.494 \\
+\midrule
+    \emph{Spread over five initializations} & & $\pm$0.0013 & $\pm$0.11 \\ \bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{The Regime of Low Accuracy}
+
+The residual error is not distributed uniformly over the set of candidate
+structures. It
+concentrates at small values of the multiplication-factor and kinetic-parameter
+fitness functions, $f_k$, $f_{\beta}$ and $f_{\Lambda}$, and at large values of
+the flux fitness function, $f_{\Phi}$. Since small fitness values identify the
+best structures, this behaviour requires an explanation, which is found in the
+target function, namely the function that the metamodel learns, which assigns
+to each group structure the value of a fitness function. The metamodel is a
+smooth interpolator, and its accuracy is expected to degrade where the target
+changes strongly between structures that differ by a single boundary. To verify
+this, the steepness of the target was measured on the pairs of structures of the
+training database that differ by exactly one boundary, present in one structure
+of the pair and absent from the other, of which there are about $55\,000$. The
+median change of the base-ten logarithm of the fitness function across a pair
+amounts to $0.414$ decades in the lowest band of multiplication-factor
+deviations, against $0.024$ decades in the highest (a factor of 17), and to
+$0.395$ against $0.044$ decades for the lifetime.
+Figure~\tref{eg:fig:smallvalue} places the steepness and the error of the
+metamodel side by side, band by band and for each type of fitness function:
+where the target changes most under the addition or removal of a single
+boundary, the metamodel errs most. The right panel displays one against the
 other, and the thirty points rise together over two decades of steepness and
-one of error, the flattest quantity, the power, being the one the metamodel
-predicts best and the steepest, the flux, the one it predicts worst. The flux is
-worth keeping in view because it is the control case: its
-steepness grows with the value of the fitness function instead of falling, and
-its accuracy degrades in the same direction, opposite to the other four
-families. What the error tracks is therefore the local steepness of the target
-and not the magnitude of the quantity.
+one decade of error. The flattest quantity is the power, which is the quantity
+predicted most accurately by the metamodel, while the steepest is the flux,
+whose prediction is the least accurate. The flux serves as a control case,
+since its behaviour is opposite to that of the other four types of fitness
+function: its steepness grows with the value of the fitness function instead of
+falling, and its accuracy degrades in the same direction. The error of the
+metamodel therefore follows the local steepness of the target, irrespective of
+the magnitude of the quantity.
 
-The physical interpretation is direct. A small fitness value means that the
-condensed calculation reproduces the Monte Carlo reference almost exactly, and
+The physical interpretation is the following. A small fitness value means that
+the condensed calculation accurately reproduces the Monte Carlo reference, and
 the comparison with the finest admissible structure, reported further on, shows
-how such an agreement is reached:
-not by condensing well, but by a cancellation between the error introduced by the
-condensation and the error of the deterministic model itself. A cancellation
-between two quantities of different origin is fragile, and displacing a single
-boundary destroys it. A smooth interpolator cannot follow a function that varies
-by half a decade under a one-bit change of its input. This local limitation is
-distinct from the aggregate accuracy, which the learning curve shows to be still
-limited by the data: more data of the same kind lower the second, not the
-first. This is the reason
-why the workflow described in the next section does not rely on the metamodel
-for its conclusions.
+that such an agreement is reached by a cancellation between the error introduced
+by the condensation and the error of the deterministic model itself. A
+cancellation between two quantities of different origin is fragile, and adding
+or removing a single boundary can alter it. A smooth interpolator cannot follow
+a function that varies by half a decade under a single-boundary change of its
+input. This local limitation is distinct from the aggregate accuracy, which the
+learning curve shows to be still limited by the data: more data of the same kind
+reduce the aggregate error but not this local one. For this reason, the
+workflow described in the next section uses the metamodel to explore the set of
+candidate structures efficiently and to select those worth a full-core calculation,
+while the final assessment is left to FRENETIC: every structure produced by the
+searches is recomputed with FRENETIC, and the ranking is based on the recomputed
+values. The approach is thus a compromise between the efficiency of the
+metamodel and the robustness of the full-core calculation.
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{Chapter4/Figs/fig_steepness.pdf}
-  \caption[Steepness of the target and the error of the metamodel]{Left, steepness of the target measured on the pairs of structures
-  that differ by exactly one boundary, as the median change of the base-ten
-  logarithm of the fitness function across a pair. Centre, median relative error
-  of the metamodel over the same bands of the reference value. Right, the two
-  quantities plotted against each other, one point per band and family. Colour
-  identifies the family, and the axes are logarithmic throughout.}
+  \caption[Steepness of the target and the error of the metamodel]{Left: steepness of the target, measured on the pairs of structures
+  that differ by exactly one boundary as the median change of the base-ten
+  logarithm of the fitness function across a pair. Centre: median relative error
+  of the metamodel, Eq.~(\ref{eg:eqn:relerr}). In both panels the horizontal
+  axis, labelled reference value, is the value of the fitness function computed
+  with FRENETIC, which the metamodel is trained to reproduce, divided into
+  bands, and each point corresponds to one band. Right: the two quantities
+  plotted against each other, one point per band and type of fitness function.
+  Colour identifies the type of fitness function, named in the legend beta,
+  flux, keff, life and powr, and the axes are logarithmic throughout.}
   \label{eg:fig:smallvalue}
 \end{figure}
 
