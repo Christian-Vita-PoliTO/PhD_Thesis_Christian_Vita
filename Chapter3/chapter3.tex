@@ -379,7 +379,7 @@ As expected, $\beta_{\mathrm{eff}}$ and $\Lambda_{\mathrm{eff}}$ draw no benefit
 
 It would not be accurate, though, to call the two parameters insensitive to the corrections: Fig.~\tref{sph:fig:kinetic_parameters_ARI_and_ARO_results} shows variations across the datasets. For $\beta_{\mathrm{eff}}$ the changes are minor, as its definition explains: the numerator of Eq.~\ref{sph:eq:beta_eff} carries the delayed fission operator $\hat{F}_d = \beta \chi_d \nu \Sigma_f$, which vanishes in non-fissile regions such as the CR assemblies, precisely where the correction acts. The small differences that do appear are second-order: the SPH correction modifies the cross sections of the CR regions, which perturbs the local neutron flux near the CR assemblies, and the perturbation propagates weakly to $\beta_{\mathrm{eff}}$.
 
-$\Lambda_{\mathrm{eff}}$ behaves differently. In the ARI case it is consistently underestimated when the SPH corrections are applied and overestimated when they are not. The numerator of Eq.~\ref{sph:eq:lambda_eff} never vanishes, since $\frac{1}{v}$ is always finite, and it varies through the neutron flux $\phi$, which responds to the SPH factors; the denominator does not change, because the corrections act only on the CR regions, where $\Sigma_f = 0$. In the ARO configuration $\Lambda_{\mathrm{eff}}$ stays nearly constant across the first datasets -- the flux barely changes, as Fig.~\tref{sph:fig:ARO_power_density_distribution_4_cases} confirms -- and drops visibly for the last two. There the correction extends beyond the CR assemblies to the surrounding fuel assemblies, so the denominator picks up non-zero fission terms and grows, and the parameter decreases.
+$\Lambda_{\mathrm{eff}}$ behaves differently. In the ARI case it is consistently underestimated when the SPH corrections are applied and overestimated when they are not. The numerator of Eq.~\ref{sph:eq:lambda_eff} never vanishes, since $\frac{1}{v}$ is always finite, and it varies through the neutron flux $\phi$, which responds to the SPH factors; the denominator does not change, because the corrections act only on the CR regions, where $\Sigma_f = 0$. In the ARO configuration $\Lambda_{\mathrm{eff}}$ stays nearly constant across the first datasets -- the flux barely changes, as Fig.~\tref{sph:fig:ARO_power_density_distribution_4_cases} confirms -- and drops visibly, from $-17\%$ to $-32\%$, for the last two. The drop comes with the detailed model of the control-rod regions, which the last two datasets share: it already appears in the ``mini-core + CR detailed'' dataset, where no correction is applied, and the correction of the CR and SFA regions leaves it unchanged. The SPH factors are therefore not its cause.
 
 Table~\tref{sph:tab:all_results_table} gathers all the results discussed so far, together with the maximum power density relative error ($E_p$) and the computational time needed to generate the multi-group data. Building the dataset from mini-core models costs more time. Their advantage lies elsewhere: since they are defined independently of the surrounding assembly pattern (with the exception of the non-multiplying type), no new full Monte Carlo simulation is needed when the core configuration changes -- a CR repositioning, a fuel reshuffling. The advantage fades when several distributed parameters, such as temperatures, must be covered: every parameter value requires regenerating the whole dataset.
 
@@ -392,7 +392,7 @@ As discussed above, ``mini-core + CR detailed + CR and SFA SPH'' is the most acc
 
 \begin{table}[h!]
 \centering
-\caption{Comparison of different core models and MGC generation methods.}
+\caption[Comparison of core models and MGC generation methods]{Comparison of different core models and MGC generation methods. In the rows of $\Delta k_{\mathrm{eff}}$, $RMSE_P$, $Max(E_p)$ and $t_{dataset}$ the colours rank the three datasets with SPH-corrected data: yellow marks the best value, grey the second and brown the third; equal values share a colour.}
 \label{sph:tab:all_results_table}
 \small
 \setlength{\tabcolsep}{4pt}
@@ -418,7 +418,7 @@ As discussed above, ``mini-core + CR detailed + CR and SFA SPH'' is the most acc
 \addlinespace
 {$Max(E_p)$ (\%)} \\
 \textbf{ARI} & \num{11.66} & \cellcolor{yellow}\num{2.38} & \num{10.64} & \cellcolor{gray}\num{3.92} & \num{8.6} & \cellcolor{brown}\num{3.97} \\
-\textbf{ARO} & \cellcolor{gray}\num{1.54} & \cellcolor{brown}\num{1.64} & \num{1.75} & \num{2.61} & \num{2.1} & \cellcolor{yellow}\num{1.39} \\
+\textbf{ARO} & \num{1.54} & \cellcolor{gray}\num{1.64} & \num{1.75} & \cellcolor{brown}\num{2.61} & \num{2.1} & \cellcolor{yellow}\num{1.39} \\
 \addlinespace
 {$\Delta \beta_{\mathrm{eff}}$ (pcm)} \\
 \textbf{ARI} & \num{31} & \num{39} & \num{43} & \num{41} & \num{43} & \num{33} \\
@@ -429,8 +429,8 @@ As discussed above, ``mini-core + CR detailed + CR and SFA SPH'' is the most acc
 \textbf{ARO} & \num{-17} & \num{-17} & \num{-17} & \num{-17} & \num{-32} & \num{-32} \\
 \addlinespace
 {$t_{dataset}$ (h)} \\
-\textbf{ARI} & \cellcolor{yellow}\num{12.3} & \cellcolor{gray}\num{24.5} & \num{70.2} & \num{70.2} & \num{70.2} & \cellcolor{brown}\num{70.2} \\
-\textbf{ARO} & \cellcolor{yellow}\num{14.1} & \cellcolor{gray}\num{34.4} & \num{78.6} & \num{78.6} & \num{78.6} & \cellcolor{brown}\num{78.6} \\
+\textbf{ARI} & \num{12.3} & \cellcolor{yellow}\num{24.5} & \num{70.2} & \cellcolor{gray}\num{70.2} & \num{70.2} & \cellcolor{gray}\num{70.2} \\
+\textbf{ARO} & \num{14.1} & \cellcolor{yellow}\num{34.4} & \num{78.6} & \cellcolor{gray}\num{78.6} & \num{78.6} & \cellcolor{gray}\num{78.6} \\
 \bottomrule
 \end{tabular}
 \end{table}
