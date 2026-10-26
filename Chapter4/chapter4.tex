@@ -820,8 +820,7 @@ Output & $R^2$ & Rel.\ err.\ [\%] & Output & $R^2$ & Rel.\ err.\ [\%] \\ \midrul
   \centering
   \includegraphics[width=\textwidth]{Chapter4/Figs/fig_scatter.pdf}
   \caption[Fitness functions predicted by the metamodel against those computed with FRENETIC]{Values of the fifteen fitness functions predicted by the metamodel
-  against those computed with FRENETIC, labelled ``reference'' on the horizontal
-  axes, for the 1700 structures of the external validation set. Rows correspond
+  against those computed with FRENETIC, for the 1700 structures of the external validation set. Rows correspond
   to the five types of fitness function and columns to the three control-rod
   configurations. Colour encodes the number of energy groups of the structure.
   Axes are in the space in which the network is trained, logarithmic for every
@@ -841,8 +840,8 @@ follows, for the reasons given below.
   \centering
   \includegraphics[width=\textwidth]{Chapter4/Figs/fig_learning.pdf}
   \caption[External validation error against the size of the training set]{External validation error as a function of the size of the training
-  set, enlarged by adaptive sampling. Left: median relative error; right: mean
-  coefficient of determination over the fifteen outputs. All the points are
+  set, enlarged by adaptive sampling. Left: median relative error; right: coefficient
+  of determination $R^2$, Eq.~(\ref{eg:eqn:r2}), averaged over the fifteen outputs. All the points are
   obtained with a shorter training protocol than that of the final ensemble,
   three networks at constant learning rate, so their accuracy is lower.}
   \label{eg:fig:learning}
@@ -981,7 +980,7 @@ metamodel and the robustness of the full-core calculation.
   equal size by their mean value. Centre: median relative error of the
   metamodel, Eq.~(\ref{eg:eqn:relerr}), over six bands of the external
   validation set bounded by the 10th, 25th, 50th, 75th and 90th percentiles of
-  the value. In both panels the horizontal axis, labelled ``reference value'', is
+  the value. In both panels the horizontal axis is
   the value of the fitness function computed with FRENETIC, which the metamodel
   is trained to reproduce. Right: the two quantities plotted against each other
   on the six bands of the centre panel, one point per band and type of fitness
@@ -1438,8 +1437,7 @@ solver.
   \includegraphics[width=0.79\textwidth]{Chapter4/Figs/fig_tradeoff.pdf}
   \caption[Best attainable joint fitness against the number of groups]{Best attainable joint fitness as a function of the number of energy
   groups, obtained by repeating the searches with the group count constrained.
-  Each point of the solid curve, labelled ``reference solver'' in the legend,
-  is verified with FRENETIC, while
+  Each point of the solid curve is verified with FRENETIC, while
   the dashed curve is the corresponding prediction of the metamodel. The faded
   blue points are the 747 distinct structures returned by the thousand
   unconstrained searches, placed at their own group count with a small
@@ -1634,7 +1632,7 @@ Table~\tref{eg:tab:ranking}.
   \includegraphics[width=0.66\textwidth]{Chapter4/Figs/fig_bias.pdf}
   \caption[Predicted against true joint fitness for the 747 structures]{Joint
   fitness predicted by the metamodel against the value obtained from
-  FRENETIC, labelled ``reference solver'' in the figure, for each of the 747 distinct structures produced by the
+  FRENETIC for each of the 747 distinct structures produced by the
   searches, on the canonical scale. Points inside the shaded region are
   structures whose fitness the metamodel underestimates, and the colour gives
   the number of energy groups.}
