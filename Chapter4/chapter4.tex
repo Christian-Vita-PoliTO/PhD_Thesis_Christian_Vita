@@ -51,14 +51,8 @@ fraction, the effective neutron lifetime and the distributions of power and of
 flux over the core. The terms do not respond in the same way to a change of the
 structure and can move in opposite directions: a change that reduces the
 deviation on the multiplication factor may increase the deviation on the flux
-distribution. The irregularity of the resulting surface can be quantified on
-the structures computed in this work, by comparing the pairs of structures that
-differ by a single boundary, present in one of the two and absent from the
-other. Across such a pair the objective changes by a median factor of about
-$15$. The change is smaller among the best structures but does not vanish: among
-the $1\%$ of the pairs whose two values have the lowest geometric mean, the
-median factor is still about $1.4$. A surface
-of this kind possesses many local optima separated by barriers that a
+distribution. The resulting surface is expected to possess many local optima
+separated by barriers that a
 population-based search crosses or does not cross depending on where it starts,
 which is precisely what three tribes with three different outcomes indicate.
 
@@ -88,15 +82,12 @@ to rank, and to propose; every structure that the searches produce is then
 recomputed with FRENETIC, and all the quantities discussed in the following
 sections are those returned by FRENETIC. The metamodel is therefore an
 accelerator of the search and not a substitute for the physical model, an arrangement
-which also protects the results from the regions where the metamodel is less
-accurate.
+which also protects the results from the error of the metamodel.
 
 The chapter first defines the optimization problem, reporting in full the
 chromosome representation and the fitness functions inherited from
 \citet{prevMulti}. It then describes the metamodel, its training and its
-accuracy, and identifies the regime in which it is least reliable. That regime includes the
-best structures, and for this reason the metamodel is used only inside the
-search, while the conclusions rest on FRENETIC. The resulting workflow, summarized in Fig.~\tref{eg:fig:flow}, is presented next,
+accuracy. The resulting workflow, summarized in Fig.~\tref{eg:fig:flow}, is presented next,
 followed by the analysis of the thousand searches, of the structures they
 produce, and of the features those structures have in common.
 
@@ -834,7 +825,8 @@ The error decreases steadily over the whole range without reaching a plateau,
 which indicates that the accuracy is still limited by the amount of available
 data rather than by the model. The error obtained with the full set is
 nevertheless judged sufficient for the application of the metamodel in what
-follows, for the reasons given below.
+follows, where it is only required to order the candidates of the search,
+every structure the searches produce being recomputed with FRENETIC.
 
 \begin{figure}[htbp]
   \centering
@@ -843,7 +835,7 @@ follows, for the reasons given below.
   set, enlarged by adaptive sampling. Left: median relative error; right: coefficient
   of determination $R^2$, Eq.~(\ref{eg:eqn:r2}), averaged over the fifteen outputs. All the points are
   obtained with a shorter training protocol than that of the final ensemble,
-  three networks at constant learning rate, so their accuracy is lower.}
+  five networks at constant learning rate, so their accuracy is lower.}
   \label{eg:fig:learning}
 \end{figure}
 
@@ -916,80 +908,6 @@ Architecture & Parameters & $R^2$ & Rel.\ err.\ [\%] \\ \midrule
     \emph{Spread over five initializations} & & $\pm$0.0013 & $\pm$0.11 \\ \bottomrule
 \end{tabular}
 \end{table}
-
-\subsection{The Regime of Low Accuracy}
-
-The residual error is not distributed uniformly over the set of candidate
-structures. It
-concentrates at small values of the multiplication-factor and kinetic-parameter
-fitness functions, $f_k$, $f_{\beta}$ and $f_{\Lambda}$, and at large values of
-the flux fitness function, $f_{\Phi}$. Since small fitness values identify the
-best structures, this behaviour requires an explanation, which is found in the
-target function, namely the function that the metamodel learns, which assigns
-to each group structure the value of a fitness function. The metamodel is a
-smooth interpolator, and its accuracy is expected to degrade where the target
-changes strongly between structures that differ by a single boundary. To verify
-this, the steepness of the target is measured on the pairs of structures of the
-training database that differ by exactly one boundary, present in one structure
-of the pair and absent from the other, of which there are about $55\,000$, in
-the configuration with the rods partially inserted. Grouping the pairs into five
-bands of equal size by the mean of their two values on a logarithmic scale, the
-median change of the base-ten logarithm of the fitness function across a pair
-amounts to $0.414$ decades in the band of the smallest multiplication-factor
-deviations, against $0.024$ decades in the band of the largest (a factor of 17),
-and to $0.395$ against $0.044$ decades for the lifetime. These values refer to
-the individual fitness functions, which the metamodel learns, rather than to the
-objective of the search, the product of the fifteen scaled terms.
-Figure~\tref{eg:fig:smallvalue} places the steepness and the error of the
-metamodel side by side, band by band and for each type of fitness function:
-where the target changes most under the addition or removal of a single
-boundary, the metamodel errs most. The right panel displays one against the
-other, and the thirty points rise together over two decades of steepness and
-one decade of error. The flattest quantity is the power, which is the quantity
-predicted most accurately by the metamodel, while the steepest is the flux,
-whose prediction is the least accurate. The flux serves as a control case,
-since its behaviour is opposite to that of the other four types of fitness
-function: its steepness grows with the value of the fitness function instead of
-falling, and its accuracy degrades in the same direction. The error of the
-metamodel therefore follows the local steepness of the target, irrespective of
-the magnitude of the quantity.
-
-The physical interpretation is the following. A small fitness value means that
-the condensed calculation accurately reproduces the Monte Carlo reference, and
-the comparison with the finest admissible structure, reported further on, shows
-that such an agreement is reached by a cancellation between the error introduced
-by the condensation and the error of the deterministic model itself. Adding
-or removing a single boundary can alter this cancellation and change the fitness
-function by about half a decade, as measured above, a variation that a smooth
-interpolator such as the metamodel cannot follow. This local limitation is distinct from the aggregate accuracy, which the
-learning curve shows to be still limited by the data: more data of the same kind
-reduce the aggregate error but not this local one. For this reason, the
-workflow described in the next section uses the metamodel to explore the set of
-candidate structures efficiently and to select those worth a full-core calculation,
-while the final assessment is left to FRENETIC: every structure produced by the
-searches is recomputed with FRENETIC, and the ranking is based on the recomputed
-values. The approach is thus a compromise between the efficiency of the
-metamodel and the robustness of the full-core calculation.
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\textwidth]{Chapter4/Figs/fig_steepness.pdf}
-  \caption[Steepness of the target and the error of the metamodel]{Left: steepness of the target, that is, the median change of the
-  base-ten logarithm of the fitness function across the pairs of structures that
-  differ by exactly one boundary, the pairs being grouped into eight bands of
-  equal size by their mean value. Centre: median relative error of the
-  metamodel, Eq.~(\ref{eg:eqn:relerr}), over six bands of the external
-  validation set bounded by the 10th, 25th, 50th, 75th and 90th percentiles of
-  the value. In both panels the horizontal axis is
-  the value of the fitness function computed with FRENETIC, which the metamodel
-  is trained to reproduce. Right: the two quantities plotted against each other
-  on the six bands of the centre panel, one point per band and type of fitness
-  function. All the values refer to the configuration with the rods partially
-  inserted. Colour identifies the type of fitness function, named in the legend
-  beta, flux, keff, life and powr, and the axes are logarithmic throughout.}
-  \label{eg:fig:smallvalue}
-\end{figure}
-
 
 \section{Workflow}
 
@@ -1089,8 +1007,7 @@ cost of a hundred evaluations with FRENETIC.
 Every distinct structure produced by the searches is submitted to FRENETIC, and
 the ranking reported in the following is the one obtained from the recomputed
 values, expressed on the canonical scale. No quantity discussed in the following is a prediction of the metamodel.
-This arrangement is deliberate and follows from the limit characterized above:
-the metamodel is accurate
+This arrangement is deliberate: the metamodel is accurate
 enough to order the candidates and thus to identify a short list worth a
 full-core calculation, which is a considerably weaker requirement than
 predicting the fitness of the best structures to the precision needed to rank
@@ -1569,12 +1486,9 @@ but because its condensation error and the model error nearly cancel.
 Two consequences follow. The first is practical: refining the energy grid is not
 a way of approaching the Monte Carlo reference in this framework, and a
 carefully chosen coarse structure is worth more than the finest admissible one,
-which is the strongest justification for optimizing the structure at all. The
-second concerns the metamodel: since the best structures owe their quality to a
-cancellation between two errors of different origin, their fitness is bound to
-be a fragile function of the grid, and therefore a hard one to interpolate.
+which is the strongest justification for optimizing the structure at all.
 
-A third consequence concerns the scope of the result, and is worth stating
+The second consequence concerns the scope of the result, and is worth stating
 plainly because it has so far been left implicit. If the quality of a structure rests
 on a cancellation, the structure is bound to everything that fixes the two
 errors being cancelled. It is specific to the core analysed, with its geometry,
@@ -1768,10 +1682,8 @@ of the order of $390\,000$ core-hours of FRENETIC and are carried
 out for $29$.
 
 Two directions are left open. The accuracy of the metamodel is still limited by
-the amount of training data, as the learning curve shows, and the data that
-would help most are those in the region where the target is steepest, around
-the optimized structures and their one-boundary neighbours, which a targeted
-campaign of FRENETIC calculations could supply. The description of the structure
+the amount of training data, as the learning curve shows, so that a further
+campaign of FRENETIC calculations would still improve it. The description of the structure
 given to the network could also be enriched with physics-informed quantities,
 such as the lethargy widths of the condensed groups or the variation of the
 reference spectrum within them weighted by the importance; a preliminary attempt
