@@ -172,7 +172,7 @@ the state being simulated.
 \subsection{Conventions}
 
 The notation of Eq.~(\ref{fm:eq:eigen}) adopts two conventions that are
-maintained throughout Part II. The column index $j$ denotes the source region
+maintained throughout Part~II. The column index $j$ denotes the source region
 and the row index $i$ the destination region; as a consequence the fission
 source $\mathbf F$ is the right eigenvector of $\mathbf A$, and the matrix
 multiplies the source vector as written. The literature is not uniform on this
@@ -187,7 +187,7 @@ verified on the database of Chapter~\ref{ch:crit-search} against the fission
 source tallied by Serpent with an independent detector: the right eigenvector
 of the matrix, as written by the code, reproduces the detector source with a
 mean deviation of \SI{0.3}{\percent}, whereas the eigenvector of the transposed
-matrix departs from it by 3 to \SI{9}{\percent}. Throughout Part II the
+matrix departs from it by 3 to \SI{9}{\percent}. Throughout Part~II the
 eigenproblem is solved with the dense solver of the \textit{SciPy} library
 \cite{VirtanenSciPy2020}; for matrices of the size used here the solution takes
 a fraction of a second.
@@ -227,8 +227,8 @@ complete matrix instead of a set of responses to be assembled.
 The cost of the second strategy is statistical, and it grows with the spatial
 resolution demanded of the matrix. The uncertainty of the coefficients
 decreases only with the number of histories of the criticality calculation. A
-partition into $N$ cells gives a matrix of $N^2$ coefficients $a_{ij}$, so that
-their number grows with the square of the number of cells, and the
+partition into $N$ cells gives a matrix of $N^2$ coefficients $a_{ij}$, whose
+number therefore grows with the square of the number of cells, and the
 fraction of the source neutrons of a cell that induce fission in any given
 other cell decreases as the cells are refined, so that the number of histories
 required to tally every coefficient to a prescribed relative uncertainty grows
@@ -299,8 +299,7 @@ axial zones, and every quantity defined on the matrix in the following,
 corrections included, connects two such cells, so that radial and axial effects
 are treated together and not as separate factors. The Monte Carlo populations used to tally the matrices, and the statistical
 uncertainty of the coefficients that results from them, are reported in
-Chapter~\ref{ch:crit-search}, together with the database and the snapshot
-database that they serve.
+Chapter~\ref{ch:crit-search}, together with the databases that they serve.
 
 \section{Parametrization over the operating state}\label{fm:sec:database}
 
@@ -383,11 +382,11 @@ easier to declare compatible with noise. The structure of the correlations,
 their analytical modelling and the verification of the resulting estimate against
 independent replicas of the whole database are examined in
 Chapter~\ref{ch:correction-ratios}, in connection with the core temperature
-correction, whose results adopt the analytical estimate.
+correction, where the analytical model is adopted.
 
 \section{Error metrics}\label{fm:sec:metrics}
 
-Two observables are compared with the reference throughout Part II, the
+Two observables are compared with the reference throughout Part~II, the
 multiplication factor and the fission source, and the same four measures are
 used for them. For the multiplication factor,
 %
@@ -413,7 +412,9 @@ deviation and the root-mean-square of the deviations over the core are
 %
 These metrics are preferred to a covariance-weighted distance, such as the
 Mahalanobis distance, because they are less sensitive to the spatial pattern of
-a residual and directly interpretable, as a case-by-case comparison requires. Every uncertainty band drawn in Chapters~\ref{ch:crit-search} and
-\ref{ch:correction-ratios} is $\pm2\sigma_{\mathrm{tot}}$, so that a point
-falling inside or outside a band corresponds to passing or failing the $|z|<2$ test adopted as the criterion of
-consistency with the statistical noise.
+a residual and directly interpretable, as a case-by-case comparison requires.
+The width of every uncertainty band drawn in Chapters~\ref{ch:crit-search}
+and \ref{ch:correction-ratios} is stated in its caption; a point falling
+inside or outside a $\pm2\sigma_{\mathrm{tot}}$ band corresponds to passing or
+failing the $|z|<2$ test adopted as the criterion of consistency with the
+statistical noise.
