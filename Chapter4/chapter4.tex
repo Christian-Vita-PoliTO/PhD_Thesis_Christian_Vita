@@ -1384,8 +1384,8 @@ The fine grid constrains which regular structures can be constructed at all.
 \centering
 \caption[The optimized structure against three reference ones]{The optimized
 structure against three reference ones, quantity by quantity: two built with
-standard spacing rules and the finest structure the collapsing procedure admits,
-obtained by suppressing a single boundary of the fine grid. Each entry is the
+standard spacing rules and the 30-group fine grid itself, computed without
+condensation. Each entry is the
 scaled contribution entering the joint fitness, obtained from the FRENETIC
 values through the fixed canonical window: unity is the lower end of that
 window, which any term already at the threshold of the controls attains, and 100
@@ -1393,67 +1393,60 @@ the upper end.}
 \label{eg:tab:standard}
 \begin{tabular}{lcccc}
 \toprule
-Figure of merit & Optimized & Equal & Uniform & Finest \\
-     &  & lethargy & index & admissible \\
-    $G$ & 15 & 13 & 19 & 29 \\ \midrule
+Figure of merit & Optimized & Equal & Uniform & Fine \\
+     &  & lethargy & index & grid \\
+    $G$ & 15 & 13 & 19 & 30 \\ \midrule
     $f_{k,\mathrm{out}}$ & 6.7 & 1.0 & 3.2 & 7.2 \\
-    $f_{k,\mathrm{partial}}$ & 1.0 & 7.2 & 9.6 & 14.2 \\
-    $f_{k,\mathrm{in}}$ & 61.6 & 72.6 & 74.5 & 86.5 \\
+    $f_{k,\mathrm{partial}}$ & 1.0 & 7.2 & 9.6 & 13.9 \\
+    $f_{k,\mathrm{in}}$ & 61.6 & 72.6 & 74.5 & 86.0 \\
     $f_{\beta,\mathrm{out}}$ & 1.0 & 52.3 & 82.9 & 98.9 \\
     $f_{\beta,\mathrm{partial}}$ & 1.0 & 19.0 & 51.3 & 68.0 \\
     $f_{\beta,\mathrm{in}}$ & 21.4 & 1.0 & 1.0 & 1.0 \\
-    $f_{\Lambda,\mathrm{out}}$ & 1.0 & 2.1 & 2.3 & 1.3 \\
-    $f_{\Lambda,\mathrm{partial}}$ & 2.2 & 1.5 & 2.4 & 1.0 \\
-    $f_{\Lambda,\mathrm{in}}$ & 1.0 & 4.3 & 3.6 & 4.6 \\
-    $f_{P,\mathrm{out}}$ & 6.1 & 14.8 & 16.0 & 15.6 \\
-    $f_{P,\mathrm{partial}}$ & 10.7 & 15.6 & 17.9 & 18.7 \\
-    $f_{P,\mathrm{in}}$ & 34.0 & 38.2 & 39.8 & 40.8 \\
+    $f_{\Lambda,\mathrm{out}}$ & 1.0 & 2.1 & 2.3 & 4.3 \\
+    $f_{\Lambda,\mathrm{partial}}$ & 2.2 & 1.5 & 2.4 & 3.9 \\
+    $f_{\Lambda,\mathrm{in}}$ & 1.0 & 4.3 & 3.6 & 7.0 \\
+    $f_{P,\mathrm{out}}$ & 6.1 & 14.8 & 16.0 & 15.5 \\
+    $f_{P,\mathrm{partial}}$ & 10.7 & 15.6 & 17.9 & 18.8 \\
+    $f_{P,\mathrm{in}}$ & 34.0 & 38.2 & 39.8 & 40.7 \\
     $f_{\Phi,\mathrm{out}}$ & 1.0 & 1.0 & 1.0 & 1.0 \\
     $f_{\Phi,\mathrm{partial}}$ & 1.0 & 1.0 & 1.0 & 1.0 \\
     $f_{\Phi,\mathrm{in}}$ & 1.0 & 1.0 & 1.0 & 1.0 \\
 \midrule
-    Joint fitness & $4.432\times10^{7}$ & $6.042\times10^{10}$ & $2.211\times10^{12}$ & $4.205\times10^{12}$ \\
+    Joint fitness & $4.432\times10^{7}$ & $6.042\times10^{10}$ & $2.211\times10^{12}$ & $8.049\times10^{13}$ \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 
-The third reference is the finest structure that the framework allows to be
-built. The fine grid has thirty groups and the collapsing routine requires the
-condensed structure to have fewer, so that keeping all thirty is not an
-admissible option: the finest structure available has twenty-nine groups and is
-obtained by merging two adjacent fine groups, that is by suppressing one of the
-twenty-nine internal boundaries. There are twenty-nine ways of doing this, and all
-of them are evaluated with FRENETIC. Such a structure condenses almost nothing,
-yet it does not give the best result that the multi-group diffusion model can deliver:
-with groups this narrow the hypotheses on which the diffusion approximation
-rests no longer hold, and a finer group structure does not bring the model
-closer to the reference. The best of the
-twenty-nine, obtained by suppressing the boundary at $8.3\times10^{-6}$~MeV,
-reaches a canonical fitness of $4.20\times10^{12}$; half of them are worse than
-$6.81\times10^{13}$, and the worst is four orders of magnitude beyond the best.
+The third reference is the fine grid itself, whose thirty groups are kept and
+no condensation is applied. The collapsing routine only accepts structures with
+fewer groups than the fine grid, so this case is computed by running FRENETIC
+directly on the 30-group data. No condensation error is therefore present, yet
+the result does not come close to the reference: the joint fitness,
+$8.049\times10^{13}$, is worse than that of both structures built with
+standard spacing rules.
 
-The optimized 15-group structure is therefore better than the best 29-group
-structure by five orders of magnitude on the joint fitness. Since that fitness
-is a product of fifteen scaled terms, the factor compounds differences which are
-individually moderate, and it is instructive to look at the terms one by one in
-Table~\tref{eg:tab:standard}. The finest structure is better than the optimized
-one on two of the fifteen quantities, the delayed neutron fraction and the
-lifetime in one configuration each, and worse on the other thirteen. Where it
-loses most is on the integral parameters: the deviation on the multiplication
-factor with the rods partially inserted is $239$~pcm against $9.6$~pcm, and the
-deviation on the delayed neutron fraction in the same configuration is $21.6$
-against $2.0$~pcm.
+The optimized 15-group structure is therefore better than the fine grid by six
+orders of magnitude on the joint fitness. Since that fitness is a product of
+fifteen scaled terms, the factor compounds differences which are individually
+moderate, and it is instructive to look at the terms one by one in
+Table~\tref{eg:tab:standard}. The fine grid is better than the optimized
+structure on one of the fifteen quantities, the delayed neutron fraction with
+the rods inserted, equal on the three flux terms, where both stand at the lower
+end of the window, and worse on the other eleven. Where it loses most is on the
+integral parameters: the deviation on the multiplication factor with the rods
+partially inserted is $235$~pcm against $9.6$~pcm, and the deviation on the
+delayed neutron fraction in the same configuration is $21.6$ against
+$2.0$~pcm.
 
 The interpretation is that these residual deviations are not caused by the
-energy grid but by the limits of the deterministic model. A 29-group structure
-minimizes the condensation, so the remaining error, measured against a Monte
+energy grid but by the limits of the deterministic model. The fine grid
+involves no condensation, so the remaining error, measured against a Monte
 Carlo reference, is due to the deterministic model itself, namely the diffusion
-approximation, with the limits just recalled, and the spatial homogenization. The optimization cannot remove that error, but can compensate
+approximation and the spatial homogenization. The optimization cannot remove that error, but can compensate
 for it: a coarser structure introduces a condensation error of its own, and the
 search selects the structure whose condensation error best compensates for the
-model error. A 29-group structure leaves almost no freedom for such a
-compensation, since it is fixed by the choice of a single boundary to suppress.
+model error. The fine grid leaves no room for such a compensation.
 The fifteen-group structure reproduces the multiplication factor with the rods
 partially inserted almost exactly not because it condenses better, but because
 its condensation error and the model error nearly compensate each other.
@@ -1461,7 +1454,7 @@ its condensation error and the model error nearly compensate each other.
 Two consequences follow. The first is practical: refining the energy grid is not
 a way of approaching the Monte Carlo reference in this framework, since the
 limits of the diffusion model remain; a carefully chosen coarse structure is
-worth more than the finest admissible one, and this is the strongest
+worth more than the fine grid itself, and this is the strongest
 justification for optimizing the structure at all.
 
 The second consequence concerns the scope of the result. If the quality of a
