@@ -8,8 +8,8 @@
 Heat-pipe micro reactors (HPMRs) are controlled by drums rotating in the radial
 reflector. Their design and their operation require the same calculation to be
 repeated many times: the determination, at a given power and at a given point
-of the cycle, of the drum angle that makes the core critical and of the
-fission-source distribution that corresponds to it.
+of the fuel cycle, of the critical drum angle and of the corresponding
+fission-source distribution.
 
 For light-water reactors this is a routine calculation. The core simulators
 used in their design and operation solve the few-group diffusion equation with
@@ -33,7 +33,7 @@ of light-water reactors, that tristructural-isotropic (TRISO) fuel with
 graphite or metal-hydride moderators lengthens the neutron migration length
 and produces strong spectral variations inside the core, and that the general
 geometrical treatment which traditional nodal methods lack becomes necessary
-\cite{Wang2025griffin}. On a heat-pipe micro reactor benchmark the differences
+\cite{Wang2025griffin}. On a heat-pipe micro reactor benchmark, the differences
 between heterogeneous and homogenized solutions are larger than in light-water
 reactors, and equivalence corrections are required to recover the eigenvalue
 and the power distribution \cite{Pandya2022}; the cross-section library has to
@@ -55,26 +55,26 @@ an online monitoring tool.
 
 The fission matrix (FM) method \cite{CarneyANE2014} addresses this limitation.
 A single Monte Carlo calculation is made to tally, in addition to its usual
-results, a matrix that couples every fissile region of the core to every other.
-That matrix contains the eigenvalue and the fission source of the state at
+results, a matrix that couples every fissile region of the core to any other.
+The resulting matrix provides the eigenvalue and the fission source of the state at
 which it is tallied, and it can be stored. A database of matrices tallied at a
-set of reference states then represents any intermediate state by
-interpolation, at the cost of an eigenvalue problem of modest size, solved in seconds and
+set of reference states can then represent any intermediate state by
+an appropriate interpolation scheme, at the cost of an eigenvalue problem of modest size, solved in seconds and
 requiring no further Monte Carlo calculation.
 
-The three works of this Part build on that idea for the same reactor and with
+The two chapters that follow build on that idea for the same reactor and with
 the same tools. Chapter~\ref{ch:crit-search} builds the database over the fuel
 temperature and the drum angle, uses it for a criticality search, and extends it
 along the cycle with a correction for burnup. Chapter~\ref{ch:correction-ratios}
 addresses what the interpolation cannot represent, the temperature of the
 reflector and sharp temperature gradients inside the core, through two
-multiplicative corrections. The present chapter provides the material common to the three works: the
+multiplicative corrections. The present chapter provides the concepts common to both: the
 derivation of the fission matrix from the transport equation, the strategies
 available for its generation, the reactor model, and the general framework
 within which the database, the statistical uncertainty and the error
 metrics are defined. The axes and the density of the database, the
 interpolation formulae and the corrections applied to the interpolated
-matrix are specific to each work, and are introduced in
+matrix are specific to each application, and are introduced in
 Chapters~\ref{ch:crit-search} and \ref{ch:correction-ratios} together with
 the results that depend on them.
 
@@ -84,16 +84,16 @@ the results that depend on them.
 
 The starting point is the $k$-eigenvalue form of the neutron transport
 equation. For the purpose of the method it is convenient to write the balance
-not for the angular flux but for the fission source, that is, for the density
+not for the angular flux but for the fission source, that is, the density
 $S(\mathbf r)$ of fission neutrons born per unit volume at the position
 $\mathbf r$. A fission neutron born at $\mathbf r'$ undergoes a sequence of
-flights, scattering events and, possibly, an absorption that induces a further
+flights, scattering events and, possibly, an absorption that may induce a further
 fission; the expected number of next-generation fission neutrons that it
 produces per unit volume at $\mathbf r$ is denoted by
 $H(\mathbf r \leftarrow \mathbf r')$. This kernel contains the entire transport
 process, cross sections, angular and energy distributions of the secondaries and
 fission multiplicity included, integrated over one generation. Since the
-production of fission neutrons is linear in the source that generates them, the
+production of fission neutrons is linear with respect to the source that generates them, the
 fission source of one generation is obtained from that of the previous
 generation by integration over the volume $V$ of the system, and the stationary
 condition reads \cite{CarneyANE2014}
@@ -137,8 +137,8 @@ with
 %
 The coefficient $a_{ij}$ is the expected number of fission neutrons born in
 region $i$ per fission neutron emitted in region $j$, the emitted neutrons
-being distributed within $V_j$ according to the source. The $N\times N$ array
-of these coefficients is the fission matrix $\mathbf A$. Its dominant
+being distributed within $V_j$ according to the source. The set of these
+$N\times N$ coefficients is the fission matrix $\mathbf A$. Its dominant
 eigenvalue is $k_{\mathrm{eff}}$ and the associated eigenvector is the
 region-wise fission source. Since each coefficient is defined per emitted
 source neutron, the fission multiplicity is embedded in it: a source neutron
@@ -147,7 +147,7 @@ region. The matrix is non-negative, so that the dominant eigenvalue is real and
 positive and its eigenvector has components of one sign, as a physical source
 must. Only the fissile regions need to be partitioned: non-fissile materials,
 reflectors and control elements emit no fission neutrons and enter the problem
-through the kernel, that is, through the value of the coefficients.
+through the kernel, that is, through the values of the coefficients $a_{ij}$.
 
 Equations~(\ref{fm:eq:eigen}) and (\ref{fm:eq:coef}) are an exact consequence
 of Eq.~(\ref{fm:eq:integral}). They become a method through the observation that $a_{ij}$ depends on the source only through its shape inside the region
@@ -194,8 +194,8 @@ a fraction of a second.
 
 \section{Strategies for the generation of the fission matrix}\label{fm:sec:generation}
 
-The matrix of one core configuration can be obtained in two ways. The first
-assembles it from a set of fixed-source calculations, one for each
+The matrix of one core configuration can be obtained with two approaches. The first
+assembles it from a set of independent fixed-source calculations, one for each
 ``fundamental cell'' of the system \cite{WaltersNSE2018}. The fundamental units
 are identified by exploiting the geometrical and material similarity between
 repeated units, so that a limited number of calculations serves for the whole
@@ -209,10 +209,11 @@ temperature interpolation \cite{HeANE2020Temp} and the treatment of material and
 control-rod discontinuities \cite{HeANE2019,HePNE2020,Mascolino2022}. The
 approach requires a mesh fine enough to resolve every local effect, which in
 turn determines the size of the matrix and the storage it requires; in
-exchange, the fixed-source calculations are inexpensive and the uncertainty of
+exchange, the fixed-source calculations, which remain Monte Carlo calculations,
+are relatively inexpensive, and the uncertainty of
 the tallied coefficients is small once a sufficient number of histories is run.
 
-The second way tallies the matrix directly during a single whole-core
+The second approach tallies the matrix directly during a single whole-core
 criticality calculation. Serpent~2 \cite{LeppanenEPJN2025} accumulates the
 coefficients during the calculation, at negligible additional cost, by
 recording over the active cycles the region of birth of every fission neutron
@@ -225,8 +226,9 @@ complete matrix instead of a set of responses to be assembled.
 
 The cost of the second strategy is statistical, and it grows with the spatial
 resolution demanded of the matrix. The uncertainty of the coefficients
-decreases only with the number of histories of the criticality calculation. The
-number of coefficients grows with the square of the number of cells, and the
+decreases only with the number of histories of the criticality calculation. A
+partition into $N$ cells gives a matrix of $N^2$ coefficients $a_{ij}$, so that
+their number grows with the square of the number of cells, and the
 fraction of the source neutrons of a cell that induce fission in any given
 other cell decreases as the cells are refined, so that the number of histories
 required to tally every coefficient to a prescribed relative uncertainty grows
@@ -244,7 +246,7 @@ makes the cost of the tally independent of the size of the core
 \cite{WaltersNSE2018}.
 
 The choice between the two strategies is therefore specific to the design and
-to the purpose. The three works of this Part all adopt the second strategy. The aim is a
+to the purpose. Both of the following chapters adopt the second strategy. The aim is a
 direct workflow feeding an online core-monitoring tool, for which
 assembly-level resolution is sufficient and pin-wise accuracy is not required;
 a matrix that already contains the reflector and the drums, tallied from the
@@ -259,7 +261,7 @@ Laboratory within the NEAMS Micro-Reactor Application Drivers area
 challenges that the developers of micro reactors face: heat pipes for the removal of
 the nuclear heat, TRISO fuel for operation at high temperature, yttrium
 hydride pins for moderation and rotating drums in the radial reflector for
-control. Its Serpent~2 and multiphysics models are distributed on the Virtual
+control. Its Monte Carlo and multiphysics models are distributed on the Virtual
 Test Bed \cite{moose_vtb_mrad_description}, and the acronym VTB is used for the
 model in what follows.
 
@@ -284,10 +286,10 @@ geometry.
 \end{figure}
 
 
-Serpent~2 tallies the fission matrix on a Cartesian mesh. That is convenient
-for a square lattice, where the mesh can be made to coincide with the fissile
-elements at pin or assembly level, and unsuited to the hexagonal lattice of the
-HPMR. The tally is therefore taken per fissile material instead: each fuel
+The Serpent~2 Monte Carlo code is used to tally the fission matrix. The code
+offers a tally on a Cartesian mesh, which is convenient for a square lattice,
+where the mesh can be made to coincide with the fissile elements at pin or
+assembly level, and unsuited to the hexagonal lattice of the HPMR. The tally is therefore taken per fissile material instead: each fuel
 assembly is one material, and each assembly is split into three axial zones to
 resolve the axial dependence, so that the mesh has $30\times3 = 90$ cells and
 the matrix $90\times90 = 8100$ coefficients. The discretization is fully
@@ -306,12 +308,12 @@ A matrix describes one state of the core. The method becomes predictive when a
 database of matrices, tallied at a set of reference states, is interpolated to
 represent a state that has never been simulated. The operating state is described by
 a small number of parameters, the temperature field, the angle of the drums and
-the burnup of the fuel in the works of this Part; the database is a grid over
+the burnup of the fuel; the database is a grid over
 those parameters, or over a subset of them, computed once and reused for every subsequent evaluation. The number of entries required for a given accuracy is not known in advance
 and is determined for each parameter by the convergence studies of
 Secs.~\ref{cs:sec:selection} and \ref{cs:sec:grid}.
 
-Two features of the interpolation are common to all the works of this Part. The first is that the state is represented coefficient by coefficient:
+Two features of the interpolation are common to all the chapters of this Part. The first is that the state is represented coefficient-wise:
 each $a_{ij}$ is interpolated with the local value of the parameters that
 concern it, not with a single global value. This property allows a non-uniform temperature field to be represented from
 database entries each of which is isothermal. The second is the assignment of that local value. For a
@@ -349,7 +351,7 @@ is not the outcome of a Monte Carlo calculation of its own: it is a new object
 assembled from database entries that carry finite statistics, and it has no
 replicas from which an uncertainty could be read.
 
-The estimate adopted in all the works of this Part is an ensemble method. Every
+The estimate adopted throughout Part~II is an ensemble method. Every
 database coefficient is treated as a random variable centred on its tallied
 value, with the standard deviation that Serpent reports for it; a complete
 realization of the database is drawn, and the whole chain of the method, namely interpolation, correction and eigenvalue
@@ -359,14 +361,14 @@ standard deviation of the results over $M$ realizations is
 $\sigma_{\mathrm{DB}}$. Propagating the covariance of the database through a
 linearized sensitivity would be less expensive, but the corrections of
 Chapters~\ref{ch:crit-search} and \ref{ch:correction-ratios} are ratios of
-tallied coefficients, nonlinear in them because the coefficients appear in
+tallied coefficients, nonlinear with respect to them because the coefficients appear in
 both numerator and denominator;
 rerunning the full chain on each realization avoids any linearization. Since
-the fission source is normalized to its sum, the relative uncertainty of a
+the fission source is normalized to unity, the relative uncertainty of a
 normalized value coincides with that of the corresponding tally, and the
 relative quantities of Eq.~(\ref{fm:eq:sigma}) combine directly.
 
-The realizations are drawn, in all three works, by uncorrelated sampling: each
+Unless stated otherwise, the realizations are drawn by uncorrelated sampling: each
 coefficient is perturbed independently of the others, which is also the
 assumption of earlier work on the uncertainty of fission-matrix results
 \cite{HeWaltersNSE2022}. The assumption is not exact. The coefficients tallied
@@ -381,7 +383,7 @@ easier to declare compatible with noise. The structure of the correlations,
 their analytical modelling and the verification of the resulting estimate against
 independent replicas of the whole database are examined in
 Chapter~\ref{ch:correction-ratios}, in connection with the core temperature
-correction.
+correction, whose results adopt the analytical estimate.
 
 \section{Error metrics}\label{fm:sec:metrics}
 
