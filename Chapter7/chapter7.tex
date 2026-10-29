@@ -50,10 +50,10 @@ the position in which it faces the core, $\theta=\ang{180}$; the effect of the
 rotation is symmetric beyond \ang{180}, so the interval $[\ang{0},\ang{180}]$
 covers every configuration. The temperature axis has eight levels, from
 \SI{300}{K} to \SI{1000}{K} in steps of \SI{100}{K}. The number of levels on
-the drum axis is the object of the convergence study of
-Sec.~\ref{cs:sec:selection}.
+the drum axis is the object of the convergence study presented below.
 
-Each entry is tallied with the discretization of Sec.~\ref{fm:sec:model},
+Each entry is tallied with the discretization described in
+Chapter~\ref{ch:fm-theory},
 ninety cells and $90\times90$ coefficients, from a Serpent~2 criticality
 calculation with $10^{5}$ neutrons per cycle and 500 active cycles. The
 complete database, eight temperatures by seventeen angles, contains 136
@@ -76,8 +76,8 @@ the coefficients is \SI{9.0}{\percent}.
 
 \subsection{Bilinear interpolation}\label{cs:sec:interp}
 
-With two parameters, the coefficient-wise interpolation of
-Sec.~\ref{fm:sec:database} is bilinear between the four entries that bracket
+With two parameters, the coefficient-wise interpolation introduced in
+Chapter~\ref{ch:fm-theory} is bilinear between the four entries that bracket
 the target point. Let $d_T$ and $d_\theta$ be the indices of the database
 levels immediately below the target temperature of cell $i$,
 $\tilde T_{f,i}$, and the target angle $\tilde\theta$, so that
@@ -98,7 +98,7 @@ corresponding grid point and the weights are the linear ones,
 $w_T^{(1)} = (\tilde T_{f,i} - T^{(d_T)})/(T^{(d_T+1)} - T^{(d_T)})$,
 $w_T^{(0)} = 1 - w_T^{(1)}$, and likewise for $\theta$. The temperature that
 selects the position on the temperature axis is that of the destination cell
-$i$, the row of the coefficient, as stated in Sec.~\ref{fm:sec:database}; the
+$i$, the row of the coefficient, as stated in Chapter~\ref{ch:fm-theory}; the
 angle is common to the whole matrix. The linear scheme is adopted as the simplest candidate; more elaborate
 interpolants, and in particular schemes that would reduce the number of
 entries required, are left to future work.
@@ -139,8 +139,8 @@ does, as also observed on a research reactor with control rods
 
 Figure~\tref{cs:fig:dbsel} shows $\Delta k_{\mathrm{eff}}$ between the
 interpolated matrix and the reference calculation for the fifteen cases and
-the three databases, and Table~\tref{cs:tab:dbsel} summarizes the metrics of
-Sec.~\ref{fm:sec:metrics}. The root-mean-square deviation on the
+the three databases, and Table~\tref{cs:tab:dbsel} summarizes the error metrics
+defined in Chapter~\ref{ch:fm-theory}. The root-mean-square deviation on the
 multiplication factor falls from 165~pcm with Database~3 to 74~pcm with
 Database~2 and to 29~pcm with Database~1, where most of the cases fall within
 the statistical uncertainty of the references; the fission source improves
@@ -333,8 +333,7 @@ one.
   \node[grey, below=of crit] (end) {critical state: critical drum angle
                        $\theta_{\mathrm{crit}}$,\\ temperature field $T_{f,i}$,
                        fission source $\tilde{\mathbf F}$};
-  \node[serp, right=of interp] (db) {database of tallied matrices,
-                       Sec.~\ref{cs:sec:database}};
+  \node[serp, right=of interp] (db) {database of tallied matrices};
   \node[old, round, right=of crit, text width=28mm] (bis) {bisection on $\theta$};
   \coordinate (rx) at ($(temp.east)+(70mm,0)$);
 
@@ -368,8 +367,8 @@ one.
 
 \subsection{Uncertainty of the search results}\label{cs:sec:ensemble}
 
-The uncertainty of the database is propagated with the ensemble method of
-Sec.~\ref{fm:sec:uq}, in the following form. The uncertainty of the tallied
+The uncertainty of the database is propagated with the ensemble method
+introduced in Chapter~\ref{ch:fm-theory}, in the following form. The uncertainty of the tallied
 coefficients is systematic with respect to the search: the database is a
 single set of tallies, shared by every evaluation the search performs, so that
 its statistical error does not average out from one evaluation to the next. It
@@ -428,11 +427,11 @@ The size of the ensemble is chosen after checking the convergence of
 $\sigma_k$. With twenty realizations $\sigma_k$ is underestimated by 10 to
 \SI{15}{\percent} and varies by as much between independent groups of twenty;
 with fifty it is within \SI{5}{\percent} of its value at two hundred. Fifty
-realizations are used along the cycle, Sec.~\ref{cs:sec:cycle}, and one
+realizations are used along the cycle and one
 hundred in the single search at nominal power of the next section. As
-discussed in Sec.~\ref{fm:sec:uq}, perturbing the coefficients independently
+discussed in Chapter~\ref{ch:fm-theory}, perturbing the coefficients independently
 neglects the correlations among the tallies of one run, so that the bands are
-conservative: the replicate comparisons of Sec.~\ref{cs:sec:hypotheses}
+conservative: the replicate comparisons presented further on
 indicate that they overestimate the observed scatter by roughly a factor 1.5.
 
 \subsection{Convergence at nominal power}\label{cs:sec:convergence}
@@ -471,8 +470,8 @@ where the uncertainty combines the two contributions of
 Eq.~(\ref{fm:eq:sigma}). At $3.4$ standard deviations from zero, the deviation cannot be attributed to
 statistical noise: it is the interpolation residual of the database at this
 state, of the same magnitude as the residuals of Table~\tref{cs:tab:dbsel},
-and it persists unchanged along the whole cycle
-(Sec.~\ref{cs:sec:cycle-results}).
+and it persists unchanged along the whole cycle, as the results over the cycle
+show further on.
 
 The cost of the search is dominated by the eigenvalue solutions (see
 Fig.~\tref{cs:fig:searchcost}). When the Monte Carlo uncertainty of the
@@ -551,8 +550,8 @@ than the nominal one was carried out, in the original study, with the
 Reflector Correction Ratio applied to the interpolated matrix. Those results depend on the reflector correction, which is the subject of
 Chapter~\ref{ch:correction-ratios}, and are not reported; the verification of
 the uncorrected workflow rests on the nominal-power case above and on the
-twelve reference states of the cycle analysis of
-Sec.~\ref{cs:sec:cycle-results}, all at nominal power. The
+twelve reference states of the cycle analysis presented further on, all at
+nominal power. The
 construction does not depend on the power level, since the temperature axis of
 the database carries it, and the same procedure applies at any power below
 $P_{\max}$.
@@ -748,10 +747,9 @@ Figure~\tref{cs:fig:flow} draws the complete scheme.
                        Eq.~(\ref{cs:eq:sigmatheta});\\ advance the burnup $BU_i$, Eq.~(\ref{cs:eq:bustep})};
   \node[decN, below=of rec] (eol) {critical with the drums\\fully extracted?};
   \node[greyN, below=of eol] (end) {end of cycle life};
-  \node[serp, right=of start] (db) {database of tallied matrices,
-                       Sec.~\ref{cs:sec:database}};
+  \node[serp, right=of start] (db) {database of tallied matrices};
   \node[serpN, right=of eig] (snap) {snapshot database,
-                       $\mathrm{BCR}_{ij}(t)$, Sec.~\ref{cs:sec:snapshots}};
+                       $\mathrm{BCR}_{ij}(t)$};
   \node[old, round, right=of crit, text width=28mm] (bis) {bisection on $\theta$};
   \coordinate (rx) at ($(temp.east)+(70mm,0)$);
 
@@ -1171,8 +1169,8 @@ history assumed in the depletion.
 
 \section{Density of the snapshot grid}\label{cs:sec:grid}
 
-The number of snapshot times required is determined with the acceptance method
-of Sec.~\ref{cs:sec:selection}, applied to the burnup axis. Nested sub-grids of
+The number of snapshot times required is determined with the same nested
+acceptance method used to select the database, applied to the burnup axis. Nested sub-grids of
 the twelve-point grid, of 2, 4 and 7 points, are tested at the midpoints of
 the full grid, where the time-interpolation error peaks. At each test time the
 workflow gives the critical state on the full database, and every sub-grid is
@@ -1222,7 +1220,7 @@ snapshot times.
 
 Table~\tref{cs:tab:cost} gathers the data related to the Serpent~2 campaigns
 needed to support the workflow, that is, the cost paid once before any search is run, together with the
-cost of the workflow itself. The database of Sec.~\ref{cs:sec:database} is
+cost of the workflow itself. The fission matrix database is
 generated on a thirty-core workstation with an Intel Xeon Gold 6130 processor
 at \SI{2.1}{GHz}: 136 criticality calculations, about \SI{63}{CPU\,h} each,
 \SI{324}{h} of wall-clock time in all. The burnup extension adds one depletion
@@ -1252,9 +1250,9 @@ depletion of its own.
     \toprule
     Campaign & Runs & Cost \\
     \midrule
-    $(T,\theta)$ database, Sec.~\ref{cs:sec:database} & 136 & \SI{63}{CPU\,h} each \\
+    $(T,\theta)$ database & 136 & \SI{63}{CPU\,h} each \\
     Depletion at the reference state, drums fully extracted & 1 & \SI{2.75}{h} on 64 cores \\
-    Snapshot matrices at $\theta_{\mathrm{ref}}=\ang{0}$, Sec.~\ref{cs:sec:snapshots} & 12 & \SI{66}{CPU\,h} each \\
+    Snapshot matrices at $\theta_{\mathrm{ref}}=\ang{0}$ & 12 & \SI{66}{CPU\,h} each \\
     \midrule
     Search, Monte Carlo uncertainty neglected & -- & \SI{29}{ms} \\
     Search, ensemble of 100 realizations included & -- & \SI{1.1}{s} \\
@@ -1266,9 +1264,8 @@ depletion of its own.
 \begin{table}[htbp]
   \centering
   \caption[Verification and assumption-test campaigns]{Serpent~2 campaigns
-  run to verify the workflow and to measure the assumptions of the burnup
-  correction, Sec.~\ref{cs:sec:hypotheses}; same statistics as the database
-  entries.}
+  run to verify the workflow and to measure the three assumptions of the
+  burnup correction; same statistics as the database entries.}
   \label{cs:tab:testcost}
   \begin{tabular}{p{74mm}cc}
     \toprule
