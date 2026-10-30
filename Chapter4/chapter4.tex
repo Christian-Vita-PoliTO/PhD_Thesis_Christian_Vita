@@ -239,25 +239,36 @@ Genetic algorithms solve an optimization problem by emulating the mechanisms of
 biological evolution, and have been in use since the 1970s~\citep{holland1975}.
 They belong to the meta-heuristics: compared with a rigorous optimization
 algorithm, they do not guarantee the global optimum, but they yield a solution
-close to it while exploring only a limited part of the solution space. Each
-candidate solution, or individual, is encoded as a chromosome, a sequence of
-genes whose values, called alleles, determine the solution it represents;
-decoding a chromosome yields that solution, here a group structure. The search
-starts from a random initial population, and every individual is judged by a
-fitness function, which in this problem expresses how closely the condensed
-full-core calculation reproduces the Monte Carlo reference. The fitness
-function implements the principle of natural selection: the best individuals
-have more chances of being selected for breeding, in which crossover recombines
-portions of the chromosomes of two parents into new individuals; the best
-individuals of a generation can also pass unchanged into the next one, which is
-called elitism, and mutation changes a few genes of the new individuals at
-random. Generation after generation, the average quality of the population tends
-to improve, since desirable features are inherited while disadvantageous ones do
-not last. The balance between the exploration of new regions of the solution
-space and the refinement of the solutions already found is governed by the
-selection pressure, that is, the advantage given to the individuals of better
-fitness, and by the rates of crossover and mutation. The process is repeated for
-a prescribed number of generations. The method needs only the value of the
+close to it while exploring only a limited part of the solution space. The method rests
+on the following elements:
+\begin{description}
+  \item[Chromosome.] Each candidate solution, or individual, is encoded as a
+    chromosome, a sequence of genes whose values, called alleles, determine the
+    solution it represents; decoding a chromosome yields that solution, here a
+    group structure.
+  \item[Initial population.] The search starts from a population of
+    individuals drawn at random.
+  \item[Fitness function.] Every individual is judged by a fitness function,
+    which in this problem expresses how closely the condensed full-core
+    calculation reproduces the Monte Carlo reference.
+  \item[Selection.] The individuals of better fitness have more chances of
+    being selected for breeding, which implements the principle of natural
+    selection.
+  \item[Crossover.] Portions of the chromosomes of two parents are recombined
+    into new individuals.
+  \item[Elitism.] The best individuals of a generation can pass unchanged into
+    the next one.
+  \item[Mutation.] A few genes of the new individuals are changed at random.
+\end{description}
+Generation after generation, the average quality of the population tends to
+improve, since desirable features are inherited while disadvantageous ones do
+not last, and the process is repeated for a prescribed number of generations.
+The balance between the exploration of new regions of the solution space and
+the refinement of the solutions already found is governed by the selection
+pressure, that is, the advantage given to the individuals of better fitness,
+and by the rates of crossover and mutation.
+
+The method needs only the value of the
 fitness function of each individual, with no derivative and no assumption on its
 regularity, such as convexity, which suits a problem whose variables are
 discrete and whose objective is evaluated by an external code. The problem also
