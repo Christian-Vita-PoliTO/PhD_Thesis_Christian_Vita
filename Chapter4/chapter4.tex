@@ -979,11 +979,10 @@ Table~\tref{eg:tab:gasettings}. The implementation is built on the
 population size is established by trial searches: a population of 40
 individuals yields a median final joint fitness $1.7$ times higher and a
 population of 200 improves it by $17\%$ at twice the cost per search. The number
-of generations is checked on the campaign itself: half of the searches have a
-joint fitness within $1\%$ of their final value by generation 36, and 85
-searches out of a thousand are still improving after generation 90.
-The population is kept at 100 and the computing time is spent on the number of
-independent searches instead, a choice quantified in the following section.
+of generations is checked on the campaign itself: most searches settle well
+before the last generation, as the results show further on. The population is
+kept at 100 and the computing time is spent on the number of independent
+searches instead, a choice quantified in the following section.
 
 \begin{table}[htbp]
 \centering
@@ -1001,12 +1000,11 @@ Repair & the operator introduced with the chromosome \\
 \end{tabular}
 \end{table}
 
-One implementation detail deserves mention because it affects reproducibility.
 The sampling and mutation operators of this problem draw from the global random
 generator, which the optimization library leaves unseeded, so that the seed
-passed to the optimizer has no effect and successive runs are not reproducible.
-Seeding the global generator explicitly before each tribe restores bit-level
-reproducibility, and all results presented here can be regenerated exactly.
+passed to the optimizer has no effect on them and successive runs are not
+reproducible. The global generator is therefore seeded explicitly before each
+search, and all the results presented here can be regenerated exactly.
 
 The searches are mutually independent and are executed in parallel. One thousand
 of them require $841$~s on 14 processes of two threads each, corresponding to
