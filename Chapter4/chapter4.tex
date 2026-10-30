@@ -956,29 +956,17 @@ the exception. Therefore, for a controlled function, reaching a scaled value of 
 structure better than every other evaluated, but only one better than the
 threshold.
 
-Two checks confirm that the window built in this way is not an arbitrary
-choice. The same window computed over almost the whole training database, a
-set built before the searches are run and without reference to their
-individuals, assigns to each of the fifteen functions a width that differs from
-the one built from the searches by no more than $3\%$. Ranking the
-distinct structures returned by the searches with one window and with the other
-gives the same best structure and the same fifty best; no structure changes
-rank by more than sixteen positions, and the typical shift is one position. The range
-that the searches explore on their own is therefore the range of the problem.
-The whole campaign is then repeated by placing that fixed window inside the
-search, so that the algorithm optimizes the canonical fitness directly instead
-of its own moving scale. The thousand searches driven in this way tend to
-converge to the same best structure and select most often the same six
-boundaries, and the selection frequency of each boundary differs by at most 4 percentage points between the two
-campaigns; the fixed scale gives a slightly narrower spread of the outcomes,
-the median search ending with a joint fitness $41\%$ above that of the best
-structure, against $45\%$ with the moving scale, which is
-consistent with a stationary objective being marginally easier to optimize
-than a moving one, and this optimization runs faster, since the re-evaluation
-of the population becomes unnecessary. The formulation of the search is
-nevertheless kept as inherited: nothing in the results depends on the choice
-between the moving scale and the fixed window, and the comparison with the
-results in \citet{prevMulti} is then made at equal objective. %CV: Ma allora è necessario dire tutto quelle cose sulla scala che cambia o che rimane fissa?? 
+The window built in this way is not an arbitrary choice. The same window
+computed over almost the whole training database, a set built before the
+searches are run and without reference to their individuals, differs from it
+by no more than $3\%$ in the width assigned to each of the fifteen functions,
+and gives the same best structure and the same fifty best among those returned
+by the searches. Repeating the whole campaign with this fixed window placed
+inside the search, so that the algorithm optimizes the canonical fitness
+directly, leads to the same best structure. Nothing in the results therefore
+depends on the choice between the moving scale and the fixed window, and the
+formulation of the search is kept as inherited, so that the comparison with
+the results of \citet{prevMulti} is made at equal objective.
 
 \subsection{Multiple Independent Searches}
 
