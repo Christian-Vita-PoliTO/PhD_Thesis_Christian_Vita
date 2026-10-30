@@ -7,15 +7,15 @@
 
 The database of Chapter~\ref{ch:crit-search} is built on isothermal states: in
 every entry the fuel, the moderator, the reflector and the structures are at
-one common temperature. Two effects of an operating core therefore lie outside
+the same temperature. Two effects of an operating core therefore lie outside
 what the interpolation of Eq.~(\ref{cs:eq:interp}) can represent, and both are
 temperature effects that the coefficients cannot see.
 
 The first is the temperature difference between the core and the reflector.
 The coefficients of the fission matrix are defined between fissile cells, so
 the temperature that enters the interpolation is that of the fuel; the
-reflector enters only through the isothermal entries of the database, and a
-core hotter than its reflector has no entry to draw on. The second is a sharp
+reflector enters only through the isothermal entries of the database, and the
+situation when a core is hotter than its reflector is ignored. The second is a sharp
 temperature gradient inside the core. The interpolation assigns to each
 coefficient the temperature of its destination cell alone, so a cell that is
 much hotter than its neighbours is treated as if the whole core were at its
@@ -32,16 +32,20 @@ the criticality search. The second, the Core Temperature Correction Ratio, is
 developed on a two-dimensional variant of the same design, described in
 Sec.~\ref{cr:sec:model2d}. The chapter also carries out the study of the statistical
 uncertainty of the interpolated results that Sec.~\ref{fm:sec:uq} defers to
-it: how the tallied coefficients are correlated, how that correlation can be
-modelled analytically, and how well the resulting estimate holds against
-independent replicas of the whole database.
+it, which addresses three points:
+\begin{itemize}
+  \item how the tallied coefficients are correlated;
+  \item how that correlation can be modelled analytically;
+  \item how well the resulting estimate holds against independent replicas
+  of the whole database.
+\end{itemize}
 
 \section{The Reflector Correction Ratio}\label{cr:sec:rcr}
 
 \subsection{The reflector in the neutron balance}
 
 Reflectors reduce the leakage of a core by scattering escaping neutrons back
-into it. In a micro reactor the effect is particularly strong, because the core
+into it. In a micro reactor this effect is particularly strong, because the core
 is compact and the fissile inventory limited, so that the reflector shapes the
 flux and not only its magnitude. In the VTB design the reflector also houses
 the control drums, so its state changes during operation in two ways at once,
@@ -67,8 +71,8 @@ temperatures.
   \label{cr:fig:gradient}
 \end{figure}
 
-That such a difference exists in operation is not an assumption. A
-high-fidelity simulation of the same core, performed with the MOOSE
+This difference in operation has been noticed in the literature
+\cite{Stauff2024}. A high-fidelity simulation of the same core, performed with the MOOSE
 framework \cite{giudicelli2024moose} at nominal power with the drums fully
 extracted, gives the field of Fig.~\tref{cr:fig:moose}; the profile along a line
 crossing the active region and the reflector shows the temperature dropping at
@@ -151,8 +155,9 @@ local differences.
 \subsection{Dependence on the drum angle}
 
 Equation~(\ref{cr:eq:rcr1}) accounts for temperature alone. The control drums,
-however, sit inside the reflector, and rotating them changes the absorption in
-precisely the region whose effect the ratio describes, most of all at the interface
+however, are placed inside the reflector, and rotating them changes the
+absorption in the region whose effect is described by the ratio, most of all at
+the interface
 with the outermost ring of assemblies. Each drum position therefore requires
 its own reference matrix, and the ratio becomes
 %
@@ -171,20 +176,13 @@ coincide.
 
 The cost of the second formulation is one reference calculation per drum
 angle. The whole campaign, database and reference matrices together,
-therefore requires
-%
-\begin{equation}
-  N_T N_\theta + N_\theta
-  \label{cr:eq:rcr-cost}
-\end{equation}
-%
-criticality calculations, that is, seventeen runs in addition to the hundred and thirty-six of the database of
+therefore requires $N_T N_\theta + N_\theta$ criticality calculations, that is, seventeen runs in addition to the hundred and thirty-six of the database of
 Sec.~\ref{cs:sec:database}.
 
 \subsection{Test cases with a uniform core temperature}\label{cr:sec:rcr-tests}
 
 The first four test cases hold the fuel at a uniform temperature and the
-reflector at \SI{300}{K}, at two drum positions, Table~\tref{cr:tab:cases14}.
+reflector at \SI{300}{K}, at two drum positions (see Table~\tref{cr:tab:cases14}).
 They separate the two variables the correction depends on: the size of the
 temperature difference, between Cases 1 and 3, and the drum angle, between the
 first and the second of each pair.
@@ -315,13 +313,15 @@ difference is instructive. In Case 6, where the fuel temperature spans
 correction removes almost the entire discrepancy on the multiplication factor,
 from $-201$ to $+9$~pcm, and halves the root-mean-square deviation of the
 source. In Case 5 it reduces the deviation from $-100$ to $-31$~pcm and the
-root-mean-square from 3.4 to 2.2~\%: an appreciable improvement, but less
-complete than in Case 6. The reason lies in the shape of the imposed profile. The radial
-profile is steep, the innermost ring being the hottest and the outermost the
+root-mean-square from 3.4 to 2.2~\%: an appreciable improvement, but
+smaller than in Case 6. The reason lies in the shape of the imposed profile. The radial
+profile is steep; the innermost ring is the hottest and the outermost is the
 coldest, so the local difference between fuel and reflector varies sharply from
 ring to ring, while the correction is calibrated on a spatially uniform
-gradient. A zonation of the correction, with a reference matrix generated
-separately for different regions of the core, would address this limitation and is left to future developments. In Case 7 there is little for the
+gradient. A subdivision of the correction, with a reference matrix generated
+separately for different regions of the core, would address this limitation and is left to future developments.
+
+In Case 7 there is little for the
 correction to recover, since the local difference is small and changes sign,
 and the corrected and uncorrected results differ by \SI{14}{pcm}, of the
 order of the combined uncertainty.
@@ -358,7 +358,10 @@ order of the combined uncertainty.
   \centering
   \includegraphics[width=\textwidth]{Chapter8/Figs/Tf_rings_case_5.png}
   \caption[Case 5 of the reflector correction]{Case 5 of
-  Table~\ref{cr:tab:res567}, ring-wise fuel temperature.}
+  Table~\ref{cr:tab:res567}, with the ring-wise fuel temperature: reference fission source, combined cell-wise
+  uncertainty, and local deviation of the uncorrected and of the corrected
+  result in units of that uncertainty. Cells within $2\sigma_{\mathrm{tot},i}$
+  are drawn as transparent outlines.}
   \label{cr:fig:case5}
 \end{figure}
 
@@ -366,7 +369,10 @@ order of the combined uncertainty.
   \centering
   \includegraphics[width=\textwidth]{Chapter8/Figs/Tf_linear_case_6.png}
   \caption[Case 6 of the reflector correction]{Case 6 of
-  Table~\ref{cr:tab:res567}, linear fuel temperature ramp.}
+  Table~\ref{cr:tab:res567}, with the linear fuel temperature ramp: reference fission source, combined cell-wise
+  uncertainty, and local deviation of the uncorrected and of the corrected
+  result in units of that uncertainty. Cells within $2\sigma_{\mathrm{tot},i}$
+  are drawn as transparent outlines.}
   \label{cr:fig:case6}
 \end{figure}
 
@@ -374,8 +380,11 @@ order of the combined uncertainty.
   \centering
   \includegraphics[width=\textwidth]{Chapter8/Figs/Tf_power_like_case_7.png}
   \caption[Case 7 of the reflector correction]{Case 7 of
-  Table~\ref{cr:tab:res567}, power-like fuel temperature with a reflector
-  profile of its own.}
+  Table~\ref{cr:tab:res567}, with the power-like fuel temperature and a
+  reflector profile of its own: reference fission source, combined cell-wise
+  uncertainty, and local deviation of the uncorrected and of the corrected
+  result in units of that uncertainty. Cells within $2\sigma_{\mathrm{tot},i}$
+  are drawn as transparent outlines.}
   \label{cr:fig:case7}
 \end{figure}
 
@@ -389,12 +398,12 @@ both rebuilt from the same realization before the eigenvalue problem is solved.
 Rebuilding both is necessary, because the correction ratio reuses database
 entries: holding it fixed while perturbing the interpolated matrix would
 remove that dependence and underestimate the spread. Table~\tref{cr:tab:budget} reports the resulting
-budget for the seven cases.
+uncertainty components for the seven cases.
 
 \begin{table}[htbp]
   \centering
-  \caption[Uncertainty budget of the reflector-correction cases]{Uncertainty
-  budget of the seven test cases. The contribution of the reference
+  \caption[Uncertainty of the reflector-correction cases]{Uncertainty
+  components of the seven test cases. The contribution of the reference
   calculation and that of the database are combined in quadrature; for the
   fission source the combination is performed cell by cell and then averaged
   over the ninety cells.}
@@ -444,12 +453,13 @@ monolith, surrounded by a beryllium radial reflector, Fig.~\tref{cr:fig:geom2d}.
 Two simplifications distinguish it from the model of Sec.~\ref{fm:sec:model}.
 The control elements are removed, so that no absorber competes with the
 temperature field in shaping the flux, and the core is treated as axially
-infinite, so that the analysis is two-dimensional and radial throughout. One
-cell is one assembly, and the matrix is $127\times127$, tallied as before from
-a single whole-core criticality calculation. The finer radial mesh is required by the study: the effect examined here is the influence of the temperature of
+infinite, so that the analysis is two-dimensional and radial throughout. The
+cell corresponds to one assembly, yielding a $127\times127$ matrix, tallied as
+before from a single whole-core criticality calculation. The finer radial mesh
+is justified by the aim of the study: the effect examined here is the influence of the temperature of
 the neighbouring cells on a coefficient, and resolving it requires cells that
-are individually addressable in temperature, which ninety three-dimensional
-zones of thirty assemblies would not provide.
+are individually addressable in temperature, which the three-dimensional
+subdivision into 90 cells used previously would not provide.
 
 \begin{figure}[htbp]
   \centering
@@ -461,9 +471,9 @@ zones of thirty assemblies would not provide.
   \label{cr:fig:geom2d}
 \end{figure}
 
-The database is the one of Sec.~\ref{fm:sec:database}, eight uniform
-temperatures from 300 to \SI{1000}{K} in steps of \SI{100}{K}. With no drums
-there is no second axis, so the interpolation of Eq.~(\ref{cs:eq:interp})
+The database is one of those described in Sec.~\ref{fm:sec:database}: eight
+uniform temperatures ranging from 300 to \SI{1000}{K} in steps of \SI{100}{K}.
+Since no drums are considered, the interpolation of Eq.~(\ref{cs:eq:interp})
 reduces to its one-dimensional form,
 %
 \begin{equation}
@@ -480,10 +490,11 @@ cell $i$.
 
 Equation~(\ref{cr:eq:interp1d}) treats each coefficient as a function of the
 temperature of its destination cell alone, and therefore ignores the state of
-the cells around it. The approximation is harmless when the field is smooth,
+the cells around it. The approximation is acceptable when the field is smooth,
 because neighbouring cells are then at nearly the same temperature as the
 destination, and the database entry at that temperature describes the
-neighbourhood correctly. It fails when the field is sharp: a cell much hotter
+neighbourhood correctly. However, when the field is sharp this approach usually
+fails: a cell much hotter
 than its surroundings is represented by an entry in which the whole core is as
 hot as that cell, and the neutron economy of that entry is not the one of the
 real configuration.
@@ -550,9 +561,11 @@ measured against the difference of the calibration.
 
 The diagonal requires a separate remark, because there source and destination
 coincide
-and the difference between two cells is not defined. What the calibration
-ratios carry at $d=0$ is how much the interpolation misses the coefficient
-$a_{kk}$ of a cell surrounded by a neighbourhood at a different temperature, so
+and the difference between two cells is not defined. The calibration ratios
+evaluated at zero distance, $r^{\pm}(0)$, which refer to the coefficient
+$a_{CC}$ of the central cell, quantify the discrepancy of the interpolation
+related to the coefficient $a_{kk}$ of a cell surrounded by a neighbourhood at
+a different temperature, so
 the weight of the diagonal is built with the difference between the cell and
 the average of its first ring of neighbours $\mathcal N(k)$. No further
 calibration is needed for this case, since $r^{\pm}(0)$ comes from the same two
@@ -564,11 +577,16 @@ Eq.~(\ref{cr:eq:ctcr}).
 
 The correction is tested on twelve temperature fields, chosen to span a wide
 range of spatial sharpness, since it is under a sharp gradient that the
-local-temperature assumption is most severely tested,
-Figs.~\tref{cr:fig:cases2d-a} and \tref{cr:fig:cases2d-b}. The set comprises the
-two sharp central perturbations of the calibration, a six-assembly and two
-ring-shaped hot spots, a smooth linear gradient across the core, and six
-power-shaped profiles of different peak sharpness and radial offset. Each case
+local-temperature assumption is most severely tested (see
+Figs.~\tref{cr:fig:cases2d-a} and \tref{cr:fig:cases2d-b}). The set comprises:
+\begin{itemize}
+  \item the two sharp central perturbations of the calibration;
+  \item a six-assembly hot spot and two ring-shaped hot spots;
+  \item a smooth linear gradient across the core;
+  \item six power-shaped profiles of different peak sharpness and radial
+  offset.
+\end{itemize}
+Each case
 is evaluated raw and corrected against a direct Serpent~2 calculation of the
 same field.
 
@@ -590,10 +608,14 @@ same field.
 
 \section{Statistical uncertainty of the interpolated matrix}\label{cr:sec:uq}
 
-Section~\ref{fm:sec:uq} leaves two questions open: how the coefficients tallied
-in one criticality calculation are correlated with one another, and how far the
-uncorrelated estimate used elsewhere in this Part departs from the truth. Both
-are answered here, on the model and the database of Sec.~\ref{cr:sec:model2d}.
+Section~\ref{fm:sec:uq} leaves two questions open:
+\begin{itemize}
+  \item How are the coefficients tallied in one criticality calculation
+  correlated with one another?
+  \item How far does the uncorrelated estimate used elsewhere in this Part
+  depart from the truth?
+\end{itemize}
+Both are answered here, on the model and the database of Sec.~\ref{cr:sec:model2d}.
 
 \subsection{Four models of the correlation matrix}\label{cr:sec:four}
 
@@ -660,21 +682,22 @@ independently. The ensemble has $M=500$ realizations throughout this section.
 
 \subsection{The correlation of the coefficients of one column}\label{cr:sec:derivation}
 
-Coefficients tallied within one criticality calculation are not independent,
+Coefficients tallied within one criticality calculation are not statistically
+independent,
 because the number of histories simulated per active cycle is fixed, a fact
 behind well documented biases and correlations of cycle-based Monte Carlo
 estimators \cite{BrissendenGarlick1986}. For two coefficients that share a
 source column the mechanism can be made explicit.
 
-At the start of a cycle the number $N_j$ of source neutrons born in cell $j$ is
+At the start of a cycle, the number $N_j$ of source neutrons born in cell $j$ is
 fixed, inherited from the fission bank of the previous cycle. Each of them,
 independently of the others, either causes a fission in a destination cell $i$,
 with probability $\pi_i$, or elsewhere. The tracking used here is analog, with
-no variance reduction, and a history is terminated when it causes a fission, so
-a history contributes to one destination only and all its $\bar\nu$ secondaries
+no variance reduction, and a history is terminated when it causes a fission.
+Hence, a history contributes to one destination only and all its $\bar\nu$ secondaries
 are born there. Writing the contribution of history $s$ to the destination $i$
-as $X^{(i)}_s = \bar\nu\,I_s(i)$, where $I_s(i)$ is one if the history fissions
-in $i$ and zero otherwise, the coefficient is the average per source neutron,
+as $X^{(i)}_s = \bar\nu\,I_s(i)$, where $I_s(i)$ is 1 if the history fissions
+in $i$ and 0 otherwise, the coefficient is the average per source neutron,
 %
 \begin{equation}
   a_{ij} = \frac{1}{N_j}\sum_{s=1}^{N_j} X^{(i)}_s .
@@ -694,20 +717,21 @@ for one history and then for the coefficient,
 \end{equation}
 %
 The covariance is negative for every pair of destinations that share a source
-column, and the reason is exhaustion: a fixed number of histories is split,
+column: a fixed number of histories is split,
 exhaustively and exclusively, among the destinations, so more of them reaching
 $i$ means fewer reaching $l$. Dividing the covariance by the geometric mean of
 the two variances, the factor $\bar\nu^2/N_j$ cancels, and what survives
 depends only on the destination probabilities, not on the number of histories,
-which is a run-time setting and not a property of the physics,
+which is just a run-time numerical setting and not a property of the physical
+process,
 %
 \begin{equation}
   \rho_{\mathrm{pred}}(i,l) = -\sqrt{\frac{\pi_i}{1-\pi_i}\cdot\frac{\pi_l}{1-\pi_l}} .
   \label{cr:eq:rho-pi}
 \end{equation}
 %
-The probabilities are not tallied directly, but the mean coefficients are, and
-$a_i = \bar\nu\pi_i$. Writing $\kappa=-1/\bar\nu$ and substituting,
+The probabilities are not tallied directly, whereas the mean coefficients
+$a_i = \bar\nu\pi_i$ are. Writing $\kappa=-1/\bar\nu$ and substituting yields
 %
 \begin{equation}
   \rho_{\mathrm{pred}}(i,l) = \kappa\,
@@ -715,7 +739,7 @@ $a_i = \bar\nu\pi_i$. Writing $\kappa=-1/\bar\nu$ and substituting,
   \label{cr:eq:rho-pred}
 \end{equation}
 %
-a closed form that needs only the multiplicity and the mean coefficients of the
+which is a closed form that needs only the multiplicity and the mean coefficients of the
 database itself. Figures~\tref{cr:fig:corr-unc} to \tref{cr:fig:corr-meas} show
 the correlation matrix of the coefficients of one source column at
 \SI{300}{K} under the three assumptions: absent, predicted in closed form, and
@@ -750,10 +774,10 @@ magnitude, and without its statistical noise.
   \label{cr:fig:corr-meas}
 \end{figure}
 
-Two simplifications enter the derivation. The multiplicity is treated as a
+Two simplifications enter the derivation: (i) the multiplicity is treated as a
 constant, whereas it depends on the incident energy and every cell sees a
-slightly different spectrum, and every history is given unit weight, whereas
-Monte Carlo weights are not exactly one. Neither touches the amplitude of the
+slightly different spectrum; (ii) every history is given unit weight, whereas
+Monte Carlo weights are not exactly unity. Neither touches the amplitude of the
 perturbation, which is read from the statistical errors Serpent reports and
 therefore already contains both effects, and neither touches the covariance of
 Eq.~(\ref{cr:eq:multinomial}), which vanishes term by term as long as a history
@@ -784,11 +808,13 @@ spread as an error on $\bar\nu$ changes them by \SI{0.33}{\percent} and
 
 \subsection{Coefficients of different columns}
 
-The derivation says nothing about two coefficients that do not share a column.
+The derivation does not provide information about two coefficients that do not
+share a column.
 The numbers of source neutrons of two different cells are not independent: the
 total population per
-cycle is fixed, so the source cells compete for a shared budget. That coupling,
-however, need not reach the normalized coefficients. By the law of total
+cycle is fixed, so the source cells compete for a shared amount of neutrons.
+That coupling, however, does not necessarily propagate to the normalized
+coefficients. By the law of total
 covariance,
 %
 \begin{equation}
@@ -803,8 +829,8 @@ independent once the two populations are given. Term (II) vanishes because
 $E[a_{ij}\mid N_j] = \pi_i$ does not depend on the realized population, by
 construction of the normalized estimator of Eq.~(\ref{cr:eq:aij}).
 
-This rules out one channel, the competition for a shared budget, not every
-conceivable one. A bootstrap check on the $150$ independent replicas at
+This rules out one channel, i.e., the competition for a shared amount of
+neutrons, not every conceivable one. A bootstrap check on the $150$ independent replicas at
 \SI{300}{K} finds a small residual: pairs of coefficients that share a
 column are negatively correlated \SI{59.95}{\percent} of the time, with a
 \SI{95}{\percent} confidence interval of 59.48 to \SI{60.30}{\percent}, against
@@ -819,8 +845,8 @@ against the brute-force reconstruction, which makes no such assumption.
 
 The third method measures the correlation at \SI{300}{K} and reuses it at every
 other temperature. The simplest test of that assumption is to measure the
-matrix independently at the opposite end of the range and ask whether the two
-differ by more than the noise of estimating either one. Differences are
+matrix independently at the opposite end of the range and check whether the
+two differ by more than their statistical noise. Differences are
 measured with the relative Frobenius distance,
 %
 \begin{equation}
@@ -844,12 +870,12 @@ temperature.
 
 The reference calculations carry, averaged over the twelve cases, an
 uncertainty of \SI{9.7}{pcm} on the multiplication factor and
-\SI{0.309}{\percent} on the root-mean-square of the source,
-Fig.~\tref{cr:fig:sigref}. The one mild outlier is the case with the broadest
+\SI{0.309}{\percent} on the root-mean-square of the source
+(see Fig.~\tref{cr:fig:sigref}). The one mild outlier is the case with the broadest
 temperature profile, 12.5~pcm and \SI{0.42}{\percent}, whose flatter fission
-source makes the detector tally noisier. The reference term is one of the two contributions to the budget; the other is
-the database term, and Fig.~\tref{cr:fig:validation} compares the three
-inexpensive estimates of it with the brute-force reconstruction, case by case
+source makes the detector tally noisier. The reference term is one of the two contributions to the combined
+uncertainty; the other is the database term, and Fig.~\tref{cr:fig:validation}
+compares the three cheap estimates of it with the brute-force reconstruction, case by case
 and for both observables.
 
 \begin{figure}[htbp]
@@ -868,7 +894,7 @@ and for both observables.
   \centering
   \includegraphics[width=\textwidth]{Chapter8/Figs/fig2_validation_against_brute_force.pdf}
   \caption[Verification of the database uncertainty]{Database contribution to the
-  uncertainty predicted by the three inexpensive methods against the
+  uncertainty predicted by the three cheap methods against the
   brute-force reconstruction with $150$ independent replicas: multiplication
   factor (left) and root-mean-square of the fission source (right), corrected
   variant, twelve cases, each identified by its temperature field on the left
@@ -876,7 +902,7 @@ and for both observables.
   \label{cr:fig:validation}
 \end{figure}
 
-The ordering of the three is as expected in almost every case. The uncorrelated
+The ranking of the three proposed methods is as expected in almost every case. The uncorrelated
 baseline gives systematically the largest uncertainty, and therefore the widest
 band, the only exception being the multiplication factor of one case, which is
 within the fluctuation of a resampling procedure; the analytical model gives
@@ -885,7 +911,7 @@ multiplication factor the analytical model reproduces the brute-force
 uncertainty to within \SI{4.6}{\percent}, against \SI{8.7}{\percent} for the measured
 correlation and \SI{18.0}{\percent} for the uncorrelated baseline. The reason is the sign of the intra-column correlations:
 they are negative, so neglecting them inflates the propagated variance of the
-eigenvalue. On the root-mean-square of the source the ranking is reversed: the
+eigenvalue. On the root-mean-square of the source, the ranking is reversed: the
 uncorrelated baseline reproduces the brute-force uncertainty to within
 \SI{3.3}{\percent} and the measured correlation to \SI{3.7}{\percent}, while
 the analytical model is the least accurate of the three, \SI{7.2}{\percent}.
@@ -902,7 +928,7 @@ Eq.~(\ref{cr:eq:rho-pred}) is evaluated on the mean coefficients of one
 database, which are themselves uncertain. Rebuilding the predicted
 matrix from each of the $150$ independent replicas at \SI{300}{K} and comparing
 it with the one built from the production database gives a mean relative
-Frobenius distance of $0.0013$ and a maximum of $0.0014$, two to three orders
+Frobenius distance of $0.0013$ and a maximum of $0.0014$, which is 2 to 3 orders
 of magnitude below both the temperature dependence of the measured matrix and
 its own noise floor. The predicted matrix can therefore be treated as
 deterministic.
@@ -965,8 +991,8 @@ source from 1.28 to \SI{0.96}{\percent}, by \SI{25}{\percent}.
   \label{cr:fig:rawcorr}
 \end{figure}
 
-The benefit is markedly uneven. It is largest for the fields that are sharp and
-at the same time extended over several cells: the rings at \SI{1000}{K} improve
+The benefit is markedly uneven. It is largest for sharp fields extended at the
+same time over several cells: the rings at \SI{1000}{K} improve
 from 57.4 to \SI{0.7}{pcm} and the six-assembly pattern from 53.9 to
 \SI{23.5}{pcm}, and both roughly halve the deviation of the source. For the
 smoother profiles the correction is small or mildly unfavourable on the
@@ -974,9 +1000,10 @@ eigenvalue, as in the power shape with a \SI{200}{K} span, which moves from
 $-41.5$ to $-52.5$~pcm, while the source improves in almost every case.
 
 The two single-cell perturbations require a separate remark, because they are
-the calibration cases themselves and one would expect them to be corrected
-best. On the fission source they are, and the improvement is of the same order
-as elsewhere; on the multiplication factor they are not, moving from 79.7 to
+the calibration cases themselves and one would expect them to be the best after
+correction. This happens for the fission source, with an improvement of the same
+order as for the other cases; on the multiplication factor it does not, the
+deviation moving from 79.7 to
 \SI{73.5}{pcm} and from $-55.4$ to $-46.4$~pcm. The two observables do not
 weigh the matrix in the same way. A single hot cell in a cold core displaces a
 small number of coefficients, those that connect it to its surroundings, and
@@ -989,9 +1016,9 @@ the corrected coefficients are many more, and the eigenvalue follows.
 
 Combining the two contributions in quadrature, with the database term from the
 analytical model, gives the picture of Fig.~\tref{cr:fig:keffdist}. Under the
-combined budget \SI{58}{\percent} of the corrected cases fall within
+combined uncertainty, \SI{58}{\percent} of the corrected cases fall within
 $|z|<2$, with a median $|z|$ of $1.30$, against \SI{42}{\percent} of the raw
-cases, whose median is $2.18$. The database term dominates the budget in every
+cases, whose median is $2.18$. The database term dominates the uncertainty in every
 case, 14 to \SI{22}{pcm} against 9 to \SI{12}{pcm} of the reference, so both
 variants are judged against a relatively wide band.
 
@@ -1005,8 +1032,8 @@ variants are judged against a relatively wide band.
   \label{cr:fig:keffdist}
 \end{figure}
 
-Rather than collapsing that budget into one number per case, the figure shows
-each realization of the analytical model and each of the $150$ genuinely
+Rather than collapsing that uncertainty into one number per case, the figure
+shows each realization of the analytical model and each of the $150$
 independent replicas of the database, together with the interval of the
 reference calculation and the point estimate. This representation reveals a feature that a single error bar would conceal. In several cases the whole replica cloud is displaced from zero, and
 resampling cannot remove the displacement, because its origin is not database
@@ -1020,9 +1047,9 @@ database inherits it. It is a bias of the comparison, not a fluctuation, and it
 is exactly the effect the correction of Sec.~\ref{cr:sec:rcr} is built for.
 
 Where the corrected cloud is centred near zero, which is the case for the
-central cell at \SI{300}{K}, for the linear gradient and for most of the
-smoother power-shaped profiles, the residual deviation is indistinguishable
-from the statistical noise and no further correction is warranted. Where it is
+central cell at \SI{300}{K}, the residual deviation is indistinguishable
+from the statistical noise for the linear gradient and for most of the
+smoother power-shaped profiles, and no further correction is warranted. Where it is
 not, in the localized spikes and in the ring-shaped cases, the deviation
 exceeds what either source of noise can account for, and since the model of the
 database noise has itself been verified against brute force, the most likely

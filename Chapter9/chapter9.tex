@@ -24,34 +24,34 @@ distribution of the deterministic model close to the reference, at a cost of
 seconds per supercell, and it does so more effectively where the system is more
 heterogeneous. The kinetic parameters respond to the correction without a
 direct benefit, which follows from what the correction preserves: reaction
-rates, the product of a cross section and the flux, and not bilinear quantities
-weighted with the adjoint. Fast reactors prove favourable ground for the
+rates, and not bilinear quantities weighted with the adjoint. Fast reactors prove favourable ground for the
 method, since the relatively uniform flux, the reduced anisotropy and the
 smooth energy dependence of the cross sections limit the condensation errors
 and let scalar factors preserve the global quantities.
 
-For the ALFRED core the object of the optimization is the grid itself, the
-set of energy boundaries on which the constants are condensed, and the dependence of the result on
-the random seed, observed in the earlier study of the same problem, is measured on
+Then, for the ALFRED core, an optimization aiming at improving the grid itself,
+i.e., the set of energy boundaries on which the constants are condensed, is
+carried out, and the impact of the random seed on the result is measured on
 one thousand independent searches instead of three. The number is made
 affordable by a neural metamodel trained on more than $90\,000$ full-core evaluations of
 FRENETIC, which replaces the solver inside the search alone; every structure
-the searches return is recomputed with the solver, so that the conclusions
-rest on it and not on the metamodel. The dependence is severe: a single search
-returns a structure typically forty-five per cent above the best on the joint
-objective, three searches twenty per cent, and a hundred two per cent, so that
+the searches return is recomputed with FRENETIC itself, to make the
+conclusions more solid. The seed dependence is severe: a single search returns
+a structure whose fitness is typically \SI{45}{\percent} above the best on the
+joint objective, three searches \SI{20}{\percent}, and a hundred
+\SI{2}{\percent}, so that
 the gain from repeating the search is concentrated between one search and a few
 tens of them, a number of searches that cannot be afforded with FRENETIC inside
 the loop. The thousand searches converge to 747 distinct
-structures with no common skeleton; the regularities they display are an
+structures, with no boundary common to all of them; the regularities they display are an
 exclusive choice between two boundaries of the fast region and a placement of
 the boundaries that follows the neutron importance rather than the flux, a
 criterion never imposed and found \emph{a posteriori}. The best structure has fifteen groups and improves on
 the three obtained with the solver inside the loop, on the structures built by
 uniform spacing rules and on the 30-group fine grid itself, the last by six
 orders of magnitude on the joint objective. That last
-comparison is the one that explains the result: a structure that condenses
-nothing leaves the error of the deterministic model intact, and the
+comparison explains the result: a structure with no condensation leaves
+the error of the deterministic model intact, and the
 optimized structure does better because its condensation error compensates for
 that model error. The quality of the best structures is therefore bound to the core,
 to the solver and to the objective on which it is obtained, and what carries
@@ -75,10 +75,10 @@ in without enlarging the database: a correction ratio, tallied once for each
 snapshot of the cycle at a single reference state, multiplies the interpolated
 matrix, and the cycle is followed quasi-statically, with drum angle,
 temperatures, fission source and cell-wise burnup advancing together. Over
-sixty-six months the states so obtained have a multiplication factor between
+66 months the states so obtained have a multiplication factor between
 $-59$ and $-5$~pcm from unity when recomputed by Monte Carlo, with the same
 bias found at beginning of life and no drift with burnup, and an assembly-wise
-fission source reproduced to about one per cent. The three assumptions on
+fission source reproduced to about \SI{1}{\percent}. The three assumptions on
 which the factorization rests are each tested on a dedicated campaign and
 found to cost no more than that residual, and seven snapshots along the cycle
 prove sufficient.
@@ -96,34 +96,35 @@ it when the temperature jumps from ring to ring. For the gradients inside the
 core, the correction reinstates the influence that the neighbouring cells exert
 on a coefficient, and over twelve temperature fields it lowers the mean
 absolute deviation of the multiplication factor by a quarter and that of the
-fission source by as much, the gain being largest on fields that are both
-sharp and extended over several cells. The statistical uncertainty of
-everything obtained from an interpolated matrix is also examined. The
+fission source by as much. The largest gain is obtained on fields that are both
+sharp and extended over several cells. The statistical uncertainty affecting
+the outcome of an interpolated matrix is also examined. The
 coefficients that share a source column turn out to be negatively correlated,
 because the histories of that source are divided among destinations that
 exclude one another, and the correlation follows in closed form from the mean
 coefficients and the multiplicity alone; checked against 150 independent
 databases, the closed form gives the uncertainty of the multiplication factor
-to within five per cent, whereas the uncorrelated assumption used elsewhere in
+to within \SI{5}{\percent}, whereas the uncorrelated assumption used elsewhere in
 the Part overestimates it, so that the bands reported for the criticality
 search err on the safe side.
 
 \section{Perspectives}
 
-Each of the works leaves a direction open, and they are stated as the chapters
-state them. On the multi-group side, the mini-core route to the generation of
+Each of the works leaves a direction open, as commented in the previous
+chapters. On the multi-group side, the mini-core route to the generation of
 the constants lends itself to sensitivity and uncertainty studies on the nuclear data in
 transient calculations, and the reproduction of the kinetic
 parameters under superhomogenization correction, which preserves reaction rates
-and not adjoint-weighted quantities, remains to be improved. The neural
-metamodel is still limited by the amount of reference data, and a further
+and not adjoint-weighted quantities, remains to be improved.
+
+The neural metamodel is still limited by the amount of reference data, and a further
 campaign of FRENETIC calculations would still improve it; the network could also receive, in
 addition to the boundaries of a structure, quantities that carry physical
 content, such as the lethargy width of each condensed group or the variation of
 the reference spectrum inside it, a possibility that a first attempt leaves open.
 
-On the fission matrix side, what limits the criticality search is the
-interpolation of the original database rather than the burnup correction, and
+On the fission matrix side, the criticality search is limited by the
+interpolation of the original database rather than by the burnup correction, and
 the prescribed relation between power and fuel temperature can give way to a
 thermal response computed by a conduction solver, for which the workflow
 already provides the interface. The two temperature corrections are built on
