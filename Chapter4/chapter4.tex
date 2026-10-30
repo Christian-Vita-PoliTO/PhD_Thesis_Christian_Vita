@@ -1070,7 +1070,7 @@ quantitative evidence.
 The internal dynamics of a single search are illustrated in
 Fig.~\tref{eg:fig:tribe}. The initial population is heterogeneous, with most of the
 boundaries present in about half of the individuals, while by generation 40
-the population has crystallized. Each boundary is then either adopted by
+the population has converged. Each boundary is then either adopted by
 nearly every individual or abandoned by nearly all of them. Later events, in
 which a boundary that has been fixed moves, that is, it is abandoned and
 replaced by another, show that crossover and mutation
@@ -1364,16 +1364,16 @@ outcome of the campaign at that group count, the one at $G=20$ lies in its
 upper tail and the one at $G=13$ is worse than all the structures the campaign
 returns at that group count. The gap is therefore a question of how many
 searches are affordable, and, with FRENETIC inside the loop, three searches from
-independent seeds are what a reasonable budget allows. The objective is the same in the two
+independent seeds are what can reasonably be afforded. The objective is the same in the two
 cases, so the comparison only measures the size of the campaign.
 
 Table~\tref{eg:tab:standard} compares the optimized structure with three further
 reference constructions. A structure with uniformly spaced boundary indices and
 nineteen groups is worse by a factor of $5.0\times10^{4}$, and one with uniform
-lethargy spacing by a factor of $1.4\times10^{3}$. It is worth noting that a
-uniform-lethargy structure cannot be built with 19 boundaries on this fine grid,
-since the 30 fine groups are not themselves equally spaced in lethargy, so that
-equally spaced targets collapse onto repeated boundaries and only 13 survive.
+lethargy spacing by a factor of $1.4\times10^{3}$. A uniform-lethargy structure
+cannot, however, be built with 19 boundaries on this fine grid: since the 30
+fine groups are not themselves equally spaced in lethargy, equally spaced
+targets collapse onto repeated boundaries and only 13 survive.
 The fine grid constrains which regular structures can be constructed at all.
 
 \begin{table}[htbp]
@@ -1538,7 +1538,7 @@ Rank & $G$ & True fitness & Predicted & Disagr.\ [\%] \\ \midrule
 
 \subsection{Computational Cost}
 
-Table~\tref{eg:tab:cost} summarizes the computational budget. Assembling the
+Table~\tref{eg:tab:cost} summarizes the computational cost. Assembling the
 training set requires approximately $3\,516$ core-hours of FRENETIC, while a
 single search evaluated directly on the solver would require $383$. The
 metamodel therefore becomes advantageous beyond approximately nine searches, and
@@ -1550,7 +1550,7 @@ core-hours for the 747 structures.
 
 \begin{table}[htbp]
 \centering
-\caption[Computational budget in core-hours]{Computational budget in core-hours, from the measured cost of one
+\caption[Computational cost in core-hours]{Computational cost in core-hours, from the measured cost of one
 FRENETIC evaluation of a structure over the three control-rod configurations
 (46~s on 3 cores). One tribe is a complete genetic
 search of 100 individuals over 100 generations.}
