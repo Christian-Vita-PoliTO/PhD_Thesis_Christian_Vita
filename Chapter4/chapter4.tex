@@ -62,13 +62,16 @@ separated by barriers that a
 population-based search crosses or does not cross depending on where it starts,
 which is precisely what three tribes with three different outcomes indicate.
 
-Two consequences follow. The first is that the result of a single optimization
-should not be interpreted as the optimal structure, but as a nearly optimal solution, i.e., one member of a set
-whose extent is unknown. The second is that any statement of general validity
-about where the boundaries of a good structure should lie requires many
-independent searches, not only one. Both consequences call for the same remedy, i.e., a higher
-number of simulated tribes, to provide a better characterization of an optimized
-energy grid.
+Two consequences follow:
+\begin{itemize}
+  \item the result of a single optimization should not be interpreted as the
+    optimal structure, but as a nearly optimal solution, i.e., one member of a
+    set whose extent is unknown;
+  \item any statement of general validity about where the boundaries of a good
+    structure should lie requires many independent searches, not only one.
+\end{itemize}
+Both consequences call for the same remedy, i.e., a higher number of simulated
+tribes, to provide a better characterization of an optimized energy grid.
 
 That remedy is not affordable within the workflow shown in \citet{prevMulti}. The fitness of a
 candidate structure can only be established by running the full-core
