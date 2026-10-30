@@ -182,7 +182,7 @@ interchangeable. Transposition preserves the eigenvalues, so that
 $k_{\mathrm{eff}}$ is unaffected; the right eigenvector of the transposed
 matrix, however, is the left eigenvector of $\mathbf A$, which in this
 formalism plays the role of the adjoint source, the importance of a fission
-neutron born in each region, and not of the source itself. The point is
+neutron born in each region, and not of the source itself. This is
 verified on the database of Chapter~\ref{ch:crit-search} against the fission
 source tallied by Serpent with an independent detector: the right eigenvector
 of the matrix, as written by the code, reproduces the detector source with a
@@ -199,7 +199,7 @@ assembles it from a set of independent fixed-source calculations, one for each
 ``fundamental cell'' of the system \cite{WaltersNSE2018}. The fundamental units
 are identified by exploiting the geometrical and material similarity between
 repeated units, so that a limited number of calculations serves for the whole
-core; reflectors and structural materials are deliberately excluded from the
+core; reflectors and structural materials are excluded from the
 tally to preserve that similarity, and their influence is restored afterwards
 through boundary and discontinuity corrections. This is the approach of the
 RAPID code system, a mature implementation that provides whole-core solutions within minutes with
