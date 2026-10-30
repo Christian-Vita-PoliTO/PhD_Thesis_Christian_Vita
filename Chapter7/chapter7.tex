@@ -18,7 +18,7 @@ construction proceeds in three steps:
 \begin{itemize}
   \item a database of fission matrices is built over the two parameters of the
   search, i.e., the fuel temperature and the drum angle, and the density of the
-  database is settled by a convergence study;
+  database is determined by a convergence study;
   \item a correlation between power and fuel temperature replaces a heat
   transfer model, so that the search becomes self-consistent;
   \item the search algorithm is defined, verified against reference Monte Carlo
@@ -106,7 +106,7 @@ entries required, are left to future work.
 \subsection{Selection of the database}\label{cs:sec:selection}
 
 The number of entries required to reach a given accuracy cannot be stated
-beforehand. It is therefore settled by a nested procedure: a coarse database is built first, its
+beforehand. It is therefore determined by a nested procedure: a coarse database is built first, its
 adequacy is judged by reproducing a fixed set of reference calculations, and
 if the root-mean-square of $\Delta k_{\mathrm{eff}}$ over the set does not
 fall within the statistical uncertainty of the references, entries are added.
@@ -115,7 +115,7 @@ midpoints between neighbouring points of the finest grid, where the
 interpolation error is largest: five temperatures, 350, 550, 650, 750 and
 \SI{950}{K}, combined with three angles, \ang{5.625}, \ang{84.375} and
 \ang{174.375}, fifteen cases in all. More elaborate adaptive strategies exist;
-the nested one is adopted deliberately for its transparency.
+the nested one is adopted for its transparency.
 
 Three databases, whose grid points are shown in Fig.~\tref{cs:fig:nested}, are
 compared. They share the eight
@@ -230,7 +230,7 @@ following sections can and cannot measure:
 \begin{itemize}
   \item it is local and instantaneous: each cell is mapped on its own, with no
   conduction between cells and no dynamics of the heat pipes;
-  \item it is normalized: the coldest and the hottest cell sit at the two ends of
+  \item it is normalized: the coldest and the hottest cell lie at the two ends of
   the interval by construction, so that what Eq.~(\ref{cs:eq:correlation})
   provides is the spatial redistribution of the temperature, which assemblies
   are hot and which are cold, and not the absolute spread, which is fixed
@@ -1287,7 +1287,7 @@ depletion of its own.
 
 The criticality search of this chapter rests on a database of 136 fission
 matrices over eight temperatures and seventeen drum angles, whose density is
-settled by a nested convergence study, and on a prescribed correlation between
+determined by a nested convergence study, and on a prescribed correlation between
 power and fuel temperature that makes the search self-consistent.
 At nominal power and fresh fuel the search converges in about one second on a
 single core, uncertainty quantification included, and the multiplication
