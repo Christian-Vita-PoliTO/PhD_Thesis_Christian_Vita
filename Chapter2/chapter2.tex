@@ -8,8 +8,8 @@
 The design of a reactor and its safety analysis require the neutron field to be
 computed many times: for the configurations of the control system that the
 plant will pass through, for the states of the fuel that follow one another
-along the cycle, and, in the transient analyses for which those calculations are
-ultimately intended, for many instants in time. A Monte Carlo (MC) calculation
+along the cycle, and, in the transient analyses, for many instants
+in time. A Monte Carlo (MC) calculation
 answers each of those questions with the fewest approximations, since it treats
 energy and angle as continuous variables and represents the geometry of the
 system in full detail. The general-purpose codes that implement it, among which
@@ -26,8 +26,8 @@ among other codes~\cite{serpentDynamic}. A study that repeats the same
 calculation over hundreds of configurations, however, still relies on a
 deterministic solver.
 
-The price of that speed is paid in the form in which the nuclear data have to be
-supplied. A deterministic solver does not read the continuous-energy cross
+That speed comes with a requirement on the form in which the nuclear data have
+to be supplied. A deterministic solver does not read the continuous-energy cross
 sections: it reads a set of multi-group constants, defined over a finite number
 of energy intervals and over regions of the core which are homogenized. The
 generation of this set is a calculation in its own right, and it has been
@@ -206,7 +206,7 @@ Eqs.~(\ref{mg:eq:condensation}) to (\ref{mg:eq:homogenization}) directly
 \subsection{The weighting flux}
 
 The definitions above share a structure and, with it, a difficulty. The weight is
-the flux, which is the unknown of precisely the problem the constants are meant to
+the flux, which is the unknown of the problem that the constants are meant to
 solve. Were the true flux available, the multi-group equations would reproduce
 the reaction rates of the continuous problem exactly, and there would be no
 reason to solve them. What is available in its place is the flux of a model
@@ -228,8 +228,8 @@ DRAGON~\cite{dragon}, which belongs to the thermal one. The second,
 followed in this Part, is a Monte Carlo calculation of the system itself,
 which tallies the numerator and the denominator of
 Eqs.~(\ref{mg:eq:condensation}) to (\ref{mg:eq:homogenization}) with no
-approximation on the geometry and none on the energy dependence, at the price of
-a statistical uncertainty on every constant and of a cost that grows with the
+approximation on the geometry and none on the energy dependence, but with
+a statistical uncertainty on every constant and a cost that grows with the
 number of states the library has to cover. The two routes are not alternatives in
 principle, and which of them is preferable is decided by that number, as
 Chapter~\ref{ch:sph-lfr} shows for the design studied here.
