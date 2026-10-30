@@ -32,14 +32,15 @@ and let scalar factors preserve the global quantities.
 Then, for the ALFRED core, an optimization aiming at improving the grid itself,
 i.e., the set of energy boundaries on which the constants are condensed, is
 carried out, and the impact of the random seed on the result is measured on
-one thousand independent searches instead of three. The number is made
+one thousand independent searches instead of the three of the earlier study
+of the same problem. The number is made
 affordable by a neural metamodel trained on more than $90\,000$ full-core evaluations of
 FRENETIC, which replaces the solver inside the search alone; every structure
 the searches return is recomputed with FRENETIC itself, to make the
 conclusions more solid. The seed dependence is severe: a single search returns
-a structure whose fitness is typically \SI{45}{\percent} above the best on the
-joint objective, three searches \SI{20}{\percent}, and a hundred
-\SI{2}{\percent}, so that
+a structure whose joint fitness is typically \SI{45}{\percent} above that of
+the best structure, the best of three searches \SI{20}{\percent} above it, and
+the best of a hundred \SI{2}{\percent}, so that
 the gain from repeating the search is concentrated between one search and a few
 tens of them, a number of searches that cannot be afforded with FRENETIC inside
 the loop. The thousand searches converge to 747 distinct
@@ -110,7 +111,7 @@ search err on the safe side.
 
 \section{Perspectives}
 
-Each of the works leaves a direction open, as commented in the previous
+Each of the works leaves a direction open, as discussed in the previous
 chapters. On the multi-group side, the mini-core route to the generation of
 the constants lends itself to sensitivity and uncertainty studies on the nuclear data in
 transient calculations, and the reproduction of the kinetic

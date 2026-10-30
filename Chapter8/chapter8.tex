@@ -15,7 +15,7 @@ The first is the temperature difference between the core and the reflector.
 The coefficients of the fission matrix are defined between fissile cells, so
 the temperature that enters the interpolation is that of the fuel; the
 reflector enters only through the isothermal entries of the database, and the
-situation when a core is hotter than its reflector is ignored. The second is a sharp
+situation in which the core is hotter than its reflector is ignored. The second is a sharp
 temperature gradient inside the core. The interpolation assigns to each
 coefficient the temperature of its destination cell alone, so a cell that is
 much hotter than its neighbours is treated as if the whole core were at its
@@ -32,7 +32,7 @@ same used for the criticality search. The second, the Core Temperature Correctio
 developed on a two-dimensional variant of the same design, described further
 on. The chapter also carries out the study of the statistical
 uncertainty of the interpolated results that Chapter~\ref{ch:fm-theory} defers
-to it, which addresses three points:
+to it. The study addresses three points:
 \begin{itemize}
   \item how the tallied coefficients are correlated;
   \item how that correlation can be modelled analytically;
@@ -71,8 +71,9 @@ temperatures.
   \label{cr:fig:gradient}
 \end{figure}
 
-This difference in operation has been noticed in the literature
-\cite{Stauff2024}. A high-fidelity simulation of the same core, performed with the MOOSE
+This difference in operation is documented in the literature: in the
+multiphysics steady state of the same core computed by \citet{Stauff2024}, the
+radial reflector is colder than the fuel. A high-fidelity simulation of the same core, performed with the MOOSE
 framework \cite{giudicelli2024moose} at nominal power with the drums fully
 extracted, gives the field of Fig.~\tref{cr:fig:moose}; the profile along a line
 crossing the active region and the reflector shows the temperature dropping at
@@ -176,7 +177,9 @@ coincide.
 
 The cost of the second formulation is one reference calculation per drum
 angle. The whole campaign, database and reference matrices together,
-therefore requires $N_T N_\theta + N_\theta$ criticality calculations, that is, seventeen runs in addition to the hundred and thirty-six of the database of
+therefore requires $N_T N_\theta + N_\theta$ criticality calculations,
+$N_T=8$ being the number of fuel temperatures and $N_\theta=17$ that of the drum
+angles, that is, seventeen runs in addition to the hundred and thirty-six of the database of
 Chapter~\ref{ch:crit-search}.
 
 \subsection{Test cases with a uniform core temperature}\label{cr:sec:rcr-tests}
@@ -251,8 +254,8 @@ falls from 1.7--4.7~\% without correction to 0.4--1.1~\% with it.
   \end{tabular}
 \end{table}
 
-Figures~\tref{cr:fig:case1} and \tref{cr:fig:case2} show the first two cases cell
-by cell. Each figure has four panels: the reference fission source, the
+Figures~\tref{cr:fig:case1} and \tref{cr:fig:case2} show the first two cases. Each
+figure has four panels: the reference fission source, the
 combined cell-wise uncertainty $\sigma_{\mathrm{tot},i}$ of
 Eq.~(\ref{fm:eq:sigma}), and the local deviation of the uncorrected and of the
 corrected result, both expressed in units of that same uncertainty. The two
@@ -453,7 +456,7 @@ monolith, surrounded by a beryllium radial reflector, Fig.~\tref{cr:fig:geom2d}.
 Two simplifications distinguish it from the three-dimensional model.
 The control elements are removed, so that no absorber competes with the
 temperature field in shaping the flux, and the core is treated as axially
-infinite, so that the analysis is two-dimensional and radial throughout. The
+infinite, so that the analysis is two-dimensional and radial throughout. Each
 cell corresponds to one assembly, yielding a $127\times127$ matrix, tallied as
 before from a single whole-core criticality calculation. The finer radial mesh
 is justified by the aim of the study: the effect examined here is the influence of the temperature of
@@ -471,8 +474,8 @@ subdivision into 90 cells used previously would not provide.
   \label{cr:fig:geom2d}
 \end{figure}
 
-The database is one of those described in Chapter~\ref{ch:fm-theory}: eight
-uniform temperatures ranging from 300 to \SI{1000}{K} in steps of \SI{100}{K}.
+The database is built as described in Chapter~\ref{ch:fm-theory}, on eight
+uniform temperatures, ranging from 300 to \SI{1000}{K} in steps of \SI{100}{K}.
 Since no drums are considered, the interpolation of Eq.~(\ref{cs:eq:interp})
 reduces to its one-dimensional form,
 %
@@ -493,8 +496,8 @@ temperature of its destination cell alone, and therefore ignores the state of
 the cells around it. The approximation is acceptable when the field is smooth,
 because neighbouring cells are then at nearly the same temperature as the
 destination, and the database entry at that temperature describes the
-neighbourhood correctly. However, when the field is sharp this approach usually
-fails: a cell much hotter
+neighbourhood correctly. However, when the field is sharp, this approach
+usually fails: a cell much hotter
 than its surroundings is represented by an entry in which the whole core is as
 hot as that cell, and the neutron economy of that entry is not the one of the
 real configuration.
@@ -562,11 +565,11 @@ measured against the difference of the calibration.
 The diagonal requires a separate remark, because there source and destination
 coincide
 and the difference between two cells is not defined. The calibration ratios
-evaluated at zero distance, $r^{\pm}(0)$, which refer to the coefficient
-$a_{CC}$ of the central cell, quantify the discrepancy of the interpolation
-related to the coefficient $a_{kk}$ of a cell surrounded by a neighbourhood at
-a different temperature, so
-the weight of the diagonal is built with the difference between the cell and
+evaluated at zero distance, $r^{\pm}(0)$, refer to the diagonal coefficient
+$a_{CC}$ of the central cell: they quantify the discrepancy of the
+interpolation on the diagonal coefficient of a cell whose neighbourhood is at a
+different temperature, and are applied to every diagonal coefficient $a_{kk}$.
+The weight of the diagonal is therefore built with the difference between the cell and
 the average of its first ring of neighbours $\mathcal N(k)$. No further
 calibration is needed for this case, since $r^{\pm}(0)$ comes from the same two
 matrices. The two variants compared in the following are named \emph{raw},
@@ -674,8 +677,8 @@ $T$ is
 \end{equation}
 %
 so that the covariance is reproduced by construction. One vector $\mathbf z$ is
-shared by the coefficients of the same column, and this sharing is what
-imposes the correlation, while the marginal standard deviation of each coefficient stays
+shared by the coefficients of the same column. This sharing is imposed by the
+correlation, while the marginal standard deviation of each coefficient stays
 the one Serpent reports whatever $\boldsymbol\rho$ is. The eight database
 temperatures are independent calculations, so their perturbations are drawn
 independently. The ensemble has $M=500$ realizations throughout this section.
@@ -812,7 +815,8 @@ The derivation does not provide information about two coefficients that do not
 share a column.
 The numbers of source neutrons of two different cells are not independent: the
 total population per
-cycle is fixed, so the source cells compete for a shared amount of neutrons.
+cycle is fixed, so the source cells compete for a shared total number of
+neutrons.
 That coupling, however, does not necessarily propagate to the normalized
 coefficients. By the law of total
 covariance,
@@ -829,7 +833,7 @@ independent once the two populations are given. Term (II) vanishes because
 $E[a_{ij}\mid N_j] = \pi_i$ does not depend on the realized population, by
 construction of the normalized estimator of Eq.~(\ref{cr:eq:aij}).
 
-This rules out one channel, i.e., the competition for a shared amount of
+This rules out one channel, i.e., the competition for a shared total number of
 neutrons, not every conceivable one. A bootstrap check on the $150$ independent replicas at
 \SI{300}{K} finds a small residual: pairs of coefficients that share a
 column are negatively correlated \SI{59.95}{\percent} of the time, with a
@@ -902,7 +906,7 @@ and for both observables.
   \label{cr:fig:validation}
 \end{figure}
 
-The ranking of the three proposed methods is as expected in almost every case. The uncorrelated
+The ranking of the three cheap methods is as expected in almost every case. The uncorrelated
 baseline gives systematically the largest uncertainty, and therefore the widest
 band, the only exception being the multiplication factor of one case, which is
 within the fluctuation of a resampling procedure; the analytical model gives
@@ -928,7 +932,7 @@ Eq.~(\ref{cr:eq:rho-pred}) is evaluated on the mean coefficients of one
 database, which are themselves uncertain. Rebuilding the predicted
 matrix from each of the $150$ independent replicas at \SI{300}{K} and comparing
 it with the one built from the production database gives a mean relative
-Frobenius distance of $0.0013$ and a maximum of $0.0014$, which is 2 to 3 orders
+Frobenius distance of $0.0013$ and a maximum of $0.0014$, which are 2 to 3 orders
 of magnitude below both the temperature dependence of the measured matrix and
 its own noise floor. The predicted matrix can therefore be treated as
 deterministic.
@@ -1000,9 +1004,9 @@ eigenvalue, as in the power shape with a \SI{200}{K} span, which moves from
 $-41.5$ to $-52.5$~pcm, while the source improves in almost every case.
 
 The two single-cell perturbations require a separate remark, because they are
-the calibration cases themselves and one would expect them to be the best after
-correction. This happens for the fission source, with an improvement of the same
-order as for the other cases; on the multiplication factor it does not, the
+the calibration cases themselves and one would expect the correction to work
+best on them. This happens for the fission source, with an improvement of the
+same order as for the other cases; on the multiplication factor it does not, the
 deviation moving from 79.7 to
 \SI{73.5}{pcm} and from $-55.4$ to $-46.4$~pcm. The two observables do not
 weigh the matrix in the same way. A single hot cell in a cold core displaces a
@@ -1048,8 +1052,8 @@ is exactly the effect the reflector correction is built for.
 
 Where the corrected cloud is centred near zero, which is the case for the
 central cell at \SI{300}{K}, the residual deviation is indistinguishable
-from the statistical noise for the linear gradient and for most of the
-smoother power-shaped profiles, and no further correction is warranted. Where it is
+from the statistical noise, as it is for the linear gradient and for most of
+the smoother power-shaped profiles, and no further correction is warranted. Where it is
 not, in the localized spikes and in the ring-shaped cases, the deviation
 exceeds what either source of noise can account for, and since the model of the
 database noise has itself been verified against brute force, the most likely
@@ -1088,7 +1092,7 @@ isolates the population the correction is meant to act on.
 
 Table~\tref{cr:tab:zones} makes the same picture quantitative: for each case it
 counts the cells, out of 127, whose local deviation of the source is consistent
-with the noise, raw against corrected, under each of the four models of the
+with the noise under each of the four models of the
 database uncertainty. The pattern of the point estimates appears again, and more sharply. For
 the ring-shaped cases the corrected count roughly doubles, from 36--41 to
 77--88 cells in the case of the rings at \SI{1000}{K}, consistently across the
@@ -1130,7 +1134,7 @@ of the set, from 59 to 76 cells.
 
 The local reading is relevant to the intended use of the method. In a
 transient analysis the quantity of interest is often not a core-averaged
-parameter but the most exposed point of the system, a local hot spot, and there
+parameter but the most exposed point of the system, e.g., a local hot spot, and there
 the reliability of the model is decided by its accuracy at that one location
 and not by the agreement of the multiplication factor or of a
 root-mean-square.
@@ -1145,9 +1149,10 @@ and the reflector. On a uniformly hot core it reduces the deviation of the
 multiplication factor from several hundred pcm to a few tens, and below the
 statistical uncertainty of the reference calculations once the reference matrix
 follows the rotation of the drums, at a cost of one additional calculation per
-drum angle. On non-uniform fields it recovers almost the whole discrepancy when
+drum angle. On non-uniform fields, it recovers almost the whole discrepancy when
 the field is smooth, and only part of it when the profile is steep from ring to
-ring, a limit that a zonation of the reference matrix would address.
+ring, a limit that a subdivision of the reference matrix into regions would
+address.
 
 The core temperature correction restores the influence of the neighbouring
 cells on a coefficient, and is calibrated on the sharpest field the database
@@ -1169,7 +1174,7 @@ uncertainty of the multiplication factor to within \SI{4.6}{\percent}, the
 measured correlation to \SI{8.7}{\percent} and the uncorrelated assumption used
 elsewhere in this Part to \SI{18.0}{\percent}, the last one always in excess,
 so that the bands reported in Chapter~\ref{ch:crit-search} are conservative.
-On the fission source the ordering changes, and the residual correlation
+On the fission source, the ranking changes and the residual correlation
 between different columns, which the closed form omits, is what accounts for
 the difference.
 
