@@ -22,17 +22,17 @@ much hotter than its neighbours is treated as if the whole core were at its
 own temperature.
 
 Both are treated with the scheme already used for burnup in
-Sec.~\ref{cs:sec:bcr}: a ratio of two matrices tallied at reference
+Chapter~\ref{ch:crit-search}: a ratio of two matrices tallied at reference
 conditions that differ in the effect of interest alone, applied element by
 element to the interpolated matrix. The new element is a weight, which
 scales the ratio by how much of the reference effect is present at the
 target state. The first correction, the Reflector Correction Ratio, is developed on
-the three-dimensional VTB model of Sec.~\ref{fm:sec:model}, the same used for
-the criticality search. The second, the Core Temperature Correction Ratio, is
-developed on a two-dimensional variant of the same design, described in
-Sec.~\ref{cr:sec:model2d}. The chapter also carries out the study of the statistical
-uncertainty of the interpolated results that Sec.~\ref{fm:sec:uq} defers to
-it, which addresses three points:
+the three-dimensional VTB model described in Chapter~\ref{ch:fm-theory}, the
+same used for the criticality search. The second, the Core Temperature Correction Ratio, is
+developed on a two-dimensional variant of the same design, described further
+on. The chapter also carries out the study of the statistical
+uncertainty of the interpolated results that Chapter~\ref{ch:fm-theory} defers
+to it, which addresses three points:
 \begin{itemize}
   \item how the tallied coefficients are correlated;
   \item how that correlation can be modelled analytically;
@@ -169,7 +169,7 @@ its own reference matrix, and the ratio becomes
 \end{equation}
 %
 where the numerator is now interpolated in the drum angle as well. The limiting
-cases of Sec.~\ref{cr:sec:rcr-def} are preserved, since at a given drum
+cases discussed above are preserved, since at a given drum
 position $\tilde a^{\Delta T}_{ij}(\theta)$ plays the role that
 $a^{\Delta T}_{ij}$ played before. At $\theta=\ang{0}$ the two formulations
 coincide.
@@ -177,7 +177,7 @@ coincide.
 The cost of the second formulation is one reference calculation per drum
 angle. The whole campaign, database and reference matrices together,
 therefore requires $N_T N_\theta + N_\theta$ criticality calculations, that is, seventeen runs in addition to the hundred and thirty-six of the database of
-Sec.~\ref{cs:sec:database}.
+Chapter~\ref{ch:crit-search}.
 
 \subsection{Test cases with a uniform core temperature}\label{cr:sec:rcr-tests}
 
@@ -205,7 +205,7 @@ first and the second of each pair.
   \end{tabular}
 \end{table}
 
-Table~\tref{cr:tab:res14} reports the metrics of Sec.~\ref{fm:sec:metrics} for
+Table~\tref{cr:tab:res14} reports the metrics defined in Chapter~\ref{ch:fm-theory} for
 the three variants: no correction, the correction of Eq.~(\ref{cr:eq:rcr1}) and
 the correction of Eq.~(\ref{cr:eq:rcr2}). Without correction the deviation on
 the multiplication factor is an order of magnitude larger than the statistical
@@ -392,7 +392,7 @@ order of the combined uncertainty.
 
 The residual deviations of the two tables have to be judged against the
 statistical noise of the comparison, computed with the ensemble method of
-Sec.~\ref{cs:sec:ensemble}: the database is resampled coefficient by
+Chapter~\ref{ch:crit-search}: the database is resampled coefficient by
 coefficient, uncorrelated, and the interpolation and the correction ratio are
 both rebuilt from the same realization before the eigenvalue problem is solved.
 Rebuilding both is necessary, because the correction ratio reuses database
@@ -450,7 +450,7 @@ effect under study is isolated from everything else.
 The system is a modified version of the same heat-pipe micro reactor
 \cite{Stauff2024}: 127 hexagonal TRISO-fuelled assemblies in a graphite
 monolith, surrounded by a beryllium radial reflector, Fig.~\tref{cr:fig:geom2d}.
-Two simplifications distinguish it from the model of Sec.~\ref{fm:sec:model}.
+Two simplifications distinguish it from the three-dimensional model.
 The control elements are removed, so that no absorber competes with the
 temperature field in shaping the flux, and the core is treated as axially
 infinite, so that the analysis is two-dimensional and radial throughout. The
@@ -471,7 +471,7 @@ subdivision into 90 cells used previously would not provide.
   \label{cr:fig:geom2d}
 \end{figure}
 
-The database is one of those described in Sec.~\ref{fm:sec:database}: eight
+The database is one of those described in Chapter~\ref{ch:fm-theory}: eight
 uniform temperatures ranging from 300 to \SI{1000}{K} in steps of \SI{100}{K}.
 Since no drums are considered, the interpolation of Eq.~(\ref{cs:eq:interp})
 reduces to its one-dimensional form,
@@ -608,19 +608,19 @@ same field.
 
 \section{Statistical uncertainty of the interpolated matrix}\label{cr:sec:uq}
 
-Section~\ref{fm:sec:uq} leaves two questions open:
+Chapter~\ref{ch:fm-theory} leaves two questions open:
 \begin{itemize}
   \item How are the coefficients tallied in one criticality calculation
   correlated with one another?
   \item How far does the uncorrelated estimate used elsewhere in this Part
   depart from the truth?
 \end{itemize}
-Both are answered here, on the model and the database of Sec.~\ref{cr:sec:model2d}.
+Both are answered here, on the two-dimensional model and its database.
 
 \subsection{Four models of the correlation matrix}\label{cr:sec:four}
 
 The estimate of $\sigma_{\mathrm{DB}}$ follows the ensemble method of
-Sec.~\ref{fm:sec:uq}: the database is perturbed, the interpolation and the
+Chapter~\ref{ch:fm-theory}: the database is perturbed, the interpolation and the
 correction are reapplied, the eigenvalue problem is solved, and the spread of
 the results over many realizations is the database contribution. Writing the
 perturbation of the retained coefficients as
@@ -645,15 +645,15 @@ specified, and four ways of specifying it are compared.
   results~\cite{HeWaltersNSE2022}, and it serves here as the baseline.
   \item \emph{Analytical model},
   $\boldsymbol\rho=\boldsymbol\rho_{\mathrm{pred}}$, predicted in closed form
-  from the branching structure of the fission process, derived in
-  Sec.~\ref{cr:sec:derivation}. It requires no Monte Carlo replica beyond the
+  from the branching structure of the fission process, derived further
+  on. It requires no Monte Carlo replica beyond the
   database itself.
   \item \emph{Measured correlation}, $\boldsymbol\rho=\hat{\boldsymbol\rho}$,
   obtained from the cycle-by-cycle tallies of one calculation, each active
   cycle treated as a pseudo-replica. Since Serpent does not write the fission matrix per cycle, its source code is
 modified to do so. The matrix is measured once
   at \SI{300}{K} and reused at every database temperature, an assumption tested
-  in Sec.~\ref{cr:sec:invariance}.
+  further on.
   \item \emph{Brute force}. The whole database is rebuilt $150$ times, with one independent calculation
 per temperature and per repetition. No model of the covariance is involved: the correlations are
   present in the replicas by construction. It is the most expensive estimate
@@ -838,7 +838,7 @@ column are negatively correlated \SI{59.95}{\percent} of the time, with a
 \SI{51.20}{\percent} for pairs that share neither. The two latter figures are
 distinguishable from the \SI{50}{\percent} of no correlation, but by less than
 a tenth of the same-column effect. The analytical model neglects that residual,
-and the consequence of doing so is measured in Sec.~\ref{cr:sec:validation}
+and the consequence of doing so is measured further on
 against the brute-force reconstruction, which makes no such assumption.
 
 \subsection{Temperature invariance of the measured matrix}\label{cr:sec:invariance}
@@ -1044,7 +1044,7 @@ its eight points, whereas several test cases hold the reflector at
 departs from \SI{300}{K}, this creates a core--reflector difference that is
 absent from the construction of the database, and every replica of that
 database inherits it. It is a bias of the comparison, not a fluctuation, and it
-is exactly the effect the correction of Sec.~\ref{cr:sec:rcr} is built for.
+is exactly the effect the reflector correction is built for.
 
 Where the corrected cloud is centred near zero, which is the case for the
 central cell at \SI{300}{K}, the residual deviation is indistinguishable
