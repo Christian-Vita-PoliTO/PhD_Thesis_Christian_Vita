@@ -661,7 +661,7 @@ encoding and its decoding with an example.
 
 \section{The Metamodel}
 
-\subsection{Architecture} %CV: non pensi che qua sarebbe necessario uno schema?
+\subsection{Architecture}
 
 The fifteen fitness functions are not independent: they are of five types, one
 for each physical quantity (multiplication factor, effective delayed neutron
@@ -669,8 +669,8 @@ fraction, effective neutron lifetime, power and flux), and each type is
 evaluated for the same three control-rod configurations. The metamodel
 reproduces that organization with a feed-forward neural network, in which the
 input passes through a sequence of intermediate, or hidden, layers of neurons
-before reaching the outputs. The layers are arranged in three levels. The
-first level, called the trunk because the other levels branch off from it, is
+before reaching the outputs. The layers are arranged in three levels, shown in
+Fig.~\tref{eg:fig:network}. The first level, called the trunk because the other levels branch off from it, is
 common to all the outputs. It receives the description of the structure as 29
 bits, one for each internal boundary of the fine grid and equal to one when the
 boundary is retained, together with the number of groups, and it consists of
@@ -686,6 +686,51 @@ and the logarithm of a variance, whose only role is in the loss function
 described further on. The parameters of the trunk are thus shared by all the
 outputs, while those of the branches are specific to one type of fitness
 function or to one configuration.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[
+    font=\footnotesize, x=1mm, y=1mm,
+    blk/.style  = {rectangle, rounded corners=1pt, draw=newc, line width=.8pt,
+                   fill=nnc!22, align=center, inner sep=2pt, text width=24mm,
+                   minimum height=9mm},
+    head/.style = {rectangle, rounded corners=1pt, draw=newc, line width=.6pt,
+                   fill=nnc!10, align=center, inner sep=1pt, minimum width=8mm,
+                   minimum height=4.2mm},
+    arr/.style  = {-{Stealth[length=1.4mm]}, black!55, line width=.4pt},
+    lev/.style  = {font=\scriptsize, text=black!60, align=center},
+  ]
+    \node[blk, draw=black!55, fill=black!6] (in) at (0,-43)
+      {Structure\\29 bits and $G$};
+    \node[blk, minimum height=15mm] (trunk) at (32,-43)
+      {Trunk\\1024, 512 and\\256 neurons};
+    \draw[arr] (in) -- (trunk);
+    \foreach \sym [count=\i from 0] in {k,\beta,\Lambda,P,\Phi} {
+      \pgfmathsetmacro{\yb}{-((3*\i+1)*5.4+2.6*\i)}
+      \node[blk] (b\i) at (66,\yb) {$f_{\sym}$ branch\\128 and 64 neurons};
+      \draw[arr] (trunk.east) -- (b\i.west);
+      \foreach \cfg [count=\j from 0] in {out,partial,in} {
+        \pgfmathsetmacro{\yh}{-((3*\i+\j)*5.4+2.6*\i)}
+        \node[head] (h\i\j) at (94,\yh) {32};
+        \draw[arr] (b\i.east) -- (h\i\j.west);
+        \node[anchor=west, inner sep=1pt] at (99,\yh) {$f_{\sym,\mathrm{\cfg}}$};
+      }
+    }
+    \node[lev] at (0,6)  {input};
+    \node[lev] at (32,6) {first level};
+    \node[lev] at (66,6) {second level};
+    \node[lev] at (94,6) {third level};
+  \end{tikzpicture}
+  \caption[Architecture of the networks of the metamodel]{Architecture of each
+  of the five networks of the metamodel. The structure, given as 29 bits and the
+  number of groups $G$, enters the trunk, whose three fully connected layers are
+  shared by all the outputs; the trunk feeds one branch for each type of fitness
+  function, and each of these feeds three configuration branches, one for each
+  control-rod configuration, ending in the predicted value of the corresponding
+  fitness function and in the logarithm of a variance. The numbers give the
+  neurons of each layer, and every hidden layer uses the ReLU activation.}
+  \label{eg:fig:network}
+\end{figure}
 
 Twelve of the fifteen outputs span several orders of magnitude and are learned
 as $\log_{10}(y+10^{-6})$; the offset $10^{-6}$, smaller than any value in the
