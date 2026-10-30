@@ -268,18 +268,17 @@ the refinement of the solutions already found is governed by the selection
 pressure, that is, the advantage given to the individuals of better fitness,
 and by the rates of crossover and mutation.
 
-The method needs only the value of the
-fitness function of each individual, with no derivative and no assumption on its
-regularity, such as convexity, which suits a problem whose variables are
-discrete and whose objective is evaluated by an external code. The problem also
-lends itself to the genetic representation: a group structure is a sequence of
-energy boundaries, each strongly influenced by its neighbours, much as a
-chromosome is a sequence of genes~\citep{prevGA}. Since the initial population
-is random and the operators make random choices, the outcome is a solution close
-to the optimum that depends on the random seed, and searches started from
-different seeds can converge to different solutions. The two ingredients
-specific to the problem, the fitness functions and the chromosome, are defined
-in the following.
+The method suits the present problem for two reasons. First, it needs only the
+value of the fitness function of each individual, with no derivative and no
+assumption on its regularity, such as convexity, which is what a problem with
+discrete variables and an objective evaluated by an external code allows.
+Second, a group structure lends itself to the genetic representation: it is a
+sequence of energy boundaries, each strongly influenced by its neighbours, much
+as a chromosome is a sequence of genes~\citep{prevGA}. Since the initial
+population is random and the operators make random choices, the solution
+returned depends on the random seed. The two ingredients specific to the
+problem, the fitness functions and the chromosome, are defined in the
+following.
 
 \subsection{Reference Data and Fitness Functions}
 
