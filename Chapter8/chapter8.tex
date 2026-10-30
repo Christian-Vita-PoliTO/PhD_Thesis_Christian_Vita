@@ -395,7 +395,7 @@ order of the combined uncertainty.
   \label{cr:fig:case7}
 \end{figure}
 
-\subsection{Significance of the residual deviations}\label{cr:sec:rcr-budget}
+\subsection{Significance of the residual deviations}\label{cr:sec:rcr-significance}
 
 The residual deviations of the two tables have to be judged against the
 statistical noise of the comparison, computed with the ensemble method of
@@ -404,7 +404,7 @@ coefficient, uncorrelated, and the interpolation and the correction ratio are
 both rebuilt from the same realization before the eigenvalue problem is solved.
 Rebuilding both is necessary, because the correction ratio reuses database
 entries: holding it fixed while perturbing the interpolated matrix would
-remove that dependence and underestimate the spread. Table~\tref{cr:tab:budget} reports the resulting
+remove that dependence and underestimate the spread. Table~\tref{cr:tab:rcr-uncertainty} reports the resulting
 uncertainty components for the seven cases.
 
 \begin{table}[htbp]
@@ -414,7 +414,7 @@ uncertainty components for the seven cases.
   calculation and that of the database are combined in quadrature; for the
   fission source the combination is performed cell by cell and then averaged
   over the ninety cells.}
-  \label{cr:tab:budget}
+  \label{cr:tab:rcr-uncertainty}
   \begin{tabular}{lS[table-format=2.0]S[table-format=2.0]S[table-format=2.0]S[table-format=1.2]S[table-format=1.2]S[table-format=1.2]}
     \toprule
     & \multicolumn{3}{c}{multiplication factor (pcm)}
