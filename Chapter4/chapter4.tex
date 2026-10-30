@@ -12,7 +12,7 @@
 \section{Introduction}
 
 Full-core deterministic simulations of fast reactors, and in particular the
-transient analyses for which they are ultimately intended, are performed on a
+transient analyses, are performed on a
 condensed energy grid. The number of groups and the placement of their
 boundaries determine how faithfully the condensed calculation reproduces a
 Monte Carlo reference, and the dependence is neither smooth nor intuitive, since
@@ -33,7 +33,7 @@ culminating in the multi-configuration optimization problem of
 \citet{prevMulti}, in which a single energy structure is optimized
 simultaneously for three control-rod configurations, with the goal of having
 an adequate grid as the core evolves during a transient. That study reports an observation which motivates the
-present one. In that work, the genetic algorithm is run from three different random seeds,
+present one. In Costantino's work, the genetic algorithm is run from three different random seeds,
 referred to as tribes, and the three tribes converge to three different
 structures sharing many boundaries but not all of them. Since the tribes differ
 only in the initial population, the outcome indicates that the objective
@@ -49,7 +49,7 @@ three control-rod configurations, the agreement of five quantities with the
 Monte Carlo reference: the multiplication factor, the effective delayed neutron
 fraction, the effective neutron lifetime and the distributions of power and of
 flux over the core. The terms do not respond in the same way to a change of the
-structure and can move in opposite directions: a change that reduces the
+structure and can move in opposite directions, e.g., a change that reduces the
 deviation on the multiplication factor may increase the deviation on the flux
 distribution. The resulting surface is expected to possess many local optima
 separated by barriers that a
