@@ -313,7 +313,7 @@ fuel and reflector is then small and changes sign across the core.
 \end{figure}
 
 Table~\tref{cr:tab:res567} reports the results, and
-Figs.~\tref{cr:fig:case5}--\tref{cr:fig:case7} the cell-wise picture. The
+Figs.~\tref{cr:fig:case5}--\tref{cr:fig:case7} the cell-wise results. The
 behaviour of the correction is not the same in the three cases, and the
 difference is instructive. In Case 6, where the fuel temperature spans
 \SI{600}{K} along one direction while the reflector stays at \SI{300}{K}, the
@@ -925,7 +925,7 @@ uncorrelated baseline reproduces the brute-force uncertainty to within
 the analytical model is the least accurate of the three, \SI{7.2}{\percent}.
 The reversal is consistent with what the model omits. The source is a less
 global quantity than the eigenvalue and is sensitive to the correlations
-between coefficients of different columns, which are precisely the ones the
+between coefficients of different columns, which are the ones the
 closed form of Eq.~(\ref{cr:eq:rho-pred}) does not describe, and which the
 bootstrap of the previous section measures as a small but non-zero residual.
 The eigenvalue, which aggregates the whole matrix, is instead governed by the
@@ -1023,7 +1023,7 @@ the corrected coefficients are many more, and the eigenvalue follows.
 \subsection{Results against the combined uncertainty}
 
 Combining the two contributions in quadrature, with the database term from the
-analytical model, gives the picture of Fig.~\tref{cr:fig:keffdist}. Under the
+analytical model, gives the distribution of Fig.~\tref{cr:fig:keffdist}. Under the
 combined uncertainty, \SI{58}{\percent} of the corrected cases fall within
 $|z|<2$, with a median $|z|$ of $1.30$, against \SI{42}{\percent} of the raw
 cases, whose median is $2.18$. The database term dominates the uncertainty in every
@@ -1052,7 +1052,7 @@ its eight points, whereas several test cases hold the reflector at
 departs from \SI{300}{K}, this creates a core--reflector difference that is
 absent from the construction of the database, and every replica of that
 database inherits it. It is a bias of the comparison, not a fluctuation, and it
-is exactly the effect the reflector correction is built for.
+is the effect the reflector correction is built for.
 
 Where the corrected deviation lies within twice the combined uncertainty,
 which is the case for the two ring-shaped fields, the six assemblies and four of
@@ -1092,7 +1092,7 @@ isolates the population the correction is meant to act on.
   \label{cr:fig:hexmap}
 \end{figure}
 
-Table~\tref{cr:tab:zones} makes the same picture quantitative: for each case it
+Table~\tref{cr:tab:zones} quantifies the same comparison: for each case it
 counts the cells, out of 127, whose local deviation of the source is consistent
 with the noise under each of the four models of the
 database uncertainty. The pattern of the point estimates appears again, and more sharply. For
