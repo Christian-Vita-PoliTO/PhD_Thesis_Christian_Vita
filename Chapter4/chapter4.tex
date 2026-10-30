@@ -813,8 +813,9 @@ median relative error of an ensemble of five networks of this architecture by
 about $40\%$, more than the two levels of branches bring together. The numbers
 of layers and of neurons given above are the outcome of an empirical
 exploration of architectures, trunk widths and training parameters on the same
-data, the most economical way of improving the accuracy when generating the
-data is the expensive part of the work. Of the two levels of branches, the type
+data: since generating the data is the expensive part of the work, tuning the
+network is the most economical way of improving the accuracy. Of the two levels
+of branches, the type
 branches improve the accuracy on twelve outputs out of fifteen with respect to
 a network without them, whereas the configuration branches change it by less
 than the scatter between networks of the same architecture trained from
