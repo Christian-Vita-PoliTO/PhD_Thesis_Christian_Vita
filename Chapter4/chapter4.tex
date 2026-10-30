@@ -766,9 +766,7 @@ phase are compared on their accuracy on this set, overall and output by output.
 The accuracy figures quoted in this work, which all refer to this set, may
 therefore be slightly optimistic. The conclusions of this chapter do not depend
 on them, however, because the workflow described later verifies with FRENETIC
-every result it uses. The ablation and reproducibility measurements reported
-further on are also evaluated on this set, after the architecture has been
-fixed.
+every result it uses.
 
 \subsection{Training and Accuracy}
 
@@ -812,8 +810,16 @@ parallel, takes 79 minutes on CPUs alone. The staged schedule proves
 considerably more effective than a constant learning rate: compared with a
 constant learning rate of $3\times10^{-3}$ with early stopping, it lowers the
 median relative error of an ensemble of five networks of this architecture by
-about $40\%$, more than the combined effect of the architectural refinements
-discussed further on.
+about $40\%$, more than the two levels of branches bring together. The numbers
+of layers and of neurons given above are the outcome of an empirical
+exploration of architectures, trunk widths and training parameters on the same
+data, the most economical way of improving the accuracy when generating the
+data is the expensive part of the work. Of the two levels of branches, the type
+branches improve the accuracy on twelve outputs out of fifteen with respect to
+a network without them, whereas the configuration branches change it by less
+than the scatter between networks of the same architecture trained from
+different random initializations; they are retained, since they add only
+$3\%$ of the parameters.
 
 The accuracy of the metamodel is measured on the external validation set by
 comparing, for each structure and each output, the value $\hat{f}$ predicted by
@@ -907,76 +913,6 @@ every structure the searches produce being recomputed with FRENETIC.
   five networks at constant learning rate, so their accuracy is lower.}
   \label{eg:fig:learning}
 \end{figure}
-
-\subsection{Choice of the Architecture}
-
-The size of the network is determined empirically. Since generating the
-training data is by far the most expensive part of the work, tuning the
-network is the most economical action: architectures, trunk widths and training
-parameters are explored extensively to improve the predictive accuracy
-obtained with the same data, and the architectural parameters given in the
-description of the architecture, the numbers of layers and of neurons, are the
-result of that exploration.
-
-An ablation, in which levels of the network are removed in turn, quantifies
-what each level of the hierarchy contributes, and shows that the two levels of
-branches contribute very differently.
-Table~\tref{eg:tab:ablation} reports three architectures trained on the same
-data with the same reduced protocol, a single network at constant learning rate.
-Introducing the five type branches between the trunk and the outputs raises the
-mean coefficient of determination from $0.9848$ to $0.9908$ and lowers the
-median relative error from $1.75$ to $1.50\%$, at the price of a $29\%$
-increase in the number of parameters. Adding the configuration branches below
-them changes neither figure appreciably, $0.9905$ and $1.49\%$.
-
-The comparison between the last two architectures rests on differences below
-$4\times10^{-4}$ in the mean coefficient of determination and below $0.01$
-percentage points in the median relative error. To establish whether differences of this size are meaningful,
-the reproducibility of the training is measured: five networks of identical
-architecture, trained with the identical protocol and differing only in the
-random initialization of their weights, span a range of $0.0031$ in the
-coefficient of determination and of $0.24$ percentage points in relative error, with
-standard deviations of $0.0013$ and $0.11$. The difference between the two
-architectures is thus about four times smaller than the standard deviation over
-runs of the same one, and fifteen times smaller on the relative error. The comparison of
-the fifteen outputs one by one leads to the same conclusion. The type branches
-improve twelve outputs out of fifteen with respect to the network without them,
-so the gain is shared by most of the predicted quantities. The configuration
-branches improve eight outputs out of fifteen, about half, which is the
-proportion expected if the two architectures were equivalent and each output had
-the same chance of improving or worsening.
-
-The physical quantity is therefore the dimension along which the fifteen outputs
-need separate parameters, and this is consistent with three configurations that
-differ only in the position of the control rods and share the same materials,
-the same geometry and the same fine grid. The metamodel used in the
-optimization retains the configuration branches, which are already present
-when the ablation is performed and add $3\%$ to the number of parameters, and
-the ablation gives no reason to retrain the networks without them.
-
-\begin{table}[htbp]
-\centering
-\caption[Contribution of each level of the hierarchy]{Contribution of each level of the hierarchy, measured on the same
-training structures and with the same reduced protocol: one network per
-architecture, constant learning rate and early stopping. The accuracy is
-therefore lower than that of the final ensemble, and only the differences are
-meaningful. $R^2$ is the mean coefficient of determination and Rel.\ err.\ the
-median relative error, both on the external validation set. The last line gives
-the scatter observed over five networks of identical architecture differing only
-in their random initialization, which sets the scale below which a difference
-between architectures cannot be distinguished from the effect of the
-initialization.}
-\label{eg:tab:ablation}
-\begin{tabular}{@{}p{66mm}ccc@{}}
-\toprule
-Architecture & Parameters & $R^2$ & Rel.\ err.\ [\%] \\ \midrule
-    Trunk only & 695\,582 & 0.9848 & 1.750 \\
-    Trunk and type branches & 895\,582 & 0.9908 & 1.501 \\
-    Trunk, type and configuration branches & 925\,822 & 0.9905 & 1.494 \\
-\midrule
-    \emph{Spread over five initializations} & & $\pm$0.0013 & $\pm$0.11 \\ \bottomrule
-\end{tabular}
-\end{table}
 
 \section{Workflow}
 
